@@ -1124,13 +1124,87 @@ document.addEventListener('DOMContentLoaded', () => {
       if (inpAddr2) inpAddr2.placeholder = isEn ? 'Branch or secondary street address...' : 'Şube veya 2. firma açık adresi...';
     }
 
-    // Profile Card 2: Social Media
+    // Profile Card 2: Social Media (Corporate Channels)
     const profCard2 = document.querySelectorAll('#viewAdminProfile .admin-settings-card')[1];
     if (profCard2) {
       const h3 = profCard2.querySelector('.settings-card-title');
       const p = profCard2.querySelector('.settings-card-desc');
       if (h3) h3.textContent = isEn ? 'Corporate Social Media Channels' : 'Kurumsal Sosyal Medya Kanalları';
       if (p) p.textContent = isEn ? 'Automatically populated across all staff and executive digital cards.' : 'Tüm personellerin ve yöneticinin dijital kartvizitlerine otomatik aktarılır.';
+
+      const socialInputsMap = [
+        {
+          id: 'adminSocialWhatsapp',
+          labelSel: 'label[for="adminSocialWhatsapp"]',
+          enLabel: 'Corporate WhatsApp',
+          trLabel: 'Kurumsal WhatsApp',
+          enPlaceholder: '905xxxxxxxxx',
+          trPlaceholder: '905xxxxxxxxx'
+        },
+        {
+          id: 'adminSocialLinkedin',
+          labelSel: 'label[for="adminSocialLinkedin"]',
+          enLabel: 'Corporate LinkedIn',
+          trLabel: 'Kurumsal LinkedIn',
+          enPlaceholder: 'linkedin-profile-name',
+          trPlaceholder: 'linkedin-profil-adi'
+        },
+        {
+          id: 'adminSocialInstagram',
+          labelSel: 'label[for="adminSocialInstagram"]',
+          enLabel: 'Corporate Instagram',
+          trLabel: 'Kurumsal Instagram',
+          enPlaceholder: 'instagram-profile-name',
+          trPlaceholder: 'instagram-profil-adi'
+        },
+        {
+          id: 'adminSocialTwitter',
+          labelSel: 'label[for="adminSocialTwitter"]',
+          enLabel: 'Corporate X (Twitter)',
+          trLabel: 'Kurumsal X (Twitter)',
+          enPlaceholder: 'x-username',
+          trPlaceholder: 'x-kullanici-adi'
+        },
+        {
+          id: 'adminSocialTelegram',
+          labelSel: 'label[for="adminSocialTelegram"]',
+          enLabel: 'Corporate Telegram',
+          trLabel: 'Kurumsal Telegram',
+          enPlaceholder: 'telegram-username',
+          trPlaceholder: 'telegram-kullanici-adi'
+        },
+        {
+          id: 'adminSocialFacebook',
+          labelSel: 'label[for="adminSocialFacebook"]',
+          enLabel: 'Corporate Facebook',
+          trLabel: 'Kurumsal Facebook',
+          enPlaceholder: 'facebook-page-name',
+          trPlaceholder: 'facebook-sayfa-adi'
+        },
+        {
+          id: 'adminSocialYoutube',
+          labelSel: 'label[for="adminSocialYoutube"]',
+          enLabel: 'Corporate YouTube',
+          trLabel: 'Kurumsal YouTube',
+          enPlaceholder: 'youtube-channel',
+          trPlaceholder: 'youtube-kanali'
+        },
+        {
+          id: 'adminSocialTiktok',
+          labelSel: 'label[for="adminSocialTiktok"]',
+          enLabel: 'Corporate TikTok',
+          trLabel: 'Kurumsal TikTok',
+          enPlaceholder: 'tiktok-username',
+          trPlaceholder: 'tiktok-kullanici-adi'
+        }
+      ];
+
+      socialInputsMap.forEach(item => {
+        const lbl = profCard2.querySelector(item.labelSel);
+        if (lbl) lbl.textContent = isEn ? item.enLabel : item.trLabel;
+        const inp = document.getElementById(item.id);
+        if (inp) inp.placeholder = isEn ? item.enPlaceholder : item.trPlaceholder;
+      });
     }
 
     // Profile Card 3: Brands Management
@@ -7707,6 +7781,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('adminSocialTiktok')) document.getElementById('adminSocialTiktok').value = soc.tiktok || '';
 
     renderAdminProductsList();
+    updateStaticTranslations();
   }
 
   // Render Products list in Admin Settings
