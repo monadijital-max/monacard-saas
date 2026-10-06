@@ -14,7 +14,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable;
 
     protected $guarded = ['id'];
 
@@ -67,6 +67,11 @@ class User extends Authenticatable
     }
 
     public function targets(): HasMany
+    {
+        return $this->hasMany(StaffTarget::class, 'user_id');
+    }
+
+    public function staffTargets(): HasMany
     {
         return $this->hasMany(StaffTarget::class, 'user_id');
     }

@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="{{ asset('style.css') }}?v={{ file_exists(public_path('style.css')) ? filemtime(public_path('style.css')) : time() }}">
 </head>
 <body class="role-customer">
 
@@ -205,14 +205,7 @@
           </div>
 
           <button class="btn-review" id="btnLeaveReview" title="Google Değerlendirmesi Bırak">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" id="reviewBtnShareIcon" style="display:none;">
-              <circle cx="18" cy="5" r="3"></circle>
-              <circle cx="6" cy="12" r="3"></circle>
-              <circle cx="18" cy="19" r="3"></circle>
-              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-            </svg>
-            <span id="reviewBtnText">Yorum Bırak</span>
+            <span id="reviewBtnText">Yorum Yap</span>
           </button>
         </section>
 
@@ -295,7 +288,7 @@
             </div>
 
             <!-- Ofis & Lokasyon -->
-            <div class="contact-item">
+            <div class="contact-item" id="contactItemAddress">
               <div class="contact-icon-circle">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00A86B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -304,7 +297,7 @@
               </div>
               <div class="contact-details">
                 <span class="contact-label">Ofis &amp; Lokasyon</span>
-                <span class="contact-value" id="displayAddress">Dalgıç Sk. Yeşilce Mh.<br>No 3 Kağıthane / İstanbul</span>
+                <span class="contact-value" id="displayAddress"></span>
               </div>
               <div class="contact-actions">
                 <button class="btn-review" id="btnLocationNav" title="Haritada Aç ve Paylaş" style="background:#fff;">
@@ -326,112 +319,23 @@
         <section class="section-block" id="productsSection">
           <div class="section-header">
             <h2 class="section-title">Markalarımız</h2>
-            <span class="platform-count" id="cardProductsCountBadge">2 Marka</span>
+            <span class="platform-count" id="cardProductsCountBadge">0 Marka</span>
           </div>
 
           <div class="products-grid" id="cardProductsGrid">
-            <!-- 1. Vedubox -->
-            <a href="https://vedubox.com" target="_blank" rel="noopener noreferrer" class="product-card" id="linkProdVedubox">
-              <div class="product-card-top">
-                <div class="product-logo-box">
-                  <img src="vedubox.png" alt="Vedubox Logo" class="product-brand-logo">
-                </div>
-                <span class="product-arrow">↗</span>
-              </div>
-              <span class="product-name">Vedubox</span>
-              <span class="product-subtitle">Online Eğitim &amp; Akademi</span>
-            </a>
-
-            <!-- 2. Etgigrup -->
-            <a href="https://etgigrup.com" target="_blank" rel="noopener noreferrer" class="product-card" id="linkProdEtgigrup">
-              <div class="product-card-top">
-                <div class="product-logo-box">
-                  <img src="etgigrup.png" alt="Etgigrup Logo" class="product-brand-logo">
-                </div>
-                <span class="product-arrow">↗</span>
-              </div>
-              <span class="product-name">Etgigrup</span>
-              <span class="product-subtitle">Bilişim &amp; Eğitim Teknolojileri</span>
-            </a>
+            <!-- Dinamik Olarak app.js Tarafından Doldurulur -->
           </div>
         </section>
 
-        <!-- SOSYAL AĞLAR & İLETİŞİM (6 PLATFORMS - YAN YANA & KOMPAKT) -->
-        <section class="section-block">
+        <!-- SOSYAL AĞLAR & İLETİŞİM (DİNAMİK PLATFORMLAR) -->
+        <section class="section-block" id="cardSocialSection">
           <div class="section-header">
             <h2 class="section-title">Sosyal Ağlar &amp; İletişim</h2>
-            <span class="platform-count">6 Platform</span>
+            <span class="platform-count" id="cardSocialCountBadge">0 Platform</span>
           </div>
 
-          <div class="social-grid compact-grid">
-            <!-- WhatsApp -->
-            <a href="https://wa.me/905362556424" target="_blank" rel="noopener noreferrer" class="social-card-compact whatsapp" id="linkWhatsApp">
-              <div class="social-icon-box whatsapp-box">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                </svg>
-              </div>
-              <span class="social-name">WhatsApp</span>
-              <span class="social-arrow">↗</span>
-            </a>
-
-            <!-- Telegram -->
-            <a href="https://t.me/muhiddinoktem" target="_blank" rel="noopener noreferrer" class="social-card-compact telegram" id="linkTelegram">
-              <div class="social-icon-box telegram-box">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#229ED9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="22" y1="2" x2="11" y2="13"></line>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
-              </div>
-              <span class="social-name">Telegram</span>
-              <span class="social-arrow">↗</span>
-            </a>
-
-            <!-- X - Twitter -->
-            <a href="https://x.com/muhiddinoktem" target="_blank" rel="noopener noreferrer" class="social-card-compact x-twitter" id="linkTwitter">
-              <div class="social-icon-box x-box">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-              </div>
-              <span class="social-name">X - Twitter</span>
-              <span class="social-arrow">↗</span>
-            </a>
-
-            <!-- LinkedIn -->
-            <a href="https://linkedin.com/in/muhiddinoktem" target="_blank" rel="noopener noreferrer" class="social-card-compact linkedin" id="linkLinkedIn">
-              <div class="social-icon-box linkedin-box">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="#0A66C2">
-                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                </svg>
-              </div>
-              <span class="social-name">LinkedIn</span>
-              <span class="social-arrow">↗</span>
-            </a>
-
-            <!-- Facebook -->
-            <a href="https://facebook.com/muhiddinoktem" target="_blank" rel="noopener noreferrer" class="social-card-compact facebook" id="linkFacebook">
-              <div class="social-icon-box facebook-box">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2">
-                  <path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.667 5H18V0h-3.808C10.595 0 9 1.582 9 4.615V8z"/>
-                </svg>
-              </div>
-              <span class="social-name">Facebook</span>
-              <span class="social-arrow">↗</span>
-            </a>
-
-            <!-- Instagram -->
-            <a href="https://instagram.com/muhiddinoktem" target="_blank" rel="noopener noreferrer" class="social-card-compact instagram" id="linkInstagram">
-              <div class="social-icon-box instagram-box">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E1306C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                </svg>
-              </div>
-              <span class="social-name">Instagram</span>
-              <span class="social-arrow">↗</span>
-            </a>
+          <div class="social-grid compact-grid" id="cardSocialGrid">
+            <!-- Dinamik Olarak app.js Tarafından Doldurulur -->
           </div>
         </section>
 
@@ -590,8 +494,9 @@
               <select id="meetType">
                 <option value="Google Meet">Google Meet (Online)</option>
                 <option value="Zoom Meet">Zoom Meet (Online)</option>
-                <option value="Yüz Yüze">Yüz Yüze (Kağıthane Ofis)</option>
-                <option value="Müşteri Ofisi">Yüz Yüze (Müşteri Ofisi)</option>
+                <option value="Microsoft Teams">Microsoft Teams (Online)</option>
+                <option value="Bizim Ofis">Bizim Ofis</option>
+                <option value="Müşteri Ofisi">Müşteri Ofisi</option>
               </select>
             </div>
             <div class="form-row">
@@ -1009,6 +914,12 @@
           </div>
         </button>
 
+        <button class="admin-nav-item" data-admin-view="viewAdminIntegrations" id="navAdminIntegrations" title="Kurumsal Entegrasyonlar & API">
+          <div class="admin-nav-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>
+          </div>
+        </button>
+
         <button class="admin-nav-item" data-admin-view="viewAdminSettings" id="navAdminSettings" title="Ayarlar & Arayüz Yönetimi">
           <div class="admin-nav-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
@@ -1058,11 +969,37 @@
             <svg class="moon-icon hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
           </button>
 
-          <!-- Notification Bell -->
-          <button class="admin-icon-btn" id="btnAdminNotifications" title="Bildirimler">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-            <span class="notification-badge-dot"></span>
-          </button>
+          <!-- Notification Bell & Dropdown Wrapper -->
+          <div class="header-notification-wrapper" id="adminNotifWrapper">
+            <button class="admin-icon-btn" id="btnAdminNotifications" title="Bildirimler">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              <span class="notification-badge-dot" id="adminNotifBadgeDot"></span>
+            </button>
+            <div class="notifications-dropdown-menu hidden" id="adminNotificationsDropdown">
+              <div class="notif-header">
+                <div class="notif-title-wrap">
+                  <h4 class="notif-title">Bildirimler</h4>
+                  <span class="notif-badge" id="adminNotifUnreadBadge">3 Yeni</span>
+                </div>
+                <div class="notif-header-actions">
+                  <button type="button" class="notif-action-btn" id="btnAdminMarkAllRead" title="Tümünü Okundu İşaretle">Tümünü Oku</button>
+                  <button type="button" class="notif-action-btn" id="btnAdminClearNotifs" title="Bildirimleri Temizle" style="color:#94A3B8;">Temizle</button>
+                </div>
+              </div>
+              <div class="notif-filter-tabs" id="adminNotifTabs">
+                <button type="button" class="notif-tab-btn active" data-filter="all">Tümü</button>
+                <button type="button" class="notif-tab-btn" data-filter="meeting">Toplantılar</button>
+                <button type="button" class="notif-tab-btn" data-filter="lead">Müşteri / Lead</button>
+                <button type="button" class="notif-tab-btn" data-filter="system">Sistem</button>
+              </div>
+              <div class="notif-list-container" id="adminNotifListContainer">
+                <!-- Bildirimler dinamik render edilir -->
+              </div>
+              <div class="notif-footer">
+                <span style="font-size:11.5px; color:#94A3B8;">MonaCard Akıllı Bildirim &amp; Aktivite Merkezi</span>
+              </div>
+            </div>
+          </div>
 
           <!-- Admin Profile Pill -->
           <div class="admin-user-badge" id="adminUserBadgeTrigger">
@@ -1070,7 +1007,7 @@
               <img src="avatar_clean.png" alt="Admin Avatar" id="adminHeaderAvatar">
             </div>
             <div class="admin-user-info">
-              <span class="admin-user-name" id="adminHeaderName">Muhiddin Öktem</span>
+              <span class="admin-user-name" id="adminHeaderName">Yönetici</span>
               <span class="admin-user-role" id="adminHeaderRole">Firma Yöneticisi</span>
             </div>
           </div>
@@ -1088,13 +1025,14 @@
           <!-- Greeting Header -->
           <div class="admin-greeting-header">
             <div class="greeting-text-wrap">
-              <h1 class="greeting-title">Hoş geldin, <span id="adminGreetingName">Muhiddin</span> ! <span class="wave-emoji">👋</span></h1>
+              <h1 class="greeting-title">Hoş geldin, <span id="adminGreetingName">Yönetici</span> ! <span class="wave-emoji">👋</span></h1>
               <p class="greeting-subtitle">İşte şirketinizin ve ekibinizin bugünkü performans özeti.</p>
             </div>
-            <div class="greeting-badge-wrap">
-              <span class="admin-live-pulse-badge">
-                <span class="pulse-dot"></span> Canlı CRM &amp; Satış Akışı
-              </span>
+            <div class="greeting-badge-wrap" id="greetingBadgeWrap">
+              <button type="button" class="dash-integration-btn" id="btnDashIntegrations" title="Kurumsal Entegrasyonları Yapılandır">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>
+                <span>Entegrasyonlar</span>
+              </button>
             </div>
           </div>
 
@@ -1110,10 +1048,9 @@
                 </div>
               </div>
               <div class="stat-card-body">
-                <h3 class="stat-number" id="statHotCustomers">125</h3>
-                <div class="stat-trend positive">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"></polyline></svg>
-                  <span>12.5%</span>
+                <h3 class="stat-number" id="statHotCustomers">0</h3>
+                <div class="stat-trend" id="statHotTrend">
+                  <span id="statHotTrendPct">%0</span>
                   <span class="trend-label">vs geçen hafta</span>
                 </div>
               </div>
@@ -1133,10 +1070,9 @@
                 </div>
               </div>
               <div class="stat-card-body">
-                <h3 class="stat-number" id="statWarmCustomers">51</h3>
-                <div class="stat-trend positive">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"></polyline></svg>
-                  <span>14.2%</span>
+                <h3 class="stat-number" id="statWarmCustomers">0</h3>
+                <div class="stat-trend" id="statWarmTrend">
+                  <span id="statWarmTrendPct">%0</span>
                   <span class="trend-label">vs geçen hafta</span>
                 </div>
               </div>
@@ -1156,10 +1092,9 @@
                 </div>
               </div>
               <div class="stat-card-body">
-                <h3 class="stat-number" id="statNewLeads">104</h3>
-                <div class="stat-trend positive">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"></polyline></svg>
-                  <span>16.7%</span>
+                <h3 class="stat-number" id="statNewLeads">0</h3>
+                <div class="stat-trend" id="statNewLeadsTrend">
+                  <span id="statNewLeadsTrendPct">%0</span>
                   <span class="trend-label">vs geçen hafta</span>
                 </div>
               </div>
@@ -1179,10 +1114,9 @@
                 </div>
               </div>
               <div class="stat-card-body">
-                <h3 class="stat-number" id="statMonthMeetings">18</h3>
-                <div class="stat-trend positive">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"></polyline></svg>
-                  <span>5.5%</span>
+                <h3 class="stat-number" id="statMonthMeetings">0</h3>
+                <div class="stat-trend" id="statMonthMeetingsTrend">
+                  <span id="statMonthMeetingsTrendPct">%0</span>
                   <span class="trend-label">vs geçen ay</span>
                 </div>
               </div>
@@ -1200,14 +1134,13 @@
             
             <!-- Left Card: En İyi Performans Gösteren 3 Personel (Top 3 Performers) -->
             <div class="admin-chart-card top-performers-widget">
-              <div class="chart-card-header">
-                <div>
+              <div class="chart-card-header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+                <div style="flex: 1;">
                   <h3 class="chart-title">🏆 En İyi Performans Gösteren Personeller</h3>
                   <p class="chart-subtitle" style="font-size: 12px; color: var(--admin-text-sub, #64748B); margin-top: 2px;">En yüksek müşteri kazanımı ve sıcak görüşme performansına sahip ilk 3 ekip üyesi</p>
                 </div>
-                <button class="admin-link-btn" id="btnDashViewAllStaff" title="Tüm Personelleri Listele">
-                  <span>Tümünü Gör</span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                <button type="button" class="dash-card-add-btn" id="btnDashAddStaff" title="Yeni Personel Ekle" style="background: #00A86B !important; color: #FFFFFF !important; font-weight: 700 !important; font-size: 12.5px !important; padding: 6px 12px !important; padding-left: 12px !important; padding-right: 12px !important; border-radius: 10px !important; border: none !important; cursor: pointer !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 4px !important; box-shadow: 0 3px 10px rgba(0, 168, 107, 0.3) !important; flex: 0 0 auto !important; width: auto !important; max-width: max-content !important; height: auto !important; white-space: nowrap !important; margin-left: auto !important;">
+                  <span>+ Personel Ekle</span>
                 </button>
               </div>
               
@@ -1219,9 +1152,11 @@
 
             <!-- Right Chart: Donut Chart (Müşteri Durum Dağılımı - Sıcak, Ilık, Soğuk %100) -->
             <div class="admin-chart-card">
-              <div class="chart-card-header">
-                <h3 class="chart-title">Müşteri Durum Dağılımı</h3>
-                <span class="text-xs text-muted" id="donutTotalCountLabel">Toplam: 142 Kayıt</span>
+              <div class="chart-card-header" style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+                <h3 class="chart-title" style="flex: 1;">Müşteri Durum Dağılımı</h3>
+                <button type="button" class="dash-card-add-btn" id="btnDashAddCustomer" title="Yeni Müşteri Ekle" style="background: #00A86B !important; color: #FFFFFF !important; font-weight: 700 !important; font-size: 12.5px !important; padding: 6px 12px !important; padding-left: 12px !important; padding-right: 12px !important; border-radius: 10px !important; border: none !important; cursor: pointer !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 4px !important; box-shadow: 0 3px 10px rgba(0, 168, 107, 0.3) !important; flex: 0 0 auto !important; width: auto !important; max-width: max-content !important; height: auto !important; white-space: nowrap !important; margin-left: auto !important;">
+                  <span>+ Müşteri Ekle</span>
+                </button>
               </div>
               
               <div class="donut-chart-flex">
@@ -1234,7 +1169,7 @@
                     <circle cx="80" cy="80" r="58" fill="none" stroke="#3B82F6" stroke-width="24" stroke-dasharray="80 365" stroke-dashoffset="-285" class="donut-segment cold" id="donutSegCold" data-type="cold"/>
                   </svg>
                   <div class="donut-center-overlay" id="donutCenterOverlay">
-                    <span class="donut-center-val" id="donutHotPercent">45%</span>
+                    <span class="donut-center-val" id="donutHotPercent">0%</span>
                     <span class="donut-center-sub" id="donutCenterSub">🔥 Sıcak</span>
                   </div>
                 </div>
@@ -1243,17 +1178,17 @@
                   <div class="donut-legend-item active" id="donutLegendHot" data-type="hot" title="Sıcak Müşteri Verilerini Göster">
                     <span class="legend-bullet red"></span>
                     <span class="legend-name">🔥 Sıcak Müşteri</span>
-                    <span class="legend-val font-mono" id="legendHotVal">45% (66)</span>
+                    <span class="legend-val font-mono" id="legendHotVal">0% (0)</span>
                   </div>
                   <div class="donut-legend-item" id="donutLegendWarm" data-type="warm" title="Ilık Müşteri Verilerini Göster">
                     <span class="legend-bullet yellow"></span>
                     <span class="legend-name">⚡ Ilık Müşteri</span>
-                    <span class="legend-val font-mono" id="legendWarmVal">35% (51)</span>
+                    <span class="legend-val font-mono" id="legendWarmVal">0% (0)</span>
                   </div>
                   <div class="donut-legend-item" id="donutLegendCold" data-type="cold" title="Soğuk Müşteri Verilerini Göster">
                     <span class="legend-bullet blue"></span>
                     <span class="legend-name">❄️ Soğuk Müşteri</span>
-                    <span class="legend-val font-mono" id="legendColdVal">20% (33)</span>
+                    <span class="legend-val font-mono" id="legendColdVal">0% (0)</span>
                   </div>
                 </div>
               </div>
@@ -1266,44 +1201,16 @@
             
             <!-- Header with Month Navigation -->
             <div class="weekly-timeline-header">
-              <button class="week-nav-btn" id="btnWeeklyPrevMonth" title="Önceki Ay">&lt; Ağustos</button>
-              <h3 class="weekly-timeline-title" id="weeklyTimelineTitle">Eylül 2026</h3>
-              <button class="week-nav-btn" id="btnWeeklyNextMonth" title="Sonraki Ay">Ekim &gt;</button>
+              <button class="week-nav-btn" id="btnWeeklyPrevMonth" title="Önceki Ay">&lt; Eylül</button>
+              <h3 class="weekly-timeline-title" id="weeklyTimelineTitle">Ekim 2026</h3>
+              <button class="week-nav-btn" id="btnWeeklyNextMonth" title="Sonraki Ay">Kasım &gt;</button>
             </div>
 
             <!-- Scrollable Timeline Canvas & Days Row -->
             <div class="weekly-timeline-scroll-wrap">
-              <!-- Days of Week Header Row (7 Günlük Çizelge) -->
-              <div class="weekly-days-row">
-                <div class="weekly-time-col-spacer"></div>
-                <div class="weekly-day-item" data-day="22">
-                  <span class="weekly-day-name">Pzt</span>
-                  <span class="weekly-day-num">22</span>
-                </div>
-                <div class="weekly-day-item" data-day="23">
-                  <span class="weekly-day-name">Sal</span>
-                  <span class="weekly-day-num">23</span>
-                </div>
-                <div class="weekly-day-item active" data-day="24">
-                  <span class="weekly-day-name">Çar</span>
-                  <span class="weekly-day-num">24</span>
-                </div>
-                <div class="weekly-day-item" data-day="25">
-                  <span class="weekly-day-name">Per</span>
-                  <span class="weekly-day-num">25</span>
-                </div>
-                <div class="weekly-day-item" data-day="26">
-                  <span class="weekly-day-name">Cum</span>
-                  <span class="weekly-day-num">26</span>
-                </div>
-                <div class="weekly-day-item" data-day="27">
-                  <span class="weekly-day-name">Cmt</span>
-                  <span class="weekly-day-num">27</span>
-                </div>
-                <div class="weekly-day-item" data-day="28">
-                  <span class="weekly-day-name">Paz</span>
-                  <span class="weekly-day-num">28</span>
-                </div>
+              <!-- Days of Week Header Row (7 Günlük Dinamik Çizelge) -->
+              <div class="weekly-days-row" id="weeklyDaysRow">
+                <!-- Dinamik olarak JS tarafından doldurulur -->
               </div>
 
               <!-- Timeline Grid Canvas -->
@@ -1322,99 +1229,29 @@
                 <div class="weekly-grid-body" id="weeklyTimelineGridBody">
                   
                   <!-- 7 Day Background Columns -->
-                  <div class="weekly-grid-columns-bg">
-                    <div class="weekly-bg-col"></div>
-                    <div class="weekly-bg-col"></div>
-                    <div class="weekly-bg-col active"></div>
-                    <div class="weekly-bg-col"></div>
-                    <div class="weekly-bg-col"></div>
-                    <div class="weekly-bg-col"></div>
-                    <div class="weekly-bg-col"></div>
+                  <div class="weekly-grid-columns-bg" id="weeklyGridColumnsBg">
+                    <div class="weekly-grid-col"></div>
+                    <div class="weekly-grid-col"></div>
+                    <div class="weekly-grid-col active"></div>
+                    <div class="weekly-grid-col"></div>
+                    <div class="weekly-grid-col"></div>
+                    <div class="weekly-grid-col"></div>
+                    <div class="weekly-grid-col"></div>
                   </div>
 
                   <!-- 6 Horizontal Hour Lines -->
                   <div class="weekly-grid-lines">
-                    <div class="weekly-hour-line"></div>
-                    <div class="weekly-hour-line"></div>
-                    <div class="weekly-hour-line"></div>
-                    <div class="weekly-hour-line"></div>
-                    <div class="weekly-hour-line"></div>
-                    <div class="weekly-hour-line"></div>
+                    <div class="weekly-grid-line"></div>
+                    <div class="weekly-grid-line"></div>
+                    <div class="weekly-grid-line"></div>
+                    <div class="weekly-grid-line"></div>
+                    <div class="weekly-grid-line"></div>
+                    <div class="weekly-grid-line"></div>
                   </div>
 
-                  <!-- Interactive Event Card 1: Peoplexio Sprint Meeting -->
-                  <div class="weekly-event-card purple" style="left: 2%; width: 52%; top: 12px; height: 68px;" onclick="window.openMeetingDetail(0)">
-                    <div class="weekly-event-pill-top">
-                      <span class="weekly-event-type meet" title="Google Meet">
-                        <svg class="weekly-platform-icon meet-icon" width="18" height="18" viewBox="0 0 48 48" fill="none">
-                          <path d="M42 14.5L34 20.5V13C34 11.3431 32.6569 10 31 10H7C5.34315 10 4 11.3431 4 13V35C4 36.6569 5.34315 38 7 38H31C32.6569 38 34 36.6569 34 35V27.5L42 33.5C43.1046 34.3284 44 33.8807 44 32.5V15.5C44 14.1193 43.1046 13.6716 42 14.5Z" fill="#00832D"/>
-                          <path d="M34 27.5V35C34 36.6569 32.6569 38 31 38H7C5.34315 38 4 36.6569 4 35V30L19 22L34 27.5Z" fill="#0066DA"/>
-                          <path d="M4 17L19 25L34 19.5V13C34 11.3431 32.6569 10 31 10H7C5.34315 10 4 11.3431 4 13V17Z" fill="#E53935"/>
-                          <path d="M4 17V30L19 23.5L4 17Z" fill="#FBBC04"/>
-                          <path d="M34 20.5L42 14.5C43.1046 13.6716 44 14.1193 44 15.5V32.5C44 33.8807 43.1046 34.3284 42 33.5L34 27.5V20.5Z" fill="#00AC47"/>
-                        </svg>
-                        <span class="weekly-event-type-name">Google Meet</span>
-                      </span>
-                      <span class="weekly-event-time">09:30 - 10:45</span>
-                    </div>
-                    <div class="weekly-event-text">
-                      <h4 class="weekly-event-title">MonaCard SaaS &amp; CRM Sprint Planlaması</h4>
-                      <p class="weekly-event-desc">👤 Muhiddin, Zeynep &amp; 3 kişi</p>
-                    </div>
-                    <div class="weekly-avatar-stack">
-                      <img src="avatar_clean.png" alt="Muhiddin" class="stack-avatar">
-                      <div class="stack-avatar initial" style="background:#5B4FEB;">ZA</div>
-                      <span class="stack-badge purple">+2</span>
-                    </div>
-                  </div>
-
-                  <!-- Interactive Event Card 2: Müşteri Satış Sunumu -->
-                  <div class="weekly-event-card amber" style="left: 44%; width: 54%; top: 105px; height: 68px;" onclick="window.openMeetingDetail(1)">
-                    <div class="weekly-event-pill-top">
-                      <span class="weekly-event-type zoom" title="Zoom Meet">
-                        <svg class="weekly-platform-icon zoom-icon" width="18" height="18" viewBox="0 0 48 48" fill="none">
-                          <rect width="48" height="48" rx="12" fill="#2D8CFF"/>
-                          <path d="M12 18C12 16.3431 13.3431 15 15 15H26C27.6569 15 29 16.3431 29 18V30C29 31.6569 27.6569 33 26 33H15C13.3431 33 12 31.6569 12 30V18Z" fill="white"/>
-                          <path d="M30.5 21.2L36 17.5C36.6 17.1 37.5 17.5 37.5 18.3V29.7C37.5 30.5 36.6 30.9 36 30.5L30.5 26.8V21.2Z" fill="white"/>
-                        </svg>
-                        <span class="weekly-event-type-name">Zoom Meet</span>
-                      </span>
-                      <span class="weekly-event-time">11:30 - 12:30</span>
-                    </div>
-                    <div class="weekly-event-text">
-                      <h4 class="weekly-event-title">TechPlus Kurumsal Sunum</h4>
-                      <p class="weekly-event-desc">Ali Rıza &amp; Kemal Yılmaz</p>
-                    </div>
-                    <div class="weekly-avatar-stack">
-                      <div class="stack-avatar initial" style="background:#F59E0B;">AR</div>
-                      <div class="stack-avatar initial" style="background:#10B981;">KY</div>
-                    </div>
-                  </div>
-
-                  <!-- Meeting Block 3: VIP Kurumsal Değerlendirme (Mavi Kart) -->
-                  <div class="weekly-event-card blue" style="left: 16%; width: 50%; top: 195px; height: 68px;" onclick="window.openMeetingDetail(2)">
-                    <div class="weekly-event-pill-top">
-                      <span class="weekly-event-type meet" title="Google Meet">
-                        <svg class="weekly-platform-icon meet-icon" width="18" height="18" viewBox="0 0 48 48" fill="none">
-                          <path d="M42 14.5L34 20.5V13C34 11.3431 32.6569 10 31 10H7C5.34315 10 4 11.3431 4 13V35C4 36.6569 5.34315 38 7 38H31C32.6569 38 34 36.6569 34 35V27.5L42 33.5C43.1046 34.3284 44 33.8807 44 32.5V15.5C44 14.1193 43.1046 13.6716 42 14.5Z" fill="#00832D"/>
-                          <path d="M34 27.5V35C34 36.6569 32.6569 38 31 38H7C5.34315 38 4 36.6569 4 35V30L19 22L34 27.5Z" fill="#0066DA"/>
-                          <path d="M4 17L19 25L34 19.5V13C34 11.3431 32.6569 10 31 10H7C5.34315 10 4 11.3431 4 13V17Z" fill="#E53935"/>
-                          <path d="M4 17V30L19 23.5L4 17Z" fill="#FBBC04"/>
-                          <path d="M34 20.5L42 14.5C43.1046 13.6716 44 14.1193 44 15.5V32.5C44 33.8807 43.1046 34.3284 42 33.5L34 27.5V20.5Z" fill="#00AC47"/>
-                        </svg>
-                        <span class="weekly-event-type-name">Google Meet</span>
-                      </span>
-                      <span class="weekly-event-time">14:00 - 15:00</span>
-                    </div>
-                    <div class="weekly-event-text">
-                      <h4 class="weekly-event-title">VIP Kurumsal Çözüm &amp; Demo</h4>
-                      <p class="weekly-event-desc">TechPlus Bilişim &amp; Demo</p>
-                    </div>
-                    <div class="weekly-avatar-stack">
-                      <img src="avatar_clean.png" alt="Muhiddin" class="stack-avatar">
-                      <div class="stack-avatar initial" style="background:#2563EB;">KY</div>
-                      <span class="stack-badge blue">+1</span>
-                    </div>
+                  <!-- Dynamic Event Cards Layer -->
+                  <div class="weekly-events-layer" id="weeklyEventsLayer">
+                    <!-- Dinamik olarak JS tarafından doldurulur -->
                   </div>
 
                 </div>
@@ -2013,6 +1850,7 @@
               <div class="gcal-legend">
                 <span class="gcal-legend-dot meet"></span><span>Google Meet</span>
                 <span class="gcal-legend-dot zoom"></span><span>Zoom Meet</span>
+                <span class="gcal-legend-dot teams"></span><span>MS Teams</span>
                 <span class="gcal-legend-dot inperson"></span><span>Yüz Yüze</span>
               </div>
             </div>
@@ -2211,7 +2049,7 @@
                   </label>
                 </div>
 
-                <!-- Toggle 4: Sosyal Ağlar & İletişim -->
+                <!-- Toggle 4: Sosyal Medya & İletişim -->
                 <div class="settings-toggle-row">
                   <div class="toggle-info">
                     <strong>Sosyal Medya &amp; İletişim Kanalları</strong>
@@ -2250,7 +2088,29 @@
               </div>
             </div>
 
-            <!-- SECTION 3: KURUMSAL ENTEGRASYONLAR (Google, Zoom, HubSpot, Salesforce) -->
+          </div>
+
+        </section>
+
+        <!-- =======================================================
+             ADMIN SAYFA 5: KURUMSAL ENTEGRASYONLAR & API YÖNETİMİ
+             ======================================================= -->
+        <section class="admin-view" id="viewAdminIntegrations">
+          
+          <div class="admin-view-header">
+            <div>
+              <h2 class="admin-view-title">Kurumsal Entegrasyonlar &amp; API Yönetimi</h2>
+              <p class="admin-view-subtitle">Google Workspace, Zoom Video Konferans, HubSpot CRM ve Salesforce Cloud bağlantılarınızı yapılandırın ve otomatik senkronizasyon kurallarını belirleyin.</p>
+            </div>
+            <button type="button" class="dash-integration-btn" style="pointer-events: none; opacity: 0.95;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>
+              <span>Entegrasyon Merkezi</span>
+            </button>
+          </div>
+
+          <div class="admin-settings-layout mb-4">
+            
+            <!-- SECTION: KURUMSAL ENTEGRASYONLAR (Google, Zoom, HubSpot, Salesforce) -->
             <div class="admin-settings-card full-width-card" id="integrationsSettingsCard">
               <div class="settings-card-header">
                 <div class="settings-header-icon bg-blue-subtle">
@@ -2280,9 +2140,17 @@
                   <span class="integ-pill-badge active" id="badgeZoomStatus">Aktif</span>
                 </button>
 
+                <button type="button" class="integration-tab-btn" data-integ-tab="integTeams">
+                  <div class="integ-tab-icon teams-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#505AC9" d="M19.5 7.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm1.5 2h-3a1.5 1.5 0 0 0-1.5 1.5V15a1 1 0 0 0 1 1h3.5a1.5 1.5 0 0 0 1.5-1.5V11a1.5 1.5 0 0 0-1.5-1.5z"/><path fill="#7B83EB" d="M14.5 6a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm2 2.5h-4a2 2 0 0 0-2 2V18a1.5 1.5 0 0 0 1.5 1.5H16a2 2 0 0 0 2-2V10.5a2 2 0 0 0-1.5-2z"/><rect x="2" y="10" width="8" height="11" rx="2" fill="#4B53BC"/><path d="M4.5 13.5h3v1.5h-1v4h-1v-4h-1v-1.5z" fill="#FFFFFF"/></svg>
+                  </div>
+                  <span>Microsoft Teams</span>
+                  <span class="integ-pill-badge active" id="badgeTeamsStatus">Aktif</span>
+                </button>
+
                 <button type="button" class="integration-tab-btn" data-integ-tab="integHubspot">
                   <div class="integ-tab-icon hubspot-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#FF7A59"><path d="M18.8 9.2V6.4c.7-.4 1.2-1.2 1.2-2.1 0-1.3-1.1-2.4-2.4-2.4s-2.4 1.1-2.4 2.4c0 .9.5 1.7 1.2 2.1v2.8c-1.2.5-2.2 1.4-2.8 2.6L8.5 8.3c.1-.3.1-.7.1-1 0-1.7-1.4-3.1-3.1-3.1S2.4 5.6 2.4 7.3s1.4 3.1 3.1 3.1c.4 0 .7-.1 1.1-.2l5.1 5.8c-1 1.4-1.2 3.3-.3 4.9 1 1.8 3.1 2.7 5.1 2.2 2-.5 3.4-2.3 3.4-4.4 0-1.7-.9-3.2-2.4-4v-3.7c1.3-.4 2.2-1.6 2.2-3 0-1.8-1.4-3.2-3.2-3.2z"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#FF7A59"><path d="M18.8 9.2V6.4c.7-.4 1.2-1.2 1.2-2.1 0-1.3-1.1-2.4-2.4-2.4s-2.4 1.1-2.4 2.4c0 .9.5 1.7 1.2 2.1v2.8c-1.2.5-2.2 1.4-2.8 2.6L8.5 8.3c.1-.3.1-.7.1-1 0-1.7-1.4-3.1-3.1S2.4 5.6 2.4 7.3s1.4 3.1 3.1 3.1c.4 0 .7-.1 1.1-.2l5.1 5.8c-1 1.4-1.2 3.3-.3 4.9 1 1.8 3.1 2.7 5.1 2.2 2-.5 3.4-2.3 3.4-4.4 0-1.7-.9-3.2-2.4-4v-3.7c1.3-.4 2.2-1.6 2.2-3 0-1.8-1.4-3.2-3.2-3.2z"/></svg>
                   </div>
                   <span>HubSpot CRM</span>
                   <span class="integ-pill-badge active" id="badgeHubspotStatus">Senkronize</span>
@@ -2423,7 +2291,89 @@
                   </div>
                 </div>
 
-                <!-- 3. HUBSPOT CRM INTEGRATION PANEL -->
+                <!-- 3. MICROSOFT TEAMS INTEGRATION PANEL -->
+                <div class="integration-panel" id="integTeams">
+                  <div class="integ-status-card">
+                    <div class="integ-status-left">
+                      <div class="integ-service-avatar teams-bg">T</div>
+                      <div>
+                        <div class="integ-status-title">
+                          <strong>Microsoft 365 &amp; Teams Video Konferans API</strong>
+                          <span class="status-badge active"><span class="pulse-dot"></span>Aktif</span>
+                        </div>
+                        <p class="integ-status-meta">Bağlı Organizasyon: <strong>vedubox.onmicrosoft.com</strong> &bull; Graph API Durumu: 200 OK</p>
+                      </div>
+                    </div>
+                    <button type="button" class="integ-card-action-btn" id="btnTestTeams" onclick="window.testIntegration('teams')">🔄 Bağlantıyı Test Et</button>
+                  </div>
+
+                  <div class="styled-form mt-4">
+                    <div class="settings-toggle-row mb-3">
+                      <div class="toggle-info">
+                        <strong>Otomatik Microsoft Teams Toplantı Linki Üretimi</strong>
+                        <p>Toplantı ortamı "Microsoft Teams" seçildiğinde davetlilere özel güvenli video konferans bağlantısı (joinWebUrl) ve lobi erişim kodu oluşturur.</p>
+                      </div>
+                      <label class="switch">
+                        <input type="checkbox" id="integTeamsAutoMeeting" checked>
+                        <span class="slider round"></span>
+                      </label>
+                    </div>
+
+                    <div class="settings-toggle-row mb-3">
+                      <div class="toggle-info">
+                        <strong>Outlook &amp; Microsoft 365 Takvim Senkronizasyonu</strong>
+                        <p>MonaCard randevularını ve görüşme takvimini Microsoft 365 Outlook ajandanızla çift yönlü senkronize eder.</p>
+                      </div>
+                      <label class="switch">
+                        <input type="checkbox" id="integTeamsCalendarSync" checked>
+                        <span class="slider round"></span>
+                      </label>
+                    </div>
+
+                    <div class="settings-toggle-row mb-3">
+                      <div class="toggle-info">
+                        <strong>Teams Kanalı Bildirim Webhook'u</strong>
+                        <p>Yeni müşteri kartı oluşturulduğunda veya randevu alındığında kurumsal Teams kanalına anlık bildirim kartı gönderir.</p>
+                      </div>
+                      <label class="switch">
+                        <input type="checkbox" id="integTeamsChannelNotify" checked>
+                        <span class="slider round"></span>
+                      </label>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label for="integTeamsTenantId">Microsoft Azure AD Directory (Tenant) ID</label>
+                        <input type="text" id="integTeamsTenantId" value="72f988bf-86f1-41af-91ab-2d7cd011db47" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+                        <small class="form-help-text">Azure Portal &gt; Entra ID Genel Bakış (Tenant ID) anahtarı.</small>
+                      </div>
+                      <div class="form-group">
+                        <label for="integTeamsClientId">Microsoft Entra Application (Client) ID</label>
+                        <input type="text" id="integTeamsClientId" value="9a8b7c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4d" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+                        <small class="form-help-text">App Registration uygulamanızın İstemci (Client) Kimliği.</small>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label for="integTeamsClientSecret">Client Secret (İstemci Parolası)</label>
+                        <input type="password" id="integTeamsClientSecret" value="ms_secret_984129841029384" placeholder="Client Secret Değeri">
+                      </div>
+                      <div class="form-group">
+                        <label for="integTeamsWebhookUrl">Teams Kanalı Incoming Webhook URL</label>
+                        <input type="url" id="integTeamsWebhookUrl" value="https://vedubox.webhook.office.com/webhookb2/teams-meeting-leads" placeholder="https://outlook.office.com/webhook/...">
+                      </div>
+                    </div>
+
+                    <div class="integ-action-bar">
+                      <button type="button" class="admin-btn-primary btn-sm" onclick="window.testIntegration('teams')">
+                        <span>⚡ Microsoft Teams Bağlantısını Test Et &amp; Eşitle</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 4. HUBSPOT CRM INTEGRATION PANEL -->
                 <div class="integration-panel" id="integHubspot">
                   <div class="integ-status-card">
                     <div class="integ-status-left">
@@ -2619,50 +2569,55 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label for="adminCompName">Firma / Şirket Adı *</label>
-                    <input type="text" id="adminCompName" value="Vedubox Bilişim &amp; Eğitim Teknolojileri" required>
+                    <input type="text" id="adminCompName" value="{{ $company->name ?? '' }}" placeholder="Firma Adı" required>
                   </div>
                   <div class="form-group">
-                    <label for="adminCompSector">Sektör *</label>
-                    <input type="text" id="adminCompSector" value="Eğitim Teknolojileri &amp; SaaS Yazılım" required>
+                    <label for="adminCompSector">Sektör</label>
+                    <input type="text" id="adminCompSector" value="{{ $company->sector ?? '' }}" placeholder="Örn: Bilişim &amp; Yazılım">
                   </div>
                 </div>
 
                 <div class="form-row">
                   <div class="form-group">
                     <label for="adminCompWebsite">Kurumsal Web Sitesi</label>
-                    <input type="url" id="adminCompWebsite" value="https://vedubox.com" placeholder="https://vedubox.com">
+                    <input type="url" id="adminCompWebsite" value="{{ $company->website ?? '' }}" placeholder="https://firmaniz.com">
                   </div>
                   <div class="form-group">
                     <label for="adminCompEmail">Yönetici E-Posta *</label>
-                    <input type="email" id="adminCompEmail" value="muhiddinoktem@vedubox.com" required>
+                    <input type="email" id="adminCompEmail" value="{{ $currentUser->email ?? ($company->email ?? '') }}" placeholder="yonetici@firmaniz.com" required>
                   </div>
                 </div>
 
                 <div class="form-row">
                   <div class="form-group">
                     <label for="adminManagerName">Yönetici Adı Soyadı *</label>
-                    <input type="text" id="adminManagerName" value="Muhiddin Öktem" required>
+                    <input type="text" id="adminManagerName" value="{{ $currentUser->name ?? ($company->ceo_name ?? '') }}" placeholder="Yönetici Adı Soyadı" required>
                   </div>
                   <div class="form-group">
-                    <label for="adminManagerTitle">Yönetici Pozisyonu / Ünvanı *</label>
-                    <input type="text" id="adminManagerTitle" value="Genel Müdür / CEO" required>
+                    <label for="adminManagerTitle">Yönetici Pozisyonu / Ünvanı</label>
+                    <input type="text" id="adminManagerTitle" value="{{ $currentUser->title ?? ($company->ceo_title ?? '') }}" placeholder="Örn: Kurucu &amp; Genel Müdür">
                   </div>
                 </div>
 
                 <div class="form-row">
                   <div class="form-group">
-                    <label for="adminCompPhone">Yönetici / 1. İletişim Telefonu *</label>
-                    <input type="tel" id="adminCompPhone" value="+90 536 255 64 24" placeholder="+90 536 255 64 24" required>
+                    <label for="adminCompPhone">Yönetici / 1. İletişim Telefonu</label>
+                    <input type="tel" id="adminCompPhone" value="{{ $currentUser->phone ?? ($company->phone ?? '') }}" placeholder="+90 5XX XXX XX XX">
                   </div>
                   <div class="form-group">
                     <label for="adminCompPhone2">2. İletişim / Sabit Telefon</label>
-                    <input type="tel" id="adminCompPhone2" value="+90 212 900 00 00" placeholder="+90 212 000 00 00">
+                    <input type="tel" id="adminCompPhone2" value="{{ $company->phone2 ?? '' }}" placeholder="+90 212 XXX XX XX">
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label for="adminCompAddress">Firma Merkez Adresi</label>
-                  <textarea id="adminCompAddress" rows="2">Dalgıç Sk. Yeşilce Mh. No 3 Kağıthane / İstanbul</textarea>
+                  <textarea id="adminCompAddress" rows="2" placeholder="Firma açık adresi...">{{ $company->address ?? '' }}</textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="adminCompAddress2">2. Adres / Şube Adresi</label>
+                  <textarea id="adminCompAddress2" rows="2" placeholder="Şube veya 2. firma açık adresi...">{{ $company->address2 ?? '' }}</textarea>
                 </div>
               </form>
             </div>
@@ -2683,39 +2638,45 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label for="adminSocialWhatsapp">Kurumsal WhatsApp</label>
-                    <input type="text" id="adminSocialWhatsapp" value="905362556424" placeholder="905362556424">
+                    <input type="text" id="adminSocialWhatsapp" value="{{ $company->social_links['whatsapp'] ?? '' }}" placeholder="905xxxxxxxxx">
                   </div>
                   <div class="form-group">
                     <label for="adminSocialLinkedin">Kurumsal LinkedIn</label>
-                    <input type="text" id="adminSocialLinkedin" value="muhiddinoktem" placeholder="muhiddinoktem">
+                    <input type="text" id="adminSocialLinkedin" value="{{ $company->social_links['linkedin'] ?? '' }}" placeholder="linkedin-profil-adi">
                   </div>
                 </div>
 
                 <div class="form-row">
                   <div class="form-group">
                     <label for="adminSocialInstagram">Kurumsal Instagram</label>
-                    <input type="text" id="adminSocialInstagram" value="muhiddinoktem" placeholder="muhiddinoktem">
+                    <input type="text" id="adminSocialInstagram" value="{{ $company->social_links['instagram'] ?? '' }}" placeholder="instagram-profil-adi">
                   </div>
                   <div class="form-group">
                     <label for="adminSocialTwitter">Kurumsal X (Twitter)</label>
-                    <input type="text" id="adminSocialTwitter" value="muhiddinoktem" placeholder="muhiddinoktem">
+                    <input type="text" id="adminSocialTwitter" value="{{ $company->social_links['twitter'] ?? '' }}" placeholder="x-kullanici-adi">
                   </div>
                 </div>
 
                 <div class="form-row">
                   <div class="form-group">
                     <label for="adminSocialTelegram">Kurumsal Telegram</label>
-                    <input type="text" id="adminSocialTelegram" value="muhiddinoktem" placeholder="muhiddinoktem">
+                    <input type="text" id="adminSocialTelegram" value="{{ $company->social_links['telegram'] ?? '' }}" placeholder="telegram-kullanici-adi">
                   </div>
                   <div class="form-group">
                     <label for="adminSocialFacebook">Kurumsal Facebook</label>
-                    <input type="text" id="adminSocialFacebook" value="muhiddinoktem" placeholder="muhiddinoktem">
+                    <input type="text" id="adminSocialFacebook" value="{{ $company->social_links['facebook'] ?? '' }}" placeholder="facebook-sayfa-adi">
                   </div>
                 </div>
 
-                <div class="form-group">
-                  <label for="adminSocialYoutube">Kurumsal YouTube</label>
-                  <input type="text" id="adminSocialYoutube" value="vedubox" placeholder="vedubox">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="adminSocialYoutube">Kurumsal YouTube</label>
+                    <input type="text" id="adminSocialYoutube" value="{{ $company->social_links['youtube'] ?? '' }}" placeholder="youtube-kanali">
+                  </div>
+                  <div class="form-group">
+                    <label for="adminSocialTiktok">Kurumsal TikTok</label>
+                    <input type="text" id="adminSocialTiktok" value="{{ $company->social_links['tiktok'] ?? '' }}" placeholder="tiktok-kullanici-adi">
+                  </div>
                 </div>
               </form>
             </div>
@@ -2737,7 +2698,7 @@
 
               <button type="button" class="admin-btn-primary" id="btnAdminAddProduct" style="font-size:12.5px; height:38px; padding:0 14px;">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                <span>+ Yeni Marka / Ürün Ekle</span>
+                <span>Yeni Marka / Ürün Ekle</span>
               </button>
             </div>
 
@@ -2847,11 +2808,30 @@
             <svg class="moon-icon hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
           </button>
 
-          <!-- Notification Bell -->
-          <button class="super-icon-btn" id="btnSuperNotifications" title="Demo Bildirimleri">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-            <span class="super-notification-badge-dot"></span>
-          </button>
+          <!-- Super Admin Notification Bell & Dropdown Wrapper -->
+          <div class="header-notification-wrapper" id="superNotifWrapper">
+            <button class="super-icon-btn" id="btnSuperNotifications" title="Demo Bildirimleri">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              <span class="super-notification-badge-dot" id="superNotifBadgeDot"></span>
+            </button>
+            <div class="notifications-dropdown-menu hidden" id="superNotificationsDropdown">
+              <div class="notif-header">
+                <div class="notif-title-wrap">
+                  <h4 class="notif-title">SaaS &amp; Demo Bildirimleri</h4>
+                  <span class="notif-badge" id="superNotifUnreadBadge">2 Yeni</span>
+                </div>
+                <div class="notif-header-actions">
+                  <button type="button" class="notif-action-btn" id="btnSuperMarkAllRead">Tümünü Oku</button>
+                </div>
+              </div>
+              <div class="notif-list-container" id="superNotifListContainer">
+                <!-- Bildirimler dinamik render edilir -->
+              </div>
+              <div class="notif-footer">
+                <span style="font-size:11.5px; color:#94A3B8;">MonaCard Global SaaS Akışı</span>
+              </div>
+            </div>
+          </div>
 
           <!-- Super Admin Profile Pill -->
           <div class="super-user-badge">
@@ -2884,7 +2864,7 @@
             <div class="super-quick-actions-row">
               <button class="super-btn-primary" id="btnDashNewCompany">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                <span>+ Yeni Firma Ekle</span>
+                <span>Yeni Firma Ekle</span>
               </button>
               <button class="super-btn-outline" id="btnDashViewDemos">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
@@ -3028,7 +3008,7 @@
             </div>
             <button class="super-btn-primary" id="btnOpenAddCompanyModal">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              <span>+ Yeni Firma Oluştur</span>
+              <span>Yeni Firma Oluştur</span>
             </button>
           </div>
 
@@ -3650,12 +3630,270 @@
 
   <!-- =========================================================
        ADMIN MODALLAR:
-       1. Yeni Personel / Lider Ekleme & Düzenleme Modalı
+       0. Personel Ekleme Yöntemi Seçim Modalı (3 Seçenekli Şık Açılır Kart)
+       0.1 Davet Linki & QR Modalı
+       0.2 Excel / CSV ile Toplu Yükleme Modalı
+       1. Yeni Personel / Lider Ekleme & Düzenleme Modalı (Manuel Form)
        2. Personel Performans Detay Modalı
        3. Yönetici Özel Toplantı Ekleme Modalı
        ========================================================= -->
 
-  <!-- 1. Personel Ekle / Düzenle / Lider Ata Modalı -->
+  <!-- 0. Personel Ekleme Yöntemi Seçim Modalı (3 Seçenekli Şık Açılır Kart) -->
+  <div class="modal-overlay" id="adminStaffAddChoiceModal" role="dialog" aria-modal="true" aria-labelledby="staffChoiceModalTitle">
+    <div class="modal-container staff-choice-modal-container">
+      <div class="modal-header">
+        <div>
+          <div class="staff-choice-header-badge">
+            <span>✨ Zahmetsiz &amp; Hızlı Onboarding</span>
+          </div>
+          <h3 class="modal-title" id="staffChoiceModalTitle">Personel Ekleme Yöntemini Seçin</h3>
+          <p class="modal-subtitle">Ekibinizi MonaCard sistemine dahil etmek için size en uygun yöntemi belirleyin.</p>
+        </div>
+        <button class="modal-close-btn" data-close="adminStaffAddChoiceModal">&times;</button>
+      </div>
+
+      <div class="modal-body staff-choice-modal-body">
+        <div class="staff-choice-cards-grid">
+          
+          <!-- Seçenek 1: Davet Bağlantısı & QR ile Kayıt -->
+          <div class="staff-choice-card" id="btnChoiceInviteLink" role="button" tabindex="0">
+            <div class="staff-choice-card-inner">
+              <div class="staff-choice-badge badge-purple">
+                <span>🚀 En Kolay &amp; Otomatik</span>
+              </div>
+              <div class="staff-choice-icon-wrap icon-purple">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                </svg>
+              </div>
+              <h4 class="staff-choice-title">Davet Linki &amp; QR ile Paylaş</h4>
+              <p class="staff-choice-desc">
+                WhatsApp, Slack, Teams veya E-posta grubunuzda tek tıkla paylaşın. Personeller kendi bilgilerini, fotoğraflarını ve şifrelerini saniyeler içinde kendileri doldursun.
+              </p>
+              <div class="staff-choice-footer">
+                <span class="staff-choice-action-btn btn-purple-soft">
+                  <span>Davet Et &amp; Paylaş</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seçenek 2: Excel / CSV ile Toplu Yükleme -->
+          <div class="staff-choice-card" id="btnChoiceExcelImport" role="button" tabindex="0">
+            <div class="staff-choice-card-inner">
+              <div class="staff-choice-badge badge-emerald">
+                <span>📊 Toplu Ekipler İçin</span>
+              </div>
+              <div class="staff-choice-icon-wrap icon-emerald">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="8" y1="13" x2="16" y2="13"></line>
+                  <line x1="8" y1="17" x2="16" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </div>
+              <h4 class="staff-choice-title">Excel / CSV ile Toplu Yükle</h4>
+              <p class="staff-choice-desc">
+                Hazır Excel şablonunu indirin, personel listenizi yapıştırıp tek tıkla yükleyin. Onlarca personel anında sisteme kaydedilsin.
+              </p>
+              <div class="staff-choice-footer">
+                <span class="staff-choice-action-btn btn-emerald-soft">
+                  <span>Excel Yükle</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seçenek 3: Tek Tek Manuel Form ile Ekle -->
+          <div class="staff-choice-card" id="btnChoiceSingleManual" role="button" tabindex="0">
+            <div class="staff-choice-card-inner">
+              <div class="staff-choice-badge badge-blue">
+                <span>✍️ Hızlı Tekil Kayıt</span>
+              </div>
+              <div class="staff-choice-icon-wrap icon-blue">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="8.5" cy="7" r="4"></circle>
+                  <line x1="20" y1="8" x2="20" y2="14"></line>
+                  <line x1="23" y1="11" x2="17" y2="11"></line>
+                </svg>
+              </div>
+              <h4 class="staff-choice-title">Manuel Form ile Ekle</h4>
+              <p class="staff-choice-desc">
+                Tek bir personeli veya takım liderini doğrudan yönetici panelinden bilgilerini, ünvanını ve satış hedefini girerek ekleyin.
+              </p>
+              <div class="staff-choice-footer">
+                <span class="staff-choice-action-btn btn-blue-soft">
+                  <span>Manuel Formu Aç</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 0.1 Davet Linki & QR Modalı -->
+  <div class="modal-overlay" id="modalStaffInviteLink" role="dialog" aria-modal="true" aria-labelledby="inviteLinkModalTitle">
+    <div class="modal-container" style="max-width: 580px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="inviteLinkModalTitle">🔗 Personel Davet Bağlantısı</h3>
+          <p class="modal-subtitle">Bu bağlantıyı personellerinize ileterek MonaCard profillerini kendilerinin oluşturmasını sağlayın.</p>
+        </div>
+        <button class="modal-close-btn" data-close="modalStaffInviteLink">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 1.5rem;">
+        
+        <div class="invite-banner-card">
+          <div class="invite-banner-icon">✨</div>
+          <div class="invite-banner-text">
+            <strong>Nasıl Çalışır?</strong> Personel bu bağlantıyı açtığında isim, e-posta, telefon ve fotoğrafını girip kendi şifresini belirler. Kayıt tamamlandığında otomatik olarak şirketinizin ekibine dahil olur.
+          </div>
+        </div>
+
+        <div class="form-group mt-4">
+          <label class="invite-label">Şirket Özel Katılım Bağlantısı</label>
+          <div class="invite-input-copy-group">
+            <input type="text" id="staffInviteLinkInput" readonly value="http://monacard2.test/join/vedubox?token=vdx-78492" class="invite-link-field">
+            <button type="button" class="btn-copy-link" id="btnCopyStaffInviteLink">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span id="copyLinkBtnText">Kopyala</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="invite-share-channels-row mt-4">
+          <button type="button" class="invite-channel-btn btn-wa" id="btnShareInviteWhatsApp">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+            <span>WhatsApp ile Paylaş</span>
+          </button>
+          <button type="button" class="invite-channel-btn btn-slack" id="btnShareInviteSlack">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 15a2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2h2v2zm1 0a2 2 0 0 1 2-2 2 2 0 0 1 2 2v5a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-5zm2-8a2 2 0 0 1-2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2v2H9zm0 1a2 2 0 0 1 2 2 2 2 0 0 1-2 2H4a2 2 0 0 1-2-2 2 2 0 0 1 2-2h5zm8 2a2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2v-2zm-1 0a2 2 0 0 1-2 2 2 2 0 0 1-2-2V5a2 2 0 0 1 2-2 2 2 0 0 1 2 2v5zm-2 8a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2v-2h2zm0-1a2 2 0 0 1-2-2 2 2 0 0 1 2-2h5a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-5z"/></svg>
+            <span>Slack / Teams Duyurusu</span>
+          </button>
+          <button type="button" class="invite-channel-btn btn-telegram" id="btnShareInviteTelegram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18.718-1.52 7.154-2.208 10.428-.29 1.385-.802 1.848-1.298 1.894-.972.089-1.71-.643-2.652-1.261-1.474-.967-2.306-1.569-3.738-2.513-1.654-1.09-.582-1.689.361-2.668.247-.256 4.536-4.159 4.62-4.512.01-.044.02-.208-.077-.295-.098-.086-.242-.057-.346-.033-.148.034-2.508 1.595-7.078 4.68-.67.46-1.277.685-1.82.673-.599-.013-1.751-.339-2.607-.617-1.05-.341-1.886-.521-1.813-1.099.038-.301.453-.61 1.246-.926 4.883-2.127 8.14-3.53 9.771-4.209 4.654-1.938 5.621-2.275 6.251-2.286.139-.002.449.033.65.197.17.138.217.324.239.454.022.13.048.423.028.654z"/></svg>
+            <span>Telegram ile Gönder</span>
+          </button>
+          <button type="button" class="invite-channel-btn btn-mail" id="btnShareInviteEmail">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <span>E-Posta ile Gönder</span>
+          </button>
+        </div>
+
+        <div class="invite-qr-section mt-4">
+          <div class="invite-qr-card">
+            <div class="invite-qr-preview" id="staffInviteQrPreview">
+              <svg width="84" height="84" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-indigo-600 dark:text-indigo-400"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="7" y="7" width="1" height="1"></rect><rect x="18" y="7" width="1" height="1"></rect><rect x="7" y="18" width="1" height="1"></rect><rect x="11" y="11" width="2" height="2"></rect></svg>
+            </div>
+            <div class="invite-qr-info">
+              <h5 class="invite-qr-title">Şirket İçi Ekran / QR Kod</h5>
+              <p class="invite-qr-sub">Ofiste veya toplantıda ekrana yansıtarak personellerin akıllı telefonlarıyla okutmasını sağlayabilirsiniz.</p>
+              <button type="button" class="btn-xs-outline mt-2" id="btnDownloadInviteQR">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>QR Kodu İndir</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-btn-row mt-4">
+          <button type="button" class="btn-outline" data-close="modalStaffInviteLink">Kapat</button>
+          <button type="button" class="btn-primary" id="btnBackToChoiceFromInvite">&larr; Başka Yöntem Seç</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 0.2 Excel / CSV ile Toplu Yükleme Modalı -->
+  <div class="modal-overlay" id="modalStaffExcelImport" role="dialog" aria-modal="true" aria-labelledby="excelModalTitle">
+    <div class="modal-container" style="max-width: 740px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="excelModalTitle">📁 Excel / CSV ile Toplu Personel Yükleme</h3>
+          <p class="modal-subtitle">Personel listenizi içeren CSV veya Excel dosyasını yükleyin, saniyeler içinde sisteme aktarın.</p>
+        </div>
+        <button class="modal-close-btn" data-close="modalStaffExcelImport">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 1.5rem;">
+        
+        <!-- Step 1: Download Template -->
+        <div class="excel-step-banner mb-4">
+          <div class="excel-step-badge">Adım 1</div>
+          <div class="excel-step-content">
+            <h5 class="excel-step-title">Örnek CSV / Excel Şablonunu İndirin</h5>
+            <p class="excel-step-sub">Ad Soyad, Ünvan, E-Posta, Telefon ve Aylık Hedef sütunlarını içeren hazır şablonu indirin ve personellerinizi yazın.</p>
+          </div>
+          <button type="button" class="btn-download-template" id="btnDownloadStaffTemplate">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>Şablonu İndir (.CSV)</span>
+          </button>
+        </div>
+
+        <!-- Step 2: Upload Zone -->
+        <div class="excel-upload-zone" id="excelDropZone">
+          <input type="file" id="excelStaffFileInput" accept=".csv, .xlsx, .xls, text/csv" style="display: none;">
+          <div class="excel-upload-icon-circle">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          </div>
+          <h4 class="excel-drop-title">Doldurduğunuz Dosyayı Buraya Sürükleyin</h4>
+          <p class="excel-drop-sub">veya bilgisayarınızdan seçmek için aşağıdaki butona tıklayın (.CSV, .XLSX)</p>
+          <button type="button" class="btn-browse-file mt-3" id="btnBrowseExcelFile">
+            📁 Bilgisayardan Dosya Seç
+          </button>
+          <div class="text-xs text-slate-500 mt-2 font-medium" id="selectedExcelFileName"></div>
+        </div>
+
+        <!-- Step 3: Live Preview Table (Initially hidden) -->
+        <div id="excelPreviewSection" style="display: none;" class="mt-4">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-sm text-slate-800 dark:text-slate-100">Önizleme &amp; Kontrol:</span>
+              <span class="excel-count-pill" id="excelParsedCount">0 Personel Bulundu</span>
+            </div>
+            <button type="button" class="text-xs text-red-500 hover:underline font-semibold" id="btnClearExcelParsed">Temizle &amp; Yeniden Yükle</button>
+          </div>
+          <div class="excel-preview-scroll">
+            <table class="excel-preview-table">
+              <thead>
+                <tr>
+                  <th>Ad Soyad</th>
+                  <th>Ünvan</th>
+                  <th>E-Posta</th>
+                  <th>Telefon</th>
+                  <th>Hedef</th>
+                  <th>Rol</th>
+                </tr>
+              </thead>
+              <tbody id="excelPreviewTableBody">
+                <!-- Parsed rows injected here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="modal-btn-row mt-4">
+          <button type="button" class="btn-outline" data-close="modalStaffExcelImport">İptal</button>
+          <button type="button" class="btn-primary" id="btnConfirmExcelImport" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span id="btnConfirmExcelImportText">0 Personeli Sisteme Aktar</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. Personel Ekle / Düzenle / Lider Ata Modalı (Manuel Form) -->
   <div class="modal-overlay" id="adminStaffModal" role="dialog" aria-modal="true" aria-labelledby="staffModalTitle">
     <div class="modal-container">
       <div class="modal-header">
@@ -3862,9 +4100,35 @@
           </div>
 
           <div class="form-group">
-            <label for="prodInputLogo">Logo Dosyası veya İkon Adı</label>
-            <input type="text" id="prodInputLogo" placeholder="Örn: vedubox.png veya https://...">
-            <span class="text-xs text-muted mt-1" style="display:block;">Görsel dosya adı (örn: vedubox.png, etgigrup.png) veya doğrudan görsel linki belirtebilirsiniz.</span>
+            <label>Logo / Marka Görseli</label>
+            <input type="hidden" id="prodInputLogo" value="">
+            <input type="file" id="prodInputLogoFile" accept="image/png, image/jpeg, image/jpg, image/svg+xml, image/webp" style="display:none;">
+            
+            <!-- Upload Dropzone (Browse) -->
+            <div class="logo-upload-dropzone" id="prodLogoDropzone" onclick="document.getElementById('prodInputLogoFile').click()">
+              <div class="logo-upload-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <div class="logo-upload-text">
+                <strong>Logo Seç (Browse)</strong> veya buraya sürükleyin
+              </div>
+              <span class="logo-upload-hint">PNG, JPG, SVG veya WebP (Önerilen: 200x200px veya yatay logo)</span>
+            </div>
+
+            <!-- Preview Card (Seçilen görsel önizlemesi) -->
+            <div class="logo-preview-card" id="prodLogoPreviewCard" style="display:none;">
+              <div class="logo-preview-thumb">
+                <img id="prodLogoPreviewImg" src="" alt="Logo Önizleme">
+              </div>
+              <div class="logo-preview-details">
+                <span class="logo-preview-name" id="prodLogoFileName">Logo Yüklendi</span>
+                <span class="logo-preview-status text-xs text-muted">Görsel hazır</span>
+              </div>
+              <div class="logo-preview-actions">
+                <button type="button" class="btn-xs-outline" onclick="document.getElementById('prodInputLogoFile').click()" title="Görseli Değiştir">Değiştir</button>
+                <button type="button" class="btn-xs-danger" id="btnRemoveProdLogo" title="Görseli Kaldır">Kaldır</button>
+              </div>
+            </div>
           </div>
 
           <div class="modal-btn-row mt-4">
@@ -4085,14 +4349,14 @@
       </div>
       <div class="modal-body">
         <div class="meeting-detail-card-box">
-          <!-- Platform Rozeti & Başlık Düzenleme -->
+          <!-- Platform Rozeti & Başlık Düzenleme (Kusursuz Aynı Hizada) -->
           <div class="meeting-detail-header-row">
-            <div class="meeting-platform-logo-box" id="meetDetPlatformLogo"></div>
-            <div class="meeting-detail-title-col">
+            <div class="meeting-title-row-aligned">
+              <div class="meeting-platform-logo-box" id="meetDetPlatformLogo"></div>
               <input type="text" id="editMeetTitle" class="modal-input-title" placeholder="Toplantı Konusu / Başlığı" required>
-              <div class="flex items-center gap-2" id="meetDetStatusBadgeWrapper" style="margin-top:7px;">
-                <span class="meeting-status-badge" id="meetDetStatusBadge">Planlandı</span>
-              </div>
+            </div>
+            <div class="flex items-center gap-2 mt-2" id="meetDetStatusBadgeWrapper">
+              <span class="meeting-status-badge" id="meetDetStatusBadge">Planlandı</span>
             </div>
           </div>
           
@@ -4116,8 +4380,9 @@
               <select id="editMeetType" class="modal-select-field">
                 <option value="Google Meet">Google Meet (Online)</option>
                 <option value="Zoom Meet">Zoom Meet (Online)</option>
-                <option value="Yüz Yüze">Yüz Yüze (Kağıthane Ofis)</option>
-                <option value="Müşteri Ofisi">Yüz Yüze (Müşteri Ofisi)</option>
+                <option value="Microsoft Teams">Microsoft Teams (Online)</option>
+                <option value="Bizim Ofis">Bizim Ofis</option>
+                <option value="Müşteri Ofisi">Müşteri Ofisi</option>
               </select>
             </div>
 
@@ -4144,16 +4409,26 @@
           </div>
         </div>
 
-        <!-- Alt Butonlar: Katılımcılara Hatırlat & Kapat (Yan Yana & 46px) -->
+        <!-- Alt Butonlar: Katılımcılara Hatırlat, İptal Et & Kapat -->
         <div class="meeting-detail-actions-row">
-          <button class="btn-primary btn-meeting-action" id="btnSendMeetingReminderMail">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <button type="button" class="btn-primary btn-meeting-action" id="btnSendMeetingReminderMail">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
               <polyline points="22,6 12,13 2,6"></polyline>
             </svg>
             <span>Katılımcılara Hatırlat</span>
           </button>
-          <button class="btn-outline btn-meeting-action" data-close="meetingDetailModal">Kapat</button>
+          
+          <button type="button" class="btn-danger-soft btn-meeting-action" id="btnCancelMeetingModal" title="Toplantıyı İptal Et ve Katılımcılara E-Posta Gönder">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="15" y1="9" x2="9" y2="15"></line>
+              <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+            <span>Toplantıyı İptal Et</span>
+          </button>
+
+          <button type="button" class="btn-outline btn-meeting-action" data-close="meetingDetailModal">Kapat</button>
         </div>
       </div>
     </div>
@@ -4199,10 +4474,75 @@
     </div>
   </div>
 
+  <!-- Yeni Müşteri Ekleme Modalı (Dashboard & CRM) -->
+  <div class="modal-overlay" id="modalAddCustomer" role="dialog" aria-modal="true" aria-labelledby="addCustModalTitle">
+    <div class="modal-container" style="max-width: 480px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="addCustModalTitle">Yeni Müşteri Ekle</h3>
+          <p class="modal-subtitle">Müşteri bilgilerini ve durumunu CRM havuzuna kaydedin.</p>
+        </div>
+        <button class="modal-close-btn" data-close="modalAddCustomer">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="formAddCustomerModal" class="styled-form">
+          <div class="form-group">
+            <label for="modalCustName">Müşteri Ad Soyad *</label>
+            <input type="text" id="modalCustName" required placeholder="Örn: Zeynep Kaya">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="modalCustCompany">Firma / Şirket Adı</label>
+              <input type="text" id="modalCustCompany" placeholder="Örn: Kaya Mimarlık">
+            </div>
+            <div class="form-group">
+              <label for="modalCustTitle">Ünvan / Pozisyon</label>
+              <input type="text" id="modalCustTitle" placeholder="Örn: Proje Direktörü">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="modalCustPhone">Telefon Numarası *</label>
+              <input type="tel" id="modalCustPhone" required placeholder="+90 5XX XXX XX XX">
+            </div>
+            <div class="form-group">
+              <label for="modalCustEmail">E-Posta Adresi</label>
+              <input type="email" id="modalCustEmail" placeholder="zeynep@kayamimarlik.com">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="modalCustStage">Müşteri Aşaması *</label>
+              <select id="modalCustStage" class="styled-select" style="width:100%; height:44px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0 12px; font-size:13.5px;">
+                <option value="hot">🔥 Sıcak Müşteri (Yüksek İlgi)</option>
+                <option value="warm" selected>⚡ Ilık Müşteri (Takipte)</option>
+                <option value="cold">❄️ Soğuk Müşteri (Yeni Tanışma)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="modalCustStaff">İlgilenen Personel</label>
+              <select id="modalCustStaff" class="styled-select" style="width:100%; height:44px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0 12px; font-size:13.5px;">
+                <!-- Dinamik doldurulur -->
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="modalCustNote">İlk Görüşme Notu / Talep</label>
+            <textarea id="modalCustNote" rows="2" placeholder="Görüşme detayları, teklif talebi vb." style="width:100%; border:1px solid #E2E8F0; border-radius:10px; padding:10px; font-size:13.5px;"></textarea>
+          </div>
+          <div class="modal-btn-row mt-4">
+            <button type="button" class="btn-outline" data-close="modalAddCustomer">İptal</button>
+            <button type="submit" class="btn-primary" style="background: #00A86B; color: #FFFFFF; font-weight: 700; border-radius: 12px; box-shadow: 0 4px 14px rgba(0, 168, 107, 0.35);">Müşteriyi Kaydet</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
 
   <!-- JavaScript -->
-  <script src="app.js"></script>
+  <script src="{{ asset('app.js') }}?v={{ file_exists(public_path('app.js')) ? filemtime(public_path('app.js')) : time() }}"></script>
 </body>
 </html>

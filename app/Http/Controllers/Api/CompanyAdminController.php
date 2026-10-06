@@ -310,6 +310,7 @@ class CompanyAdminController extends Controller
             'phone' => 'sometimes|string|nullable|max:50',
             'phone2' => 'sometimes|string|nullable|max:50',
             'address' => 'sometimes|string|nullable',
+            'address2' => 'sometimes|string|nullable',
             'social_links' => 'sometimes|array',
         ]);
 

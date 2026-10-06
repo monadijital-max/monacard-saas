@@ -15,14 +15,25 @@ use Illuminate\Support\Facades\Hash;
 class SuperAdminController extends Controller
 {
     /**
+     * Ensure only superadmin can access these endpoints
+     */
+    private function authorizeSuperAdmin(Request $request): void
+    {
+        if (! $request->user() || $request->user()->role !== 'superadmin') {
+            abort(403, 'Bu işlem için Süper Admin yetkisi gereklidir.');
+        }
+    }
+
+    /**
      * Super Admin Dashboard (SaaS Master Overview)
      */
     public function dashboard(Request $request): JsonResponse
     {
+        $this->authorizeSuperAdmin($request);
         $companiesCount = Company::count();
         $totalUsers = User::where('role', '!=', 'superadmin')->count();
         $pendingDemos = DemoRequest::where('status', 'pending')->count();
-        
+
         // Calculate estimated MRR based on company quotas & active tiers
         $mrr = Company::where('subscription_status', 'active')->sum('user_quota') * 45; // ~45 TL/user monthly avg
 
@@ -67,7 +78,7 @@ class SuperAdminController extends Controller
 
         $company = Company::create([
             'name' => $validated['company_name'],
-            'slug' => str($validated['company_name'])->slug() . '-' . rand(10, 99),
+            'slug' => str($validated['company_name'])->slug().'-'.rand(10, 99),
             'sector' => $validated['sector'] ?? null,
             'user_quota' => $validated['user_quota'],
             'plan' => $validated['plan'],
@@ -91,7 +102,7 @@ class SuperAdminController extends Controller
         BusinessCard::create([
             'user_id' => $admin->id,
             'company_id' => $company->id,
-            'slug' => str($admin->name)->slug() . '-' . rand(100, 999),
+            'slug' => str($admin->name)->slug().'-'.rand(100, 999),
             'direct_phone' => $admin->phone,
             'work_email' => $admin->email,
             'is_active' => true,

@@ -92,8 +92,8 @@ document.addEventListener('DOMContentLoaded', () => {
       btn_apply: "Uygula",
       btn_back_to_staff: "Personellere Dön",
       btn_set_target: "🎯 Hedef Belirle / Düzenle",
-      btn_add_new_staff: "+ Yeni Personel Ekle",
-      btn_add_new_client: "+ Yeni Müşteri Ekle",
+      btn_add_new_staff: "Yeni Personel Ekle",
+      btn_add_new_client: "Yeni Müşteri Ekle",
       btn_create_meeting: "Toplantı Oluştur",
       btn_transfer_clients: "👥 Müşterileri Aktar",
       btn_cancel_card: "Bu Kartı İptal Et",
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       super_greeting_title: "Kontrol Merkezi",
       super_greeting_sub: "Tüm kayıtlı kurumsal firmaların, demo taleplerinin ve lisans gelirlerinin anlık özeti.",
-      btn_new_company: "+ Yeni Firma Ekle",
+      btn_new_company: "Yeni Firma Ekle",
       btn_view_demos: "Demo Taleplerini Gör",
       card_active_companies: "Aktif Firma Sayısı",
       card_pending_demos: "Bekleyen Demolar",
@@ -214,8 +214,8 @@ document.addEventListener('DOMContentLoaded', () => {
       btn_apply: "Apply",
       btn_back_to_staff: "Back to Staff",
       btn_set_target: "🎯 Set / Edit Goal",
-      btn_add_new_staff: "+ Add New Staff",
-      btn_add_new_client: "+ Add New Client",
+      btn_add_new_staff: "Add New Staff",
+      btn_add_new_client: "Add New Client",
       btn_create_meeting: "Create Meeting",
       btn_transfer_clients: "👥 Transfer Clients",
       btn_cancel_card: "Deactivate Card",
@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       super_greeting_title: "Control Center",
       super_greeting_sub: "Real-time summary of registered companies, demo requests, and subscription revenues.",
-      btn_new_company: "+ Add New Company",
+      btn_new_company: "Add New Company",
       btn_view_demos: "View Demo Requests",
       card_active_companies: "Active Companies",
       card_pending_demos: "Pending Demos",
@@ -433,7 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnCrmAdd = document.getElementById('btnOpenAddCustomerModal');
     if (btnCrmAdd) {
       const sp = btnCrmAdd.querySelector('span');
-      if (sp) sp.textContent = isEn ? '+ Add New Client' : '+ Yeni Müşteri Ekle';
+      if (sp) sp.textContent = isEn ? 'Add New Client' : 'Yeni Müşteri Ekle';
     }
 
     // CRM Filter Tabs
@@ -485,6 +485,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nCrm) nCrm.title = isEn ? 'Client CRM' : 'Müşteri Havuzu (CRM)';
     const nCal = document.getElementById('navAdminCalendar');
     if (nCal) nCal.title = isEn ? 'Meetings & Calendar' : 'Toplantı & Takvim';
+    const nInteg = document.getElementById('navAdminIntegrations');
+    if (nInteg) nInteg.title = isEn ? 'Integrations & API' : 'Kurumsal Entegrasyonlar & API';
     const nSet = document.getElementById('navAdminSettings');
     if (nSet) nSet.title = isEn ? 'Settings & Interface' : 'Ayarlar & Arayüz Yönetimi';
     const nProf = document.getElementById('navAdminProfile');
@@ -501,15 +503,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const greetingSub = document.querySelector('.greeting-subtitle');
     if (greetingSub) greetingSub.textContent = isEn ? 'Here is today’s performance summary for your company and team.' : 'İşte şirketinizin ve ekibinizin bugünkü performans özeti.';
-    const liveBadge = document.querySelector('.admin-live-pulse-badge');
-    if (liveBadge) liveBadge.innerHTML = `<span class="pulse-dot"></span> ${isEn ? 'Live CRM & Meeting Stream' : 'Canlı CRM & Görüşme Akışı'}`;
+    const btnDashIntegrations = document.getElementById('btnDashIntegrations');
+    if (btnDashIntegrations) {
+      const sp = btnDashIntegrations.querySelector('span');
+      if (sp) sp.textContent = isEn ? 'Integrations' : 'Entegrasyonlar';
+    }
 
     const statTitles = document.querySelectorAll('.admin-stat-card .stat-card-title');
     if (statTitles.length >= 4) {
       statTitles[0].textContent = isEn ? 'Hot Leads' : 'Sıcak Müşteriler';
       statTitles[1].textContent = isEn ? 'Warm Leads' : 'Ilık Müşteri';
-      statTitles[2].textContent = isEn ? 'Total Clients' : 'Toplam Müşteri';
-      statTitles[3].textContent = isEn ? 'Meeting Rate' : 'Görüşme Oranı';
+      statTitles[2].textContent = isEn ? 'New Leads' : 'Yeni Müşteriler';
+      statTitles[3].textContent = isEn ? 'Monthly Meetings' : 'Bu Ayki Toplantılar';
     }
 
     const statTrends = document.querySelectorAll('.admin-stat-card .trend-label');
@@ -519,6 +524,16 @@ document.addEventListener('DOMContentLoaded', () => {
       statTrends[2].textContent = isEn ? 'vs last week' : 'vs geçen hafta';
       statTrends[3].textContent = isEn ? 'vs last month' : 'vs geçen ay';
     }
+
+    const pctZero = isEn ? '0%' : '%0';
+    const sHotP = document.getElementById('statHotTrendPct');
+    const sWarmP = document.getElementById('statWarmTrendPct');
+    const sNewP = document.getElementById('statNewLeadsTrendPct');
+    const sMonthP = document.getElementById('statMonthMeetingsTrendPct');
+    if (sHotP) sHotP.textContent = pctZero;
+    if (sWarmP) sWarmP.textContent = pctZero;
+    if (sNewP) sNewP.textContent = pctZero;
+    if (sMonthP) sMonthP.textContent = pctZero;
 
     // Chart titles & Legends
     const chartWeeklyTitle = document.querySelector('#viewAdminDashboard .admin-card-header .admin-card-title');
@@ -532,22 +547,35 @@ document.addEventListener('DOMContentLoaded', () => {
       legendItems[1].textContent = isEn ? 'New Hot Leads' : 'Yeni Sıcak Müşteri';
     }
 
-    const donutCardTitle = document.querySelector('.admin-donut-card .admin-card-title');
-    if (donutCardTitle) donutCardTitle.textContent = isEn ? 'Lead Status Distribution' : 'Müşteri Durum Dağılımı';
+    const donutCardTitle = document.querySelector('#viewAdminDashboard .admin-chart-card:not(.top-performers-widget):not(.weekly-timeline-widget) .chart-title') || document.querySelector('.admin-donut-card .admin-card-title');
+    if (donutCardTitle) donutCardTitle.textContent = isEn ? 'Client Pipeline Distribution' : 'Müşteri Durum Dağılımı';
     const donutCardSub = document.querySelector('.admin-donut-card .admin-card-subtitle');
     if (donutCardSub) donutCardSub.textContent = isEn ? 'Hot, warm, and cold leads ratio (%100)' : 'Sıcak, ılık ve soğuk müşteri oranı (%100)';
 
-    const donutLegendLabels = document.querySelectorAll('.donut-legend-info .donut-legend-name');
+    const btnDashAddCustomer = document.getElementById('btnDashAddCustomer');
+    if (btnDashAddCustomer) {
+      const sp = btnDashAddCustomer.querySelector('span');
+      if (sp) sp.textContent = isEn ? '+ Add Client' : '+ Müşteri Ekle';
+      btnDashAddCustomer.title = isEn ? 'Add New Client' : 'Yeni Müşteri Ekle';
+    }
+
+    const donutLegendLabels = document.querySelectorAll('.donut-legend-col .legend-name, .donut-legend-info .donut-legend-name');
     if (donutLegendLabels.length >= 3) {
       donutLegendLabels[0].textContent = isEn ? '🔥 Hot Leads' : '🔥 Sıcak Müşteri';
       donutLegendLabels[1].textContent = isEn ? '⚡ Warm Leads' : '⚡ Ilık Müşteri';
       donutLegendLabels[2].textContent = isEn ? '❄️ Cold Leads' : '❄️ Soğuk Müşteri';
     }
 
-    const topPerfTitle = document.querySelector('.admin-top-performers-card .admin-card-title');
-    if (topPerfTitle) topPerfTitle.textContent = isEn ? 'Top Performing Staff' : 'En İyi Performans Gösteren Personeller';
-    const topPerfSub = document.querySelector('.admin-top-performers-card .admin-card-subtitle');
-    if (topPerfSub) topPerfSub.textContent = isEn ? 'Top 3 team members with highest client acquisition and hot meeting performance' : 'En yüksek müşteri kazanımı ve sıcak görüşme performansına sahip ilk 3 ekip üyesi';
+    const topPerfTitle = document.querySelector('.top-performers-widget .chart-title') || document.querySelector('.admin-top-performers-card .admin-card-title');
+    if (topPerfTitle) topPerfTitle.textContent = isEn ? '🏆 Top Performing Team Members' : '🏆 En İyi Performans Gösteren Personeller';
+    const topPerfSub = document.querySelector('.top-performers-widget .chart-subtitle') || document.querySelector('.admin-top-performers-card .admin-card-subtitle');
+    if (topPerfSub) topPerfSub.textContent = isEn ? 'Top 3 team members with highest client acquisition and hot lead conversion' : 'En yüksek müşteri kazanımı ve sıcak görüşme performansına sahip ilk 3 ekip üyesi';
+    const btnDashAddStaff = document.getElementById('btnDashAddStaff');
+    if (btnDashAddStaff) {
+      const sp = btnDashAddStaff.querySelector('span');
+      if (sp) sp.textContent = isEn ? '+ Add Staff' : '+ Personel Ekle';
+      btnDashAddStaff.title = isEn ? 'Add New Staff' : 'Yeni Personel Ekle';
+    }
     const topPerfViewAll = document.querySelector('.btn-view-all-staff');
     if (topPerfViewAll) topPerfViewAll.textContent = isEn ? 'View All ›' : 'Tümünü Gör ›';
 
@@ -563,18 +591,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const staffPageSub = document.querySelector('#viewAdminStaff .admin-header-subtitle') || document.querySelector('#viewAdminStaff .admin-view-subtitle');
     if (staffPageSub) staffPageSub.textContent = isEn ? 'Track your team’s digital card usage, client acquisitions, and monthly goals in real-time.' : 'Ekibinizin dijital kartvizit kullanımını, müşteri kazanımlarını ve aylık hedeflerini canlı takip edin.';
     const btnStaffAddSpan = document.querySelector('#btnStaffAddModal span') || document.querySelector('#btnAdminAddStaff span');
-    if (btnStaffAddSpan) btnStaffAddSpan.textContent = isEn ? '+ Add New Staff' : '+ Yeni Personel Ekle';
+    if (btnStaffAddSpan) btnStaffAddSpan.textContent = isEn ? 'Add New Staff' : 'Yeni Personel Ekle';
 
-    // Status Filter Pills
-    const statusPillTitles = document.querySelectorAll('.status-pill-box .status-pill-title');
-    if (statusPillTitles.length >= 4) {
-      statusPillTitles[0].textContent = isEn ? 'All Staff' : 'Tüm Personeller';
-      statusPillTitles[1].textContent = isEn ? '👑 Team Leaders' : '👑 Takım Liderleri';
-      statusPillTitles[2].textContent = isEn ? '⚡ Top Performers' : '⚡ En Çok Müşteri Ekleyenler';
-      statusPillTitles[3].textContent = isEn ? '🎯 Goal Approaching' : '🎯 Hedefi Yaklaşanlar';
+    // Status Filter Pills in Staff Management
+    const pillAll = document.querySelector('.status-pill-box[data-staff-filter="all"]');
+    if (pillAll) {
+      const pt = pillAll.querySelector('.pill-title');
+      const ps = pillAll.querySelector('.pill-sub');
+      if (pt) pt.textContent = isEn ? 'All Staff' : 'Tüm Personeller';
+      if (ps) ps.textContent = isEn ? 'Active Team' : 'Aktif Ekip';
+    }
+    const pillLeaders = document.querySelector('.status-pill-box[data-staff-filter="leaders"]');
+    if (pillLeaders) {
+      const pt = pillLeaders.querySelector('.pill-title');
+      const ps = pillLeaders.querySelector('.pill-sub');
+      if (pt) pt.textContent = isEn ? 'Team Leaders 👑' : 'Takım Liderleri 👑';
+      if (ps) ps.textContent = isEn ? 'Leadership' : 'Lider Kadro';
+    }
+    const pillTop = document.querySelector('.status-pill-box[data-staff-filter="top"]');
+    if (pillTop) {
+      const pt = pillTop.querySelector('.pill-title');
+      const ps = pillTop.querySelector('.pill-sub');
+      if (pt) pt.textContent = isEn ? 'Top Performers 🚀' : 'Yüksek Performans 🚀';
+      if (ps) ps.textContent = isEn ? 'Target Exceeded' : 'Hedefi Aşan';
+    }
+    const pillNew = document.querySelector('.status-pill-box[data-staff-filter="new"]');
+    if (pillNew) {
+      const pt = pillNew.querySelector('.pill-title');
+      const ps = pillNew.querySelector('.pill-sub');
+      if (pt) pt.textContent = isEn ? 'New Joiners ✨' : 'Yeni Katılanlar ✨';
+      if (ps) ps.textContent = isEn ? 'Started This Month' : 'Bu Ay Başlayan';
     }
 
-    // Sort Select
+    // Leader Filter & Sort Select
+    if (staffLeaderFilter && staffLeaderFilter.options.length > 0) {
+      staffLeaderFilter.options[0].text = isEn ? 'All Teams / Leaders' : 'Tüm Ekipler / Liderler';
+    }
     const stfSort = document.getElementById('staffSortSelect');
     if (stfSort && stfSort.options.length >= 3) {
       stfSort.options[0].text = isEn ? 'Sort: Highest Performance' : 'Sıralama: En Yüksek Performans';
@@ -585,13 +637,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Staff Table Headers
     const staffTableThs = document.querySelectorAll('#staffDataTable th');
     if (staffTableThs.length >= 7) {
-      staffTableThs[0].textContent = isEn ? 'Staff' : 'Personel';
-      staffTableThs[1].textContent = isEn ? 'Reporting Leader' : 'Bağlı Olduğu Lider';
-      staffTableThs[2].textContent = isEn ? 'Registered Clients' : 'Kayıtlı Müşteri';
-      staffTableThs[3].textContent = isEn ? 'Client Distribution' : 'Müşteri Dağılımı';
-      staffTableThs[4].textContent = isEn ? 'Monthly Goal' : 'Aylık Hedef';
-      staffTableThs[5].textContent = isEn ? 'Performance' : 'Performans';
-      staffTableThs[6].textContent = isEn ? 'Actions' : 'İşlemler';
+      staffTableThs[0].textContent = isEn ? 'STAFF' : 'PERSONEL';
+      staffTableThs[1].textContent = isEn ? 'REPORTING LEADER' : 'BAĞLI OLDUĞU LİDER';
+      staffTableThs[2].textContent = isEn ? 'REGISTERED CLIENTS' : 'KAYITLI MÜŞTERİ';
+      staffTableThs[3].textContent = isEn ? 'CLIENT DISTRIBUTION' : 'MÜŞTERİ DAĞILIMI';
+      staffTableThs[4].textContent = isEn ? 'MONTHLY GOAL' : 'AYLIK HEDEF';
+      staffTableThs[5].textContent = isEn ? 'PERFORMANCE' : 'PERFORMANS';
+      staffTableThs[6].textContent = isEn ? 'ACTIONS' : 'İŞLEMLER';
     }
 
     // 7. Staff Detail Page
@@ -645,9 +697,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 8. Admin CRM page
     const crmPageTitle = document.querySelector('#viewAdminCrm .admin-header-title') || document.querySelector('#viewAdminCrm .admin-view-title');
-    if (crmPageTitle) crmPageTitle.textContent = isEn ? 'Corporate Client CRM' : 'Kurumsal Müşteri Havuzu (CRM)';
+    if (crmPageTitle) crmPageTitle.textContent = isEn ? 'Client Pipeline (CRM)' : 'Müşteri Havuzu';
     const crmPageSub = document.querySelector('#viewAdminCrm .admin-header-subtitle') || document.querySelector('#viewAdminCrm .admin-view-subtitle');
-    if (crmPageSub) crmPageSub.textContent = isEn ? 'Manage all clients, pipeline stages, and voice notes registered by all staff in one place.' : 'Tüm personellerin kaydettiği müşterileri, aşamalarını ve sesli notlarını tek merkezden yönetin.';
+    if (crmPageSub) crmPageSub.textContent = isEn ? 'Manage all clients, voice notes, and real-time HubSpot sync across the team.' : 'Tüm personellerin kaydettiği müşteriler, sesli/yazılı notlar ve anlık HubSpot takibi.';
+
+    // HubSpot Corporate Sync Badge
+    document.querySelectorAll('.hubspot-sync-badge').forEach(badge => {
+      badge.innerHTML = `<span class="hubspot-dot"></span> ${isEn ? 'HubSpot Enterprise Sync' : 'HubSpot Kurumsal Senkron'}`;
+    });
 
     const crmStageSelect = document.getElementById('adminCrmStageFilter');
     if (crmStageSelect && crmStageSelect.options.length >= 4) {
@@ -678,31 +735,131 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 9. Admin Calendar page
     const calPageTitle = document.querySelector('#viewAdminCalendar .admin-header-title') || document.querySelector('#viewAdminCalendar .admin-view-title');
-    if (calPageTitle) calPageTitle.textContent = isEn ? 'Meeting & Calendar Schedule' : 'Toplantı & Randevu Takvimi';
+    if (calPageTitle) calPageTitle.textContent = isEn ? 'Meeting & Calendar Schedule' : 'Toplantı & Takvim Yönetimi';
     const calPageSub = document.querySelector('#viewAdminCalendar .admin-header-subtitle') || document.querySelector('#viewAdminCalendar .admin-view-subtitle');
-    if (calPageSub) calPageSub.textContent = isEn ? 'All Google Meet, Zoom, and in-person client meetings scheduled across the team.' : 'Ekip genelinde planlanan tüm Google Meet, Zoom ve yüz yüze müşteri görüşmeleri.';
+    if (calPageSub) calPageSub.textContent = isEn ? 'Review all scheduled meetings in a monthly Google Calendar layout or plan VIP agendas.' : 'Aylık Google Calendar görünümüyle tüm toplantıları denetleyin veya VIP ajanda planlayın.';
     const btnAdminCreateMeet = document.getElementById('btnAdminCreateMeeting');
     if (btnAdminCreateMeet) {
       const sp = btnAdminCreateMeet.querySelector('span');
-      if (sp) sp.textContent = isEn ? '+ Create New Meeting' : '+ Yeni Toplantı Oluştur';
+      if (sp) sp.textContent = isEn ? 'Create New Meeting' : 'Yeni Toplantı / Görev Planla';
+    }
+
+    const calFilterLbl = document.querySelector('#calStaffFilterWrap label');
+    if (calFilterLbl) calFilterLbl.textContent = isEn ? 'Filter by Staff:' : 'Personele Göre Filtrele:';
+    if (adminCalStaffSelect && adminCalStaffSelect.options.length > 0) {
+      adminCalStaffSelect.options[0].text = isEn ? 'All Staff Appointments' : 'Tüm Personellerin Randevuları';
     }
 
     const tabAllMeet = document.getElementById('tabAdminAllMeetings');
-    if (tabAllMeet) tabAllMeet.textContent = isEn ? 'All Team Meetings' : 'Tüm Ekip Toplantıları';
+    if (tabAllMeet) {
+      const sp = tabAllMeet.querySelector('span');
+      if (sp) sp.textContent = isEn ? 'All Team Meetings' : '👥 Tüm Ekip Toplantıları & Randevuları';
+    }
     const tabPersMeet = document.getElementById('tabAdminPersonalMeetings');
-    if (tabPersMeet) tabPersMeet.textContent = isEn ? 'Personal Agenda' : 'Şahsi Ajandam';
+    if (tabPersMeet) {
+      const sp = tabPersMeet.querySelector('span');
+      if (sp) sp.textContent = isEn ? 'Personal Agenda' : '⭐ Yöneticiye Özel Ajanda & VIP Toplantılar';
+    }
     const btnCalMonth = document.getElementById('btnCalViewMonth');
-    if (btnCalMonth) btnCalMonth.textContent = isEn ? 'Month View' : 'Ay Görünümü';
+    if (btnCalMonth) {
+      const sp = btnCalMonth.querySelector('span');
+      if (sp) sp.textContent = isEn ? 'Month View' : 'Aylık Takvim';
+    }
     const btnCalCards = document.getElementById('btnCalViewCards');
-    if (btnCalCards) btnCalCards.textContent = isEn ? 'Cards' : 'Kartlar';
+    if (btnCalCards) {
+      const sp = btnCalCards.querySelector('span');
+      if (sp) sp.textContent = isEn ? 'Cards' : 'Kart Görünümü';
+    }
+    const btnGcalToday = document.getElementById('btnGcalToday');
+    if (btnGcalToday) btnGcalToday.textContent = isEn ? 'Today' : 'Bugün';
+
+    const gcalLegend = document.querySelector('.gcal-legend');
+    if (gcalLegend) {
+      gcalLegend.innerHTML = `
+        <span class="gcal-legend-dot meet"></span><span>Google Meet</span>
+        <span class="gcal-legend-dot zoom"></span><span>Zoom Meet</span>
+        <span class="gcal-legend-dot teams"></span><span>MS Teams</span>
+        <span class="gcal-legend-dot inperson"></span><span>${isEn ? 'In-Person' : 'Yüz Yüze'}</span>
+      `;
+    }
+
+    const gcalWeekdays = document.querySelectorAll('.gcal-weekdays-row .gcal-weekday');
+    const gcalDayNames = isEn ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] : ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
+    gcalWeekdays.forEach((el, idx) => {
+      if (gcalDayNames[idx]) el.textContent = gcalDayNames[idx];
+    });
 
     // 10. Admin Settings page
     const setPageTitle = document.querySelector('#viewAdminSettings .admin-header-title') || document.querySelector('#viewAdminSettings .admin-view-title');
-    if (setPageTitle) setPageTitle.textContent = isEn ? 'Company Settings & Interface Management' : 'Firma Ayarları & Arayüz Yönetimi';
+    if (setPageTitle) setPageTitle.textContent = isEn ? 'Company Settings & Interface Management' : 'Sistem & Marka Ayarları';
     const setPageSub = document.querySelector('#viewAdminSettings .admin-header-subtitle') || document.querySelector('#viewAdminSettings .admin-view-subtitle');
-    if (setPageSub) setPageSub.textContent = isEn ? 'Configure digital card branding, corporate colors, staff permissions, and integrations.' : 'Kartvizit arayüzünü, kurumsal renkleri, personel yetkilerini ve entegrasyonları yapılandırın.';
+    if (setPageSub) setPageSub.textContent = isEn ? 'Configure digital card branding, corporate colors, staff permissions, and integrations.' : 'Firma kurumsal logonuzu/renginizi seçin, açık/koyu temayı belirleyin ve personel arayüzünde nelerin görüneceğini kontrol edin.';
     const btnSaveSetSpan = document.querySelector('#btnSaveAdminSettings span') || document.querySelector('#btnSaveCompanySettings span');
-    if (btnSaveSetSpan) btnSaveSetSpan.textContent = isEn ? 'Save All Company Settings' : 'Tüm Firma Ayarlarını Kaydet';
+    if (btnSaveSetSpan) btnSaveSetSpan.textContent = isEn ? 'Save All Company Settings' : 'Kaydet';
+
+    // Settings Card 1: Brand Color & Theme
+    const setBrandCard = document.querySelector('#viewAdminSettings .admin-settings-card:first-child');
+    if (setBrandCard) {
+      const h3 = setBrandCard.querySelector('.settings-card-title');
+      const p = setBrandCard.querySelector('.settings-card-desc');
+      const lbl = setBrandCard.querySelector('.settings-label');
+      const prevLbl = setBrandCard.querySelector('.preview-label');
+      const sampleBtn = setBrandCard.querySelector('.preview-sample-btn');
+      const statusBadge = setBrandCard.querySelector('.preview-status-badge');
+
+      if (h3) h3.textContent = isEn ? 'Corporate Brand Color & Theme' : 'Kurumsal Marka Rengi & Tema';
+      if (p) p.textContent = isEn ? 'The selected color is instantly applied to all buttons, icons, badges, and staff digital business cards across the system.' : 'Seçtiğiniz renk sistemdeki tüm butonlarda, ikonlarda, rozetlerde ve personel dijital kartvizitlerinde anında aktif olur.';
+      if (lbl) lbl.textContent = isEn ? 'Primary Corporate Color:' : 'Ana Kurumsal Renk Seçimi:';
+      if (prevLbl) prevLbl.textContent = isEn ? 'LIVE PREVIEW:' : 'CANLI ÖNİZLEME:';
+      if (sampleBtn) sampleBtn.textContent = isEn ? 'Sample Button' : 'Örnek Buton';
+      if (statusBadge) statusBadge.innerHTML = `<span class="pulse-dot"></span>${isEn ? 'Active Icon' : 'Aktif İkon'}`;
+    }
+
+    // Settings Card 2: Staff Visibility Toggles
+    const setVisCard = document.querySelector('#viewAdminSettings .admin-settings-card:last-child');
+    if (setVisCard) {
+      const h3 = setVisCard.querySelector('.settings-card-title');
+      const p = setVisCard.querySelector('.settings-card-desc');
+      if (h3) h3.textContent = isEn ? 'Staff Interface Visibility Controls' : 'Personel Arayüzü Görünürlük Kontrolleri';
+      if (p) p.textContent = isEn ? 'Choose which sections appear on staff MonaCard digital business cards and workspaces.' : 'Personellerin MonaCard dijital kartvizit ve çalışma ekranında hangi bölümlerin görüneceğini belirleyin.';
+
+      const toggleRows = setVisCard.querySelectorAll('.settings-toggle-row');
+      const toggleData = [
+        {
+          title: isEn ? 'HubSpot CRM Integration & Sync Badge' : 'HubSpot CRM Entegrasyonu & Senkron Rozeti',
+          desc: isEn ? 'Display automated HubSpot synchronization alerts and status on staff cards.' : 'Personel panelinde otomatik HubSpot senkronizasyonu bildirimlerini ve durumunu gösterir.'
+        },
+        {
+          title: isEn ? 'Voice Note Recording Feature' : 'Sesli Not (Voice Note) Alma Özelliği',
+          desc: isEn ? 'Enables staff to attach recorded voice notes to client CRM profiles.' : 'Personelin müşteri kartlarına sesli görüşme notu kaydedebilmesini sağlar.'
+        },
+        {
+          title: isEn ? 'Brands & Products Showcase' : 'Markalarımız Vitrini',
+          desc: isEn ? 'Displays company brand and product links on the digital card.' : 'Kartvizit üzerinde firma marka ve ürün bağlantılarını görüntüler.'
+        },
+        {
+          title: isEn ? 'Social Media & Communication Channels' : 'Sosyal Medya & İletişim Kanalları',
+          desc: isEn ? 'Shows quick action buttons for WhatsApp, Telegram, LinkedIn, etc.' : 'WhatsApp, Telegram, LinkedIn vb. hızlı erişim butonlarını gösterir.'
+        },
+        {
+          title: isEn ? 'Google Reviews & Rating Badge' : 'Google Değerlendirme & Yorum Rozeti',
+          desc: isEn ? 'Allows clients to leave 5-star Google reviews directly.' : 'Müşterilerin Google üzerinden 5 yıldızlı yorum bırakabilmesini sağlar.'
+        },
+        {
+          title: isEn ? 'Save Contact (vCard .VCF Download) Button' : 'Rehbere Kaydet (vCard .VCF İndir) Butonu',
+          desc: isEn ? 'Enables clients to add staff directly to their phone contacts with one click.' : 'Müşterilerin personeli tek tıkla telefon rehberine eklemesine izin verir.'
+        }
+      ];
+
+      toggleRows.forEach((row, idx) => {
+        if (toggleData[idx]) {
+          const st = row.querySelector('.toggle-info strong');
+          const sp = row.querySelector('.toggle-info p');
+          if (st) st.textContent = toggleData[idx].title;
+          if (sp) sp.textContent = toggleData[idx].desc;
+        }
+      });
+    }
 
     const setLangLbl = document.getElementById('settingsLanguageLabel');
     if (setLangLbl) setLangLbl.textContent = isEn ? 'System Interface Language:' : 'Sistem Arayüz Dili (Interface Language):';
@@ -727,23 +884,254 @@ document.addEventListener('DOMContentLoaded', () => {
     if (lblThemeDarkD) lblThemeDarkD.textContent = isEn ? 'Modern eye-friendly dark theme' : 'Göz yormayan modern koyu tema';
 
     // 11. Admin Profile page
-    const profPageTitle = document.querySelector('#viewAdminProfile .admin-header-title') || document.querySelector('#viewAdminProfile .admin-view-title');
-    if (profPageTitle) profPageTitle.textContent = isEn ? 'Executive & Company Profile' : 'Yönetici & Firma Profili';
-    const profPageSub = document.querySelector('#viewAdminProfile .admin-header-subtitle') || document.querySelector('#viewAdminProfile .admin-view-subtitle');
-    if (profPageSub) profPageSub.textContent = isEn ? 'Company administrator account information and corporate identity details.' : 'Firma yöneticisi hesap bilgileri ve kurumsal kimlik detayları.';
+    const profPageTitle = document.querySelector('#viewAdminProfile .admin-view-title');
+    if (profPageTitle) profPageTitle.textContent = isEn ? 'Company & Executive Profile' : 'Firma & Yönetici Kimlik Bilgileri';
+    const profPageSub = document.querySelector('#viewAdminProfile .admin-view-subtitle');
+    if (profPageSub) profPageSub.textContent = isEn ? 'Corporate identity, social media channels, and product & service showcase.' : 'Kurumsal kimlik, şirket sosyal medya hesapları ve tüm personellere aktarılan ürün & hizmet vitrini.';
     const btnProfSave = document.getElementById('btnAdminSaveAllProfile');
     if (btnProfSave) {
       const sp = btnProfSave.querySelector('span');
-      if (sp) sp.textContent = isEn ? 'Save Profile' : 'Profili Kaydet';
+      if (sp) sp.textContent = isEn ? 'Save All Changes & Deploy to Cards' : 'Tüm Bilgileri Kaydet & Kartlara Aktar';
     }
 
-    // 12. Super Admin Views
+    // Profile Card 1: Company Profile Form
+    const profCard1 = document.querySelector('#viewAdminProfile .admin-settings-card:first-child');
+    if (profCard1) {
+      const h3 = profCard1.querySelector('.settings-card-title');
+      const p = profCard1.querySelector('.settings-card-desc');
+      if (h3) h3.textContent = isEn ? 'Company & Executive Profile' : 'Firma & Yönetici Kimliği';
+      if (p) p.textContent = isEn ? 'Official corporate legal name, executive info, and headquarters contact details.' : 'Şirket resmi unvanı, yöneticisi ve merkez iletişim detayları.';
+
+      const labelsMap = [
+        { sel: 'label[for="adminCompName"]', en: 'Company / Organization Name *', tr: 'Firma / Şirket Adı *' },
+        { sel: 'label[for="adminCompSector"]', en: 'Industry / Sector', tr: 'Sektör' },
+        { sel: 'label[for="adminCompWebsite"]', en: 'Corporate Website', tr: 'Kurumsal Web Sitesi' },
+        { sel: 'label[for="adminCompEmail"]', en: 'Executive Email *', tr: 'Yönetici E-Posta *' },
+        { sel: 'label[for="adminManagerName"]', en: 'Executive Full Name *', tr: 'Yönetici Adı Soyadı *' },
+        { sel: 'label[for="adminManagerTitle"]', en: 'Executive Title / Role', tr: 'Yönetici Pozisyonu / Ünvanı' },
+        { sel: 'label[for="adminCompPhone"]', en: 'Executive / Primary Phone', tr: 'Yönetici / 1. İletişim Telefonu' },
+        { sel: 'label[for="adminCompPhone2"]', en: 'Secondary / Landline Phone', tr: '2. İletişim / Sabit Telefon' },
+        { sel: 'label[for="adminCompAddress"]', en: 'Headquarters Address', tr: 'Firma Merkez Adresi' },
+        { sel: 'label[for="adminCompAddress2"]', en: 'Secondary / Branch Address', tr: '2. Adres / Şube Adresi' }
+      ];
+      labelsMap.forEach(item => {
+        const el = profCard1.querySelector(item.sel);
+        if (el) el.textContent = isEn ? item.en : item.tr;
+      });
+
+      const inpAddr = document.getElementById('adminCompAddress');
+      if (inpAddr) inpAddr.placeholder = isEn ? 'Headquarters street address...' : 'Firma açık adresi...';
+      const inpAddr2 = document.getElementById('adminCompAddress2');
+      if (inpAddr2) inpAddr2.placeholder = isEn ? 'Branch or secondary street address...' : 'Şube veya 2. firma açık adresi...';
+    }
+
+    // Profile Card 2: Social Media
+    const profCard2 = document.querySelectorAll('#viewAdminProfile .admin-settings-card')[1];
+    if (profCard2) {
+      const h3 = profCard2.querySelector('.settings-card-title');
+      const p = profCard2.querySelector('.settings-card-desc');
+      if (h3) h3.textContent = isEn ? 'Corporate Social Media Channels' : 'Kurumsal Sosyal Medya Kanalları';
+      if (p) p.textContent = isEn ? 'Automatically populated across all staff and executive digital cards.' : 'Tüm personellerin ve yöneticinin dijital kartvizitlerine otomatik aktarılır.';
+    }
+
+    // Profile Card 3: Brands Management
+    const profCard3 = document.querySelectorAll('#viewAdminProfile .admin-settings-card')[2];
+    if (profCard3) {
+      const h3 = profCard3.querySelector('.settings-card-title');
+      const p = profCard3.querySelector('.settings-card-desc');
+      const btnAddProd = document.getElementById('btnAdminAddProduct');
+      if (h3) h3.textContent = isEn ? 'Brands & Products Showcase Management' : 'Markalarımız Vitrin Yönetimi';
+      if (p) p.textContent = isEn ? "Automatically featured under the 'Our Products & Brands' section on all staff cards." : "Yönetici ve personellerin tüm dijital kartvizitlerinde 'Markalarımız' alanında otomatik gösterilir.";
+      if (btnAddProd) {
+        const sp = btnAddProd.querySelector('span');
+        if (sp) sp.textContent = isEn ? '+ Add New Brand / Product' : 'Yeni Marka / Ürün Ekle';
+      }
+    }
+
+    // 12. Enterprise Integrations & API Page (viewAdminIntegrations)
+    const integPageTitle = document.querySelector('#viewAdminIntegrations .admin-view-title');
+    if (integPageTitle) integPageTitle.textContent = isEn ? 'Enterprise Integrations & API Management' : 'Kurumsal Entegrasyonlar & API Yönetimi';
+    const integPageSub = document.querySelector('#viewAdminIntegrations .admin-view-subtitle');
+    if (integPageSub) integPageSub.textContent = isEn ? 'Configure your Google Workspace, Zoom, Microsoft Teams, HubSpot CRM, and Salesforce Cloud connections and establish automated synchronization rules.' : 'Google Workspace, Zoom Video Konferans, HubSpot CRM ve Salesforce Cloud bağlantılarınızı yapılandırın ve otomatik senkronizasyon kurallarını belirleyin.';
+    const integCenterBtn = document.querySelector('#viewAdminIntegrations .dash-integration-btn span');
+    if (integCenterBtn) integCenterBtn.textContent = isEn ? 'Integration Hub' : 'Entegrasyon Merkezi';
+
+    const integCardTitle = document.querySelector('#integrationsSettingsCard .settings-card-title');
+    if (integCardTitle) integCardTitle.textContent = isEn ? 'Enterprise Integrations & API Management' : 'Kurumsal Entegrasyonlar & API Yönetimi';
+    const integCardDesc = document.querySelector('#integrationsSettingsCard .settings-card-desc');
+    if (integCardDesc) integCardDesc.textContent = isEn ? 'Configure your Google Workspace, Zoom, Microsoft Teams, HubSpot CRM, and Salesforce Cloud connections and establish automated synchronization rules.' : 'Google Workspace, Zoom Video Konferans, HubSpot CRM ve Salesforce Cloud bağlantılarınızı yapılandırın ve otomatik senkronizasyon kurallarını belirleyin.';
+
+    // Tab Status Badges
+    const bGoogle = document.getElementById('badgeGoogleStatus');
+    if (bGoogle) bGoogle.textContent = isEn ? 'Connected' : 'Bağlı';
+    const bZoom = document.getElementById('badgeZoomStatus');
+    if (bZoom) bZoom.textContent = isEn ? 'Active' : 'Aktif';
+    const bTeams = document.getElementById('badgeTeamsStatus');
+    if (bTeams) bTeams.textContent = isEn ? 'Active' : 'Aktif';
+    const bHubspot = document.getElementById('badgeHubspotStatus');
+    if (bHubspot) bHubspot.textContent = isEn ? 'Synced' : 'Senkronize';
+    const bSalesforce = document.getElementById('badgeSalesforceStatus');
+    if (bSalesforce) bSalesforce.textContent = isEn ? 'Connected' : 'Bağlı';
+
+    // Panel 1: Google Workspace
+    const pGoogle = document.getElementById('integGoogle');
+    if (pGoogle) {
+      const stTitle = pGoogle.querySelector('.integ-status-title strong');
+      const stBadge = pGoogle.querySelector('.integ-status-title .status-badge');
+      const stMeta = pGoogle.querySelector('.integ-status-meta');
+      const btnReauth = document.getElementById('btnReconnectGoogle');
+      if (stTitle) stTitle.textContent = isEn ? 'Google Workspace & Calendar Connection' : 'Google Workspace & Takvim Bağlantısı';
+      if (stBadge) stBadge.innerHTML = `<span class="pulse-dot"></span>${isEn ? 'Connected' : 'Bağlandı'}`;
+      if (stMeta) stMeta.innerHTML = isEn ? 'Active Account: <strong>muhiddinoktem@vedubox.com</strong> &bull; Last Synced: 2 minutes ago' : 'Aktif Hesap: <strong>muhiddinoktem@vedubox.com</strong> &bull; Son Senkronizasyon: 2 dakika önce';
+      if (btnReauth) btnReauth.textContent = isEn ? '🔄 Re-authorize' : '🔄 Yeniden Yetkilendir';
+
+      const toggles = pGoogle.querySelectorAll('.settings-toggle-row');
+      if (toggles[0]) {
+        toggles[0].querySelector('strong').textContent = isEn ? 'Google Calendar 2-Way Synchronization' : 'Google Takvim 2 Yönlü Senkronizasyonu';
+        toggles[0].querySelector('p').textContent = isEn ? 'Instantly syncs meetings added to your MonaCard calendar with Google Calendar and vice versa.' : 'MonaCard ajandanıza eklenen toplantıları anında Google Takvim\'e işler ve Google Takvim\'deki randevuları ajandada gösterir.';
+      }
+      if (toggles[1]) {
+        toggles[1].querySelector('strong').textContent = isEn ? 'Automated Google Meet Link Generation' : 'Otomatik Google Meet Linki Üretimi';
+        toggles[1].querySelector('p').textContent = isEn ? 'Generates a dedicated video conference link when Google Meet is selected.' : 'Toplantı ortamı "Google Meet" seçildiğinde davetlilere özel güvenli video konferans bağlantısı oluşturur.';
+      }
+
+      const lblRev = pGoogle.querySelector('label[for="integGoogleReviewUrl"]');
+      if (lblRev) lblRev.textContent = isEn ? 'Google Business / Review URL' : 'Google İşletme / Değerlendirme URL\'si';
+      const lblCid = pGoogle.querySelector('label[for="integGoogleClientId"]');
+      if (lblCid) lblCid.textContent = isEn ? 'Google OAuth Client ID' : 'Google OAuth Client ID';
+      const testBtn = pGoogle.querySelector('.integ-action-bar button span');
+      if (testBtn) testBtn.textContent = isEn ? '⚡ Test & Sync Google Connection' : '⚡ Google Bağlantısını Test Et & Eşitle';
+    }
+
+    // Panel 2: Zoom Meetings
+    const pZoom = document.getElementById('integZoom');
+    if (pZoom) {
+      const stTitle = pZoom.querySelector('.integ-status-title strong');
+      const stBadge = pZoom.querySelector('.integ-status-title .status-badge');
+      const stMeta = pZoom.querySelector('.integ-status-meta');
+      const btnTest = document.getElementById('btnTestZoom');
+      if (stTitle) stTitle.textContent = isEn ? 'Zoom Video Conferencing API' : 'Zoom Video Konferans API';
+      if (stBadge) stBadge.innerHTML = `<span class="pulse-dot"></span>${isEn ? 'Active' : 'Aktif'}`;
+      if (stMeta) stMeta.innerHTML = isEn ? 'Connected Plan: <strong>Zoom Business</strong> &bull; API Status: 200 OK' : 'Bağlı Plan: <strong>Zoom Business</strong> &bull; API Durumu: 200 OK';
+      if (btnTest) btnTest.textContent = isEn ? '🔄 Run API Test' : '🔄 API Testi Yap';
+
+      const toggles = pZoom.querySelectorAll('.settings-toggle-row');
+      if (toggles[0]) {
+        toggles[0].querySelector('strong').textContent = isEn ? 'Automated Zoom Meeting & Passcode Generation' : 'Otomatik Zoom Meeting & Parola Üretimi';
+        toggles[0].querySelector('p').textContent = isEn ? 'Automatically creates dynamic Meeting ID, join URL, and passcode when Zoom Meet is selected.' : 'Toplantı ortamı "Zoom Meet" seçildiğinde tek tıkla dinamik Meeting ID, katılım URL\'si ve şifre oluşturur.';
+      }
+      if (toggles[1]) {
+        toggles[1].querySelector('strong').textContent = isEn ? 'Secure Waiting Room' : 'Güvenli Bekleme Odası (Waiting Room)';
+        toggles[1].querySelector('p').textContent = isEn ? 'Participants wait in the waiting room for host approval before joining.' : 'Katılımcılar toplantı sahibinden önce odaya giremez; bekleme odasında yönetici onayı bekler.';
+      }
+      const testBtn = pZoom.querySelector('.integ-action-bar button span');
+      if (testBtn) testBtn.textContent = isEn ? '⚡ Validate Zoom API Connection' : '⚡ Zoom API Bağlantısını Doğrula';
+    }
+
+    // Panel 3: Microsoft Teams
+    const pTeams = document.getElementById('integTeams');
+    if (pTeams) {
+      const stTitle = pTeams.querySelector('.integ-status-title strong');
+      const stBadge = pTeams.querySelector('.integ-status-title .status-badge');
+      const stMeta = pTeams.querySelector('.integ-status-meta');
+      const btnTest = document.getElementById('btnTestTeams');
+      if (stTitle) stTitle.textContent = isEn ? 'Microsoft 365 & Teams Video Conferencing API' : 'Microsoft 365 & Teams Video Konferans API';
+      if (stBadge) stBadge.innerHTML = `<span class="pulse-dot"></span>${isEn ? 'Active' : 'Aktif'}`;
+      if (stMeta) stMeta.innerHTML = isEn ? 'Connected Organization: <strong>vedubox.onmicrosoft.com</strong> &bull; Graph API Status: 200 OK' : 'Bağlı Organizasyon: <strong>vedubox.onmicrosoft.com</strong> &bull; Graph API Durumu: 200 OK';
+      if (btnTest) btnTest.textContent = isEn ? '🔄 Test Connection' : '🔄 Bağlantıyı Test Et';
+
+      const toggles = pTeams.querySelectorAll('.settings-toggle-row');
+      if (toggles[0]) {
+        toggles[0].querySelector('strong').textContent = isEn ? 'Automated Microsoft Teams Meeting Link Generation' : 'Otomatik Microsoft Teams Toplantı Linki Üretimi';
+        toggles[0].querySelector('p').textContent = isEn ? 'Generates a secure meeting link and lobby passcode when Microsoft Teams is selected.' : 'Toplantı ortamı "Microsoft Teams" seçildiğinde davetlilere özel güvenli video konferans bağlantısı (joinWebUrl) ve lobi erişim kodu oluşturur.';
+      }
+      if (toggles[1]) {
+        toggles[1].querySelector('strong').textContent = isEn ? 'Outlook & Microsoft 365 Calendar Synchronization' : 'Outlook & Microsoft 365 Takvim Senkronizasyonu';
+        toggles[1].querySelector('p').textContent = isEn ? 'Bi-directionally synchronizes MonaCard schedules with Microsoft 365 Outlook calendar.' : 'MonaCard randevularını ve görüşme takvimini Microsoft 365 Outlook ajandanızla çift yönlü senkronize eder.';
+      }
+      if (toggles[2]) {
+        toggles[2].querySelector('strong').textContent = isEn ? 'Teams Channel Notification Webhook' : 'Teams Kanalı Bildirim Webhook\'u';
+        toggles[2].querySelector('p').textContent = isEn ? 'Posts real-time alert cards to the corporate Teams channel when new leads or meetings are created.' : 'Yeni müşteri kartı oluşturulduğunda veya randevu alındığında kurumsal Teams kanalına anlık bildirim kartı gönderir.';
+      }
+      const testBtn = pTeams.querySelector('.integ-action-bar button span');
+      if (testBtn) testBtn.textContent = isEn ? '⚡ Test & Sync Microsoft Teams Connection' : '⚡ Microsoft Teams Bağlantısını Test Et & Eşitle';
+    }
+
+    // Panel 4: HubSpot CRM
+    const pHubspot = document.getElementById('integHubspot');
+    if (pHubspot) {
+      const stTitle = pHubspot.querySelector('.integ-status-title strong');
+      const stBadge = pHubspot.querySelector('.integ-status-title .status-badge');
+      const stMeta = pHubspot.querySelector('.integ-status-meta');
+      const btnSync = document.getElementById('btnSyncHubspot');
+      if (stTitle) stTitle.textContent = isEn ? 'HubSpot CRM 2-Way Integration' : 'HubSpot CRM 2 Yönlü Entegrasyon';
+      if (stBadge) stBadge.innerHTML = `<span class="pulse-dot"></span>${isEn ? '2-Way Active' : '2 Yönlü Aktif'}`;
+      if (stMeta) stMeta.innerHTML = isEn ? 'Portal ID: <strong>4829104</strong> &bull; Matched Contacts: <strong>148 Contacts</strong>' : 'Portal ID: <strong>4829104</strong> &bull; Eşleşen Müşteri: <strong>148 Kişi</strong>';
+      if (btnSync) btnSync.textContent = isEn ? '🔄 Sync Now' : '🔄 Şimdi Eşitle';
+
+      const toggles = pHubspot.querySelectorAll('.settings-toggle-row');
+      if (toggles[0]) {
+        toggles[0].querySelector('strong').textContent = isEn ? 'Automatically Sync New Business Cards to HubSpot Contacts' : 'Yeni Kartvizitleri Otomatik HubSpot Contacts\'a Ekle';
+        toggles[0].querySelector('p').textContent = isEn ? 'Every card scanned or registered by staff is instantly synced to the HubSpot CRM database.' : 'Kamera ile taranan veya personele eklenen her yeni kartvizit verisi anında HubSpot veritabanına aktarılır.';
+      }
+      if (toggles[1]) {
+        toggles[1].querySelector('strong').textContent = isEn ? 'Log Voice Notes to HubSpot Activities & Timeline' : 'Sesli Görüşme Notlarını HubSpot Aktivitelerine İşle';
+        toggles[1].querySelector('p').textContent = isEn ? 'Voice memos and transcripts recorded on customer cards are synced to HubSpot contact timeline.' : 'MonaCard müşteri kartına alınan sesli notlar ve transkriptler HubSpot CRM iletişim geçmişine senkronize edilir.';
+      }
+
+      const lblStage = pHubspot.querySelector('label[for="integHubspotStage"]');
+      if (lblStage) lblStage.textContent = isEn ? 'Default Lead Lifecycle Stage' : 'Varsayılan Lead (Aşama) Durumu';
+      const selStage = document.getElementById('integHubspotStage');
+      if (selStage && selStage.options.length >= 5) {
+        selStage.options[0].text = isEn ? 'Lead (Prospect)' : 'Lead (Potansiyel Müşteri)';
+        selStage.options[1].text = 'Marketing Qualified Lead (MQL)';
+        selStage.options[2].text = 'Sales Qualified Lead (SQL)';
+        selStage.options[3].text = isEn ? 'Opportunity (Deal)' : 'Opportunity (Fırsat)';
+        selStage.options[4].text = isEn ? 'Customer (Closed Won)' : 'Customer (Kazanılmış Müşteri)';
+      }
+      const testBtn = pHubspot.querySelector('.integ-action-bar button span');
+      if (testBtn) testBtn.textContent = isEn ? '⚡ Synchronize HubSpot Data Now' : '⚡ HubSpot Verilerini Şimdi Senkronize Et';
+    }
+
+    // Panel 5: Salesforce CRM
+    const pSalesforce = document.getElementById('integSalesforce');
+    if (pSalesforce) {
+      const stTitle = pSalesforce.querySelector('.integ-status-title strong');
+      const stBadge = pSalesforce.querySelector('.integ-status-title .status-badge');
+      const stMeta = pSalesforce.querySelector('.integ-status-meta');
+      const btnSync = document.getElementById('btnSyncSalesforce');
+      if (stTitle) stTitle.textContent = isEn ? 'Salesforce CRM Cloud Integration' : 'Salesforce CRM Cloud Entegrasyonu';
+      if (stBadge) stBadge.innerHTML = `<span class="pulse-dot"></span>${isEn ? '2-Way Active' : '2 Yönlü Aktif'}`;
+      if (stMeta) stMeta.innerHTML = isEn ? 'Org ID: <strong>00D80000000abcde</strong> &bull; Matched Leads / Contacts: <strong>230 Records</strong>' : 'Org ID: <strong>00D80000000abcde</strong> &bull; Eşleşen Lead / Contact: <strong>230 Kayıt</strong>';
+      if (btnSync) btnSync.textContent = isEn ? '🔄 Sync Now' : '🔄 Şimdi Eşitle';
+
+      const toggles = pSalesforce.querySelectorAll('.settings-toggle-row');
+      if (toggles[0]) {
+        toggles[0].querySelector('strong').textContent = isEn ? 'Automatically Create Salesforce Leads & Contacts from New Cards' : 'Yeni Kartvizitleri Otomatik Salesforce Lead / Contact Olarak Ekle';
+        toggles[0].querySelector('p').textContent = isEn ? 'Every card scanned or added by staff is automatically pushed to Salesforce Leads and Contacts.' : 'Kamera ile taranan veya personele kaydedilen her yeni kartvizit verisi anında Salesforce CRM Lead ve Contacts havuzuna aktarılır.';
+      }
+      if (toggles[1]) {
+        toggles[1].querySelector('strong').textContent = isEn ? 'Log Voice Notes as Salesforce Activities & Tasks' : 'Sesli Görüşme Notlarını Salesforce Activities / Tasks Olarak İşle';
+        toggles[1].querySelector('p').textContent = isEn ? 'Audio/text notes and AI summaries on customer profiles are synced to Salesforce activity logs.' : 'Müşteri profiline düşülen sesli/yazılı görüşme notları ve yapay zeka özetleri Salesforce müşteri aktivite geçmişine senkronize edilir.';
+      }
+      if (toggles[2]) {
+        toggles[2].querySelector('strong').textContent = isEn ? 'Automatically Create Salesforce Opportunities' : 'Otomatik Salesforce Fırsat (Opportunity) Başlat';
+        toggles[2].querySelector('p').textContent = isEn ? 'Automatically opens a Salesforce Opportunity for cards tagged as hot leads or requesting a meeting.' : 'Sıcak müşteri olarak etiketlenen veya toplantı talep eden kartvizitler için otomatik Opportunity kaydı oluşturur.';
+      }
+
+      const lblStatus = pSalesforce.querySelector('label[for="integSalesforceLeadStatus"]');
+      if (lblStatus) lblStatus.textContent = isEn ? 'Default Lead Status' : 'Varsayılan Lead Durumu';
+      const testBtn = pSalesforce.querySelector('.integ-action-bar button span');
+      if (testBtn) testBtn.textContent = isEn ? '⚡ Validate & Sync Salesforce API Connection' : '⚡ Salesforce API Bağlantısını Doğrula & Senkronize Et';
+    }
+
+    // 13. Super Admin Views
     const superGreeting = document.querySelector('.super-greeting-header .greeting-title');
     if (superGreeting) superGreeting.innerHTML = `${isEn ? 'Control Center' : 'Kontrol Merkezi'} <span class="wave-emoji">🚀</span>`;
     const superGreetingSub = document.querySelector('.super-greeting-header .greeting-subtitle');
     if (superGreetingSub) superGreetingSub.textContent = isEn ? 'Real-time summary of registered corporate clients, demo requests, and SaaS revenue.' : 'Tüm kayıtlı kurumsal firmaların, demo taleplerinin ve lisans gelirlerinin anlık özeti.';
     const btnNewCoSpan = document.querySelector('#btnDashNewCompany span');
-    if (btnNewCoSpan) btnNewCoSpan.textContent = isEn ? '+ Add New Company' : '+ Yeni Firma Ekle';
+    if (btnNewCoSpan) btnNewCoSpan.textContent = isEn ? 'Add New Company' : 'Yeni Firma Ekle';
     const btnViewDemoSpan = document.querySelector('#btnDashViewDemos span');
     if (btnViewDemoSpan) {
       const cnt = document.getElementById('dashPendingDemoCount');
@@ -796,6 +1184,104 @@ document.addEventListener('DOMContentLoaded', () => {
     if (subordTitle) subordTitle.textContent = isEn ? '👑 Assigned Subordinates' : '👑 Bağlı Personeller';
     const subordSub = document.getElementById('subordinatesModalSubtitle');
     if (subordSub) subordSub.textContent = isEn ? 'Team members working under this team leader.' : 'Bu takım liderine bağlı olarak çalışan ekip üyeleri.';
+
+    // 14. Meeting Details & Management Modal
+    const meetDetTitle = document.getElementById('meetDetTitle');
+    if (meetDetTitle) {
+      if (typeof activeMeetingIndex !== 'undefined' && activeMeetingIndex !== null) {
+        meetDetTitle.textContent = isEn ? 'Meeting Details & Management' : 'Toplantı Detayı & Düzenle';
+      } else {
+        meetDetTitle.textContent = isEn ? 'Schedule New Meeting' : 'Yeni Toplantı Planla';
+      }
+    }
+    const meetDetSub = document.querySelector('#meetingDetailModal .modal-subtitle');
+    if (meetDetSub) meetDetSub.textContent = isEn ? 'Schedule, participant management, and status updates' : 'Tarih, katılımcı yönetimi ve durum güncelleme';
+    const editMeetTitleInp = document.getElementById('editMeetTitle');
+    if (editMeetTitleInp) editMeetTitleInp.placeholder = isEn ? 'Meeting Subject / Title' : 'Toplantı Konusu / Başlığı';
+
+    const meetDetLabels = document.querySelectorAll('#meetingDetailModal .modal-edit-label');
+    meetDetLabels.forEach(lbl => {
+      const txt = lbl.textContent.trim();
+      if (txt.includes('Tarih') || txt.includes('Date')) lbl.textContent = isEn ? '📅 Date' : '📅 Tarih';
+      else if (txt.includes('Saat') || txt.includes('Time')) lbl.textContent = isEn ? '⏰ Time' : '⏰ Saat';
+      else if (txt.includes('Ortamı') || txt.includes('Platform') || txt.includes('Location')) lbl.textContent = isEn ? '🌐 Meeting Platform / Location' : '🌐 Toplantı Ortamı';
+      else if (txt.includes('Katılımcılar') || txt.includes('Participants')) lbl.textContent = isEn ? '👥 Participants (Multi-Select)' : '👥 Katılımcılar (Çoklu Seçim)';
+    });
+
+    const editMeetTypeSel = document.getElementById('editMeetType');
+    if (editMeetTypeSel && typeof populateMeetingTypeOptions === 'function') {
+      populateMeetingTypeOptions(editMeetTypeSel, editMeetTypeSel.value);
+    }
+
+    const editMeetPh = document.getElementById('editMeetParticipantsPlaceholder');
+    if (editMeetPh && (!editModalSelectedCustomers || editModalSelectedCustomers.length === 0)) {
+      editMeetPh.textContent = isEn ? 'Select participants...' : 'Katılımcı seçin...';
+    }
+
+    const btnSaveMeet = document.getElementById('btnSaveMeetingChanges');
+    if (btnSaveMeet) {
+      const sp = btnSaveMeet.querySelector('span');
+      if (sp) sp.textContent = isEn ? '💾 Save Changes' : '💾 Değişiklikleri Kaydet';
+    }
+
+    const btnSendReminder = document.getElementById('btnSendMeetingReminderMail');
+    if (btnSendReminder) {
+      const sp = btnSendReminder.querySelector('span');
+      if (sp) sp.textContent = isEn ? 'Notify Participants' : 'Katılımcılara Hatırlat';
+    }
+
+    const btnCancelMeet = document.getElementById('btnCancelMeetingModal');
+    if (btnCancelMeet) {
+      const sp = btnCancelMeet.querySelector('span');
+      if (sp) sp.textContent = isEn ? 'Cancel Meeting' : 'Toplantıyı İptal Et';
+      btnCancelMeet.title = isEn ? 'Cancel meeting and notify participants via email' : 'Toplantıyı İptal Et ve Katılımcılara E-Posta Gönder';
+    }
+
+    const meetModalCloseBtns = document.querySelectorAll('#meetingDetailModal button[data-close="meetingDetailModal"]');
+    meetModalCloseBtns.forEach(btn => {
+      if (btn.classList.contains('btn-outline')) btn.textContent = isEn ? 'Close' : 'Kapat';
+    });
+
+    // 15. Add Customer Modal
+    const addCustTitle = document.getElementById('addCustModalTitle');
+    if (addCustTitle) addCustTitle.textContent = isEn ? 'Add New Client' : 'Yeni Müşteri Ekle';
+    const addCustSub = document.querySelector('#modalAddCustomer .modal-subtitle');
+    if (addCustSub) addCustSub.textContent = isEn ? 'Save client details and pipeline status to CRM portfolio.' : 'Müşteri bilgilerini ve durumunu CRM havuzuna kaydedin.';
+    const custNameLbl = document.querySelector('label[for="modalCustName"]');
+    if (custNameLbl) custNameLbl.textContent = isEn ? 'Client Full Name *' : 'Müşteri Ad Soyad *';
+    const custCompLbl = document.querySelector('label[for="modalCustCompany"]');
+    if (custCompLbl) custCompLbl.textContent = isEn ? 'Company / Organization Name' : 'Firma / Şirket Adı';
+    const custTitleLbl = document.querySelector('label[for="modalCustTitle"]');
+    if (custTitleLbl) custTitleLbl.textContent = isEn ? 'Title / Position' : 'Ünvan / Pozisyon';
+    const custPhoneLbl = document.querySelector('label[for="modalCustPhone"]');
+    if (custPhoneLbl) custPhoneLbl.textContent = isEn ? 'Phone Number *' : 'Telefon Numarası *';
+    const custEmailLbl = document.querySelector('label[for="modalCustEmail"]');
+    if (custEmailLbl) custEmailLbl.textContent = isEn ? 'Email Address' : 'E-Posta Adresi';
+    const custStageLbl = document.querySelector('label[for="modalCustStage"]');
+    if (custStageLbl) custStageLbl.textContent = isEn ? 'Client Pipeline Stage *' : 'Müşteri Aşaması *';
+    const custStageSel = document.getElementById('modalCustStage');
+    if (custStageSel && custStageSel.options.length >= 3) {
+      custStageSel.options[0].text = isEn ? '🔥 Hot Lead (High Interest)' : '🔥 Sıcak Müşteri (Yüksek İlgi)';
+      custStageSel.options[1].text = isEn ? '⚡ Warm Lead (Follow-up)' : '⚡ Ilık Müşteri (Takipte)';
+      custStageSel.options[2].text = isEn ? '❄️ Cold Lead (Initial Contact)' : '❄️ Soğuk Müşteri (Yeni Tanışma)';
+    }
+    const btnSaveCustModal = document.querySelector('#formAddCustomerModal button[type="submit"] span');
+    if (btnSaveCustModal) btnSaveCustModal.textContent = isEn ? 'Save Client' : 'Müşteriyi Kaydet';
+
+    // 16. Staff Choice Modal
+    const staffChoiceTitle = document.getElementById('staffChoiceModalTitle');
+    if (staffChoiceTitle) staffChoiceTitle.textContent = isEn ? 'Choose Staff Onboarding Method' : 'Personel Ekleme Yöntemini Seçin';
+    const staffChoiceSub = document.querySelector('#adminStaffAddChoiceModal .modal-subtitle');
+    if (staffChoiceSub) staffChoiceSub.textContent = isEn ? 'Select the best way to invite or onboard your team members.' : 'Ekibinizi MonaCard sistemine dahil etmek için size en uygun yöntemi belirleyin.';
+    const staffChoiceBadge = document.querySelector('.staff-choice-header-badge span');
+    if (staffChoiceBadge) staffChoiceBadge.textContent = isEn ? '✨ Seamless & Fast Onboarding' : '✨ Zahmetsiz & Hızlı Onboarding';
+
+    const choiceTitles = document.querySelectorAll('.staff-choice-title');
+    if (choiceTitles.length >= 3) {
+      choiceTitles[0].textContent = isEn ? 'Invite Link & QR Code' : 'Davet Linki & QR ile Paylaş';
+      choiceTitles[1].textContent = isEn ? 'Bulk Import via Excel / CSV' : 'Excel / CSV ile Toplu Yükle';
+      choiceTitles[2].textContent = isEn ? 'Manual Registration Form' : 'Tek Tek Manuel Form ile Ekle';
+    }
 
     // Sync radio controls in settings
     const rLangTr = document.getElementById('radioLangTr');
@@ -871,6 +1357,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================================================
   // 0. ADMIN / COMPANY SETTINGS & DATA STRUCTURES
   // =========================================================
+  let loggedInUser = null;
+  try {
+    const loggedInUserStr = localStorage.getItem('monacard_user');
+    if (loggedInUserStr) loggedInUser = JSON.parse(loggedInUserStr);
+  } catch (e) {}
+
   const defaultAdminSettings = {
     brandColor: '#00A86B',
     themeMode: 'light',
@@ -883,58 +1375,76 @@ document.addEventListener('DOMContentLoaded', () => {
       vcard: true
     },
     companyProfile: {
-      name: 'Vedubox Bilişim & Eğitim Teknolojileri',
-      sector: 'Eğitim Teknolojileri & SaaS Yazılım',
-      website: 'https://vedubox.com',
-      managerName: 'Muhiddin Öktem',
-      managerTitle: 'Genel Müdür / CEO',
-      email: 'muhiddinoktem@vedubox.com',
-      phone: '+90 536 255 64 24',
-      phone2: '+90 212 900 00 00',
-      address: 'Dalgıç Sk. Yeşilce Mh. No 3 Kağıthane / İstanbul',
+      name: (loggedInUser && ((loggedInUser.company && loggedInUser.company.name) || loggedInUser.company_name)) || '',
+      sector: (loggedInUser && ((loggedInUser.company && loggedInUser.company.sector) || loggedInUser.sector)) || '',
+      website: (loggedInUser && ((loggedInUser.company && loggedInUser.company.website) || loggedInUser.website)) || '',
+      managerName: (loggedInUser && loggedInUser.name) || '',
+      managerTitle: (loggedInUser && (loggedInUser.title || (loggedInUser.company && loggedInUser.company.ceo_title))) || '',
+      email: (loggedInUser && loggedInUser.email) || '',
+      phone: (loggedInUser && (loggedInUser.phone || (loggedInUser.company && loggedInUser.company.phone))) || '',
+      phone2: (loggedInUser && ((loggedInUser.company && loggedInUser.company.phone2) || loggedInUser.phone2)) || '',
+      address: (loggedInUser && ((loggedInUser.company && loggedInUser.company.address) || loggedInUser.address)) || '',
+      address2: (loggedInUser && ((loggedInUser.company && loggedInUser.company.address2) || loggedInUser.address2)) || '',
       socialLinks: {
-        whatsapp: '905362556424',
-        telegram: 'muhiddinoktem',
-        twitter: 'muhiddinoktem',
-        linkedin: 'muhiddinoktem',
-        facebook: 'muhiddinoktem',
-        instagram: 'muhiddinoktem',
-        youtube: 'vedubox'
+        whatsapp: (loggedInUser && loggedInUser.company && loggedInUser.company.social_links && loggedInUser.company.social_links.whatsapp) || '',
+        telegram: (loggedInUser && loggedInUser.company && loggedInUser.company.social_links && loggedInUser.company.social_links.telegram) || '',
+        twitter: (loggedInUser && loggedInUser.company && loggedInUser.company.social_links && loggedInUser.company.social_links.twitter) || '',
+        linkedin: (loggedInUser && loggedInUser.company && loggedInUser.company.social_links && loggedInUser.company.social_links.linkedin) || '',
+        facebook: (loggedInUser && loggedInUser.company && loggedInUser.company.social_links && loggedInUser.company.social_links.facebook) || '',
+        instagram: (loggedInUser && loggedInUser.company && loggedInUser.company.social_links && loggedInUser.company.social_links.instagram) || '',
+        youtube: (loggedInUser && loggedInUser.company && loggedInUser.company.social_links && loggedInUser.company.social_links.youtube) || '',
+        tiktok: (loggedInUser && loggedInUser.company && loggedInUser.company.social_links && loggedInUser.company.social_links.tiktok) || ''
       },
-      products: [
-        { id: 'prod-1', name: 'Vedubox', subtitle: 'Online Eğitim & LMS Platformu', url: 'https://vedubox.com', logo: 'vedubox.png' },
-        { id: 'prod-2', name: 'Etgigrup', subtitle: 'Bilişim & Eğitim Teknolojileri', url: 'https://etgigrup.com', logo: 'etgigrup.png' }
-      ]
+      products: (loggedInUser && loggedInUser.company && Array.isArray(loggedInUser.company.products)) ? loggedInUser.company.products : []
     },
     integrations: {
       google: {
         calendarSync: true,
         meetAuto: true,
-        reviewUrl: 'https://g.page/r/vedubox/review',
-        clientId: '782910482910-vedubox.apps.googleusercontent.com'
+        reviewUrl: '',
+        clientId: ''
       },
       zoom: {
         autoLink: true,
         waitingRoom: true,
-        accountId: 'zoom_acc_98412894',
-        clientId: 'zm_client_849201948',
-        clientSecret: 'zm_secret_k84920f92j1923'
+        accountId: '',
+        clientId: '',
+        clientSecret: ''
+      },
+      teams: {
+        autoMeeting: true,
+        calendarSync: true,
+        channelNotify: true,
+        tenantId: '',
+        clientId: '',
+        clientSecret: '',
+        webhookUrl: ''
       },
       hubspot: {
         autoSyncContacts: true,
         autoSyncVoice: true,
-        portalId: '4829104',
+        portalId: '',
         stage: 'lead',
-        apiKey: 'demo_hubspot_token_placeholder'
+        apiKey: ''
       }
     }
   };
 
   let adminSettings = { ...defaultAdminSettings };
   try {
-    const savedAdmin = localStorage.getItem('monacard_admin_settings');
+    const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : 'default');
+    const storageKey = `monacard_admin_settings_${userCompId}`;
+    const savedAdmin = localStorage.getItem(storageKey);
     if (savedAdmin) {
       adminSettings = { ...defaultAdminSettings, ...JSON.parse(savedAdmin) };
+    }
+    if (loggedInUser && loggedInUser.name) {
+      if (!adminSettings.companyProfile) adminSettings.companyProfile = { ...defaultAdminSettings.companyProfile };
+      adminSettings.companyProfile.managerName = loggedInUser.name;
+      const compName = (loggedInUser.company && loggedInUser.company.name) || loggedInUser.company_name;
+      if (compName) adminSettings.companyProfile.name = compName;
+      if (loggedInUser.email) adminSettings.companyProfile.email = loggedInUser.email;
+      if (loggedInUser.phone) adminSettings.companyProfile.phone = loggedInUser.phone;
     }
   } catch (e) {
     console.warn('Admin settings storage error', e);
@@ -942,7 +1452,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function saveAdminSettingsToStorage() {
     try {
-      localStorage.setItem('monacard_admin_settings', JSON.stringify(adminSettings));
+      const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : 'default');
+      localStorage.setItem(`monacard_admin_settings_${userCompId}`, JSON.stringify(adminSettings));
     } catch (e) {}
   }
 
@@ -950,20 +1461,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1. STAFF PROFILE DATA & LOCAL STORAGE
   // =========================================================
   const defaultProfile = {
-    fullName: "Muhiddin Öktem",
-    company: "Vedubox",
-    title: "Senior Product Designer & Creative Technologist",
-    phone: "+90 536 255 64 24",
-    phoneClean: "+905362556424",
-    email: "muhiddinoktem@vedubox.com",
-    website: "https://vedubox.com",
-    address: "Dalgıç Sk. Yeşilce Mh.\nNo 3 Kağıthane / İstanbul",
-    whatsapp: "905362556424",
-    telegram: "muhiddinoktem",
-    linkedin: "muhiddinoktem",
-    twitter: "muhiddinoktem",
-    facebook: "muhiddinoktem",
-    instagram: "muhiddinoktem",
+    fullName: (loggedInUser && loggedInUser.name) || "Muhiddin Öktem",
+    company: (loggedInUser && ((loggedInUser.company && loggedInUser.company.name) || loggedInUser.company_name)) || "Vedubox",
+    title: (loggedInUser && loggedInUser.title) || "Senior Product Designer & Creative Technologist",
+    phone: (loggedInUser && loggedInUser.phone) || "+90 536 255 64 24",
+    phoneClean: (loggedInUser && loggedInUser.phone ? loggedInUser.phone.replace(/\D/g, '') : "+905362556424"),
+    email: (loggedInUser && loggedInUser.email) || "muhiddinoktem@vedubox.com",
+    website: (loggedInUser && ((loggedInUser.company && loggedInUser.company.website) || loggedInUser.website)) || "https://vedubox.com",
+    address: "",
+    whatsapp: "",
+    telegram: "",
+    linkedin: "",
+    twitter: "",
+    facebook: "",
+    instagram: "",
+    youtube: "",
+    tiktok: "",
     prodVeduboxUrl: "https://vedubox.com",
     prodEtgigrupUrl: "https://etgigrup.com"
   };
@@ -973,6 +1486,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const saved = localStorage.getItem('monacard_staff_profile');
     if (saved) {
       staffProfile = { ...defaultProfile, ...JSON.parse(saved) };
+    }
+    if (loggedInUser && loggedInUser.name) {
+      staffProfile.fullName = loggedInUser.name;
+      const compName = (loggedInUser.company && loggedInUser.company.name) || loggedInUser.company_name;
+      if (compName) staffProfile.company = compName;
+      if (loggedInUser.email) staffProfile.email = loggedInUser.email;
+      if (loggedInUser.phone) {
+        staffProfile.phone = loggedInUser.phone;
+        staffProfile.phoneClean = loggedInUser.phone.replace(/\D/g, '');
+      }
     }
   } catch (e) {
     console.warn('Profile storage error', e);
@@ -985,80 +1508,85 @@ document.addEventListener('DOMContentLoaded', () => {
     const emailEl = document.getElementById('displayEmail');
     const websiteEl = document.getElementById('displayWebsite');
     const addressEl = document.getElementById('displayAddress');
+    const contactItemAddress = document.getElementById('contactItemAddress');
 
-    if (nameEl) nameEl.textContent = staffProfile.fullName;
-    if (titleEl) titleEl.textContent = staffProfile.title;
+    // Corporate Profile inheritance
+    const compProf = (typeof adminSettings !== 'undefined' && adminSettings.companyProfile) ? adminSettings.companyProfile : {};
+
+    const activeFullName = staffProfile.fullName || compProf.managerName || 'Muhiddin Öktem';
+    const activeTitle = staffProfile.title || compProf.managerTitle || '';
+    const activePhone = staffProfile.phone || compProf.phone || '';
+    const activePhoneClean = (staffProfile.phoneClean || activePhone).replace(/[^\d+]/g, '');
+    const activeEmail = staffProfile.email || compProf.email || '';
+    const activeWebsite = compProf.website || staffProfile.website || '';
+    const activeAddress = compProf.address || staffProfile.address || '';
+
+    if (nameEl) nameEl.textContent = activeFullName;
+    if (titleEl) titleEl.textContent = activeTitle;
+
     if (phoneEl) {
-      phoneEl.textContent = staffProfile.phone;
-      phoneEl.href = `tel:${staffProfile.phoneClean}`;
+      if (activePhone) {
+        phoneEl.textContent = activePhone;
+        phoneEl.href = `tel:${activePhoneClean}`;
+        if (phoneEl.closest('.contact-item')) phoneEl.closest('.contact-item').style.display = 'flex';
+      } else {
+        if (phoneEl.closest('.contact-item')) phoneEl.closest('.contact-item').style.display = 'none';
+      }
     }
+
     if (emailEl) {
-      emailEl.textContent = staffProfile.email;
-      emailEl.href = `mailto:${staffProfile.email}`;
+      if (activeEmail) {
+        emailEl.textContent = activeEmail;
+        emailEl.href = `mailto:${activeEmail}`;
+        if (emailEl.closest('.contact-item')) emailEl.closest('.contact-item').style.display = 'flex';
+      } else {
+        if (emailEl.closest('.contact-item')) emailEl.closest('.contact-item').style.display = 'none';
+      }
     }
+
     if (websiteEl) {
-      const cleanWeb = staffProfile.website.replace(/^https?:\/\//, '');
-      websiteEl.textContent = cleanWeb;
-      websiteEl.href = staffProfile.website.startsWith('http') ? staffProfile.website : `https://${staffProfile.website}`;
-    }
-    if (addressEl) {
-      addressEl.innerHTML = staffProfile.address.replace(/\n/g, '<br>');
+      if (activeWebsite) {
+        const cleanWeb = activeWebsite.replace(/^https?:\/\//, '');
+        websiteEl.textContent = cleanWeb;
+        websiteEl.href = activeWebsite.startsWith('http') ? activeWebsite : `https://${activeWebsite}`;
+        if (websiteEl.closest('.contact-item')) websiteEl.closest('.contact-item').style.display = 'flex';
+      } else {
+        if (websiteEl.closest('.contact-item')) websiteEl.closest('.contact-item').style.display = 'none';
+      }
     }
 
-    // Direct action links
-    // Direct action links
+    // Direct action links in contact cards
     const linkCallAction = document.getElementById('linkCallAction');
-    if (linkCallAction) linkCallAction.href = `tel:${staffProfile.phoneClean}`;
+    if (linkCallAction) linkCallAction.href = `tel:${activePhoneClean}`;
     const linkSmsAction = document.getElementById('linkSmsAction');
-    if (linkSmsAction) linkSmsAction.href = `sms:${staffProfile.phoneClean}`;
+    if (linkSmsAction) linkSmsAction.href = `sms:${activePhoneClean}`;
     const linkEmailAction = document.getElementById('linkEmailAction');
-    if (linkEmailAction) linkEmailAction.href = `mailto:${staffProfile.email}`;
+    if (linkEmailAction) linkEmailAction.href = `mailto:${activeEmail}`;
     const linkWebsiteAction = document.getElementById('linkWebsiteAction');
-    if (linkWebsiteAction) linkWebsiteAction.href = staffProfile.website;
+    if (linkWebsiteAction) linkWebsiteAction.href = activeWebsite.startsWith('http') ? activeWebsite : `https://${activeWebsite}`;
 
-    // Corporate Social Channels (Inherited automatically from Company Profile if empty on staff)
-    const compSoc = (typeof adminSettings !== 'undefined' && adminSettings.companyProfile && adminSettings.companyProfile.socialLinks)
-      ? adminSettings.companyProfile.socialLinks
-      : { whatsapp: '905362556424', telegram: 'muhiddinoktem', twitter: 'muhiddinoktem', linkedin: 'muhiddinoktem', facebook: 'muhiddinoktem', instagram: 'muhiddinoktem', youtube: 'vedubox' };
+    // Address Rendering (Hide if empty)
+    if (contactItemAddress) {
+      if (activeAddress && activeAddress.trim()) {
+        contactItemAddress.style.display = 'flex';
+        if (addressEl) addressEl.innerHTML = activeAddress.trim().replace(/\n/g, '<br>');
+      } else {
+        contactItemAddress.style.display = 'none';
+      }
+    }
 
-    const linkWhatsApp = document.getElementById('linkWhatsApp');
-    const waVal = staffProfile.whatsapp || compSoc.whatsapp || '905362556424';
-    if (linkWhatsApp) linkWhatsApp.href = `https://wa.me/${waVal.replace(/\D/g, '')}`;
-
-    const linkTelegram = document.getElementById('linkTelegram');
-    const tgVal = staffProfile.telegram || compSoc.telegram || 'muhiddinoktem';
-    if (linkTelegram) linkTelegram.href = `https://t.me/${tgVal}`;
-
-    const linkTwitter = document.getElementById('linkTwitter');
-    const twVal = staffProfile.twitter || compSoc.twitter || 'muhiddinoktem';
-    if (linkTwitter) linkTwitter.href = `https://x.com/${twVal}`;
-
-    const linkLinkedIn = document.getElementById('linkLinkedIn');
-    const liVal = staffProfile.linkedin || compSoc.linkedin || 'muhiddinoktem';
-    if (linkLinkedIn) linkLinkedIn.href = liVal.startsWith('http') ? liVal : `https://linkedin.com/in/${liVal}`;
-
-    const linkFacebook = document.getElementById('linkFacebook');
-    const fbVal = staffProfile.facebook || compSoc.facebook || 'muhiddinoktem';
-    if (linkFacebook) linkFacebook.href = fbVal.startsWith('http') ? fbVal : `https://facebook.com/${fbVal}`;
-
-    const linkInstagram = document.getElementById('linkInstagram');
-    const igVal = staffProfile.instagram || compSoc.instagram || 'muhiddinoktem';
-    if (linkInstagram) linkInstagram.href = `https://instagram.com/${igVal}`;
-
-    // Render Dynamic Products Vitrin on Cards
+    // Render Dynamic Products Vitrin and Social Links on Cards
     renderCardProducts();
+    renderCardSocialLinks();
   }
 
   // Dynamic Product Rendering for Digital Business Cards (Inherited to all staff & manager)
   function renderCardProducts() {
     const grid = document.getElementById('cardProductsGrid');
     const countBadge = document.getElementById('cardProductsCountBadge');
-    const prods = (typeof adminSettings !== 'undefined' && adminSettings.companyProfile && adminSettings.companyProfile.products)
+    const prods = (typeof adminSettings !== 'undefined' && adminSettings.companyProfile && Array.isArray(adminSettings.companyProfile.products))
       ? adminSettings.companyProfile.products
-      : [
-          { id: 'prod-1', name: 'Vedubox', subtitle: 'Online Eğitim & Akademi', url: 'https://vedubox.com', logo: 'vedubox.png' },
-          { id: 'prod-2', name: 'Etgigrup', subtitle: 'Bilişim & Eğitim Teknolojileri', url: 'https://etgigrup.com', logo: 'etgigrup.png' }
-        ];
+      : [];
 
     if (countBadge) {
       countBadge.textContent = `${prods.length} Marka / Ürün`;
@@ -1066,12 +1594,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (grid) {
       if (prods.length === 0) {
-        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:16px;color:#94A3B8;font-size:12.5px;">Henüz şirket ürünü eklenmedi.</div>`;
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:24px 16px;color:#94A3B8;font-size:12.5px;background:#F8FAFC;border:1px dashed #CBD5E1;border-radius:14px;">Henüz şirket ürünü eklenmedi.</div>`;
         return;
       }
 
       grid.innerHTML = prods.map(p => {
-        const isImg = p.logo && (p.logo.includes('.') || p.logo.startsWith('http'));
+        const isImg = p.logo && (p.logo.includes('.') || p.logo.startsWith('http') || p.logo.startsWith('data:image'));
         return `
           <a href="${p.url || '#'}" target="_blank" rel="noopener noreferrer" class="product-card">
             <div class="product-card-top">
@@ -1088,6 +1616,141 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
       }).join('');
     }
+  }
+
+  // Dynamic Corporate Social Media Channels Rendering (Only displays entered platforms)
+  function renderCardSocialLinks() {
+    const grid = document.getElementById('cardSocialGrid');
+    const countBadge = document.getElementById('cardSocialCountBadge');
+    const section = document.getElementById('cardSocialSection');
+    if (!grid) return;
+
+    const compSoc = (typeof adminSettings !== 'undefined' && adminSettings.companyProfile && adminSettings.companyProfile.socialLinks)
+      ? adminSettings.companyProfile.socialLinks
+      : {};
+
+    const platforms = [];
+
+    // WhatsApp
+    const waVal = (staffProfile && staffProfile.whatsapp) || compSoc.whatsapp;
+    if (waVal && waVal.trim()) {
+      const cleanWa = waVal.replace(/\D/g, '');
+      platforms.push({
+        id: 'whatsapp',
+        boxClass: 'whatsapp-box',
+        name: 'WhatsApp',
+        url: `https://wa.me/${cleanWa}`,
+        svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>`
+      });
+    }
+
+    // Telegram
+    const tgVal = (staffProfile && staffProfile.telegram) || compSoc.telegram;
+    if (tgVal && tgVal.trim()) {
+      const cleanTg = tgVal.replace(/^@/, '');
+      platforms.push({
+        id: 'telegram',
+        boxClass: 'telegram-box',
+        name: 'Telegram',
+        url: tgVal.startsWith('http') ? tgVal : `https://t.me/${cleanTg}`,
+        svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>`
+      });
+    }
+
+    // X (Twitter)
+    const twVal = (staffProfile && staffProfile.twitter) || compSoc.twitter;
+    if (twVal && twVal.trim()) {
+      const cleanTw = twVal.replace(/^@/, '');
+      platforms.push({
+        id: 'twitter',
+        boxClass: 'x-box',
+        name: 'X - Twitter',
+        url: twVal.startsWith('http') ? twVal : `https://x.com/${cleanTw}`,
+        svg: `<svg width="18" height="18" viewBox="0 0 24 24" fill="#0F172A"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`
+      });
+    }
+
+    // LinkedIn
+    const liVal = (staffProfile && staffProfile.linkedin) || compSoc.linkedin;
+    if (liVal && liVal.trim()) {
+      platforms.push({
+        id: 'linkedin',
+        boxClass: 'linkedin-box',
+        name: 'LinkedIn',
+        url: liVal.startsWith('http') ? liVal : `https://linkedin.com/in/${liVal}`,
+        svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A66C2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>`
+      });
+    }
+
+    // Facebook
+    const fbVal = (staffProfile && staffProfile.facebook) || compSoc.facebook;
+    if (fbVal && fbVal.trim()) {
+      platforms.push({
+        id: 'facebook',
+        boxClass: 'facebook-box',
+        name: 'Facebook',
+        url: fbVal.startsWith('http') ? fbVal : `https://facebook.com/${fbVal}`,
+        svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1877F2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>`
+      });
+    }
+
+    // Instagram
+    const igVal = (staffProfile && staffProfile.instagram) || compSoc.instagram;
+    if (igVal && igVal.trim()) {
+      const cleanIg = igVal.replace(/^@/, '');
+      platforms.push({
+        id: 'instagram',
+        boxClass: 'instagram-box',
+        name: 'Instagram',
+        url: igVal.startsWith('http') ? igVal : `https://instagram.com/${cleanIg}`,
+        svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E1306C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>`
+      });
+    }
+
+    // YouTube
+    const ytVal = (staffProfile && staffProfile.youtube) || compSoc.youtube;
+    if (ytVal && ytVal.trim()) {
+      const cleanYt = ytVal.replace(/^@/, '');
+      platforms.push({
+        id: 'youtube',
+        boxClass: 'youtube-box',
+        name: 'YouTube',
+        url: ytVal.startsWith('http') ? ytVal : `https://youtube.com/@${cleanYt}`,
+        svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>`
+      });
+    }
+
+    // TikTok
+    const ttVal = (staffProfile && staffProfile.tiktok) || compSoc.tiktok;
+    if (ttVal && ttVal.trim()) {
+      const cleanTt = ttVal.replace(/^@/, '');
+      platforms.push({
+        id: 'tiktok',
+        boxClass: 'tiktok-box',
+        name: 'TikTok',
+        url: ttVal.startsWith('http') ? ttVal : `https://tiktok.com/@${cleanTt}`,
+        svg: `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.49 6.27 6.27 0 0 0 1.88-4.48V8.75a8.28 8.28 0 0 0 5-1.74z"/></svg>`
+      });
+    }
+
+    if (countBadge) {
+      countBadge.textContent = `${platforms.length} Platform`;
+    }
+
+    if (platforms.length === 0) {
+      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:24px 16px;color:#94A3B8;font-size:12.5px;background:#F8FAFC;border:1px dashed #CBD5E1;border-radius:14px;">Henüz sosyal medya kanalı eklenmedi.</div>`;
+      return;
+    }
+
+    grid.innerHTML = platforms.map(p => `
+      <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="social-card-compact" id="linkSocial${p.id.charAt(0).toUpperCase() + p.id.slice(1)}">
+        <div class="social-icon-box ${p.boxClass}">
+          ${p.svg}
+        </div>
+        <span class="social-name">${p.name}</span>
+        <span class="social-arrow">↗</span>
+      </a>
+    `).join('');
   }
 
   applyProfileToUI();
@@ -1455,16 +2118,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
-  let adminStaffList = [...initialAdminStaff];
+  function getStaffScore(s) {
+    if (!s) return 0;
+    if ((!s.totalContacts || s.totalContacts === 0) && (!s.hotCount || s.hotCount === 0) && (!s.newLeads || s.newLeads === 0)) {
+      return 0;
+    }
+    if (s.score !== undefined && s.score !== null) {
+      return Number(s.score);
+    }
+    if (s.monthlyTarget && s.monthlyTarget > 0) {
+      return Math.min(100, Math.round(((s.totalContacts || 0) / s.monthlyTarget) * 100));
+    }
+    return 0;
+  }
+
+  let adminStaffList = [];
   try {
     const savedStaff = localStorage.getItem('monacard_admin_staff');
     if (savedStaff) {
       const parsed = JSON.parse(savedStaff);
-      // Ensure monthlyTarget exists for each
-      adminStaffList = parsed.map((s, idx) => ({
-        ...s,
-        monthlyTarget: s.monthlyTarget || (initialAdminStaff[idx] ? initialAdminStaff[idx].monthlyTarget : 15)
-      }));
+      // Ensure monthlyTarget exists for each and zero-out empty staff scores
+      adminStaffList = parsed.map((s, idx) => {
+        let score = (s.score !== undefined) ? s.score : 0;
+        if ((!s.totalContacts || s.totalContacts === 0) && (!s.hotCount || s.hotCount === 0) && (!s.newLeads || s.newLeads === 0)) {
+          score = 0;
+        }
+        return {
+          ...s,
+          score: score,
+          monthlyTarget: s.monthlyTarget || (initialAdminStaff[idx] ? initialAdminStaff[idx].monthlyTarget : 15)
+        };
+      });
+    } else if (!loggedInUser) {
+      adminStaffList = [...initialAdminStaff];
     }
   } catch (e) {
     console.warn('Admin staff storage error', e);
@@ -1483,28 +2169,36 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Manager Personal VIP Meetings
-  let adminPersonalMeetings = [
-    {
-      id: "meet-admin-1",
-      title: "VIP Yatırımcı & Yönetim Kurulu Sunumu",
-      date: "2026-09-24",
-      time: "10:30",
-      type: "Google Meet",
-      participants: "Dr. Selim Bayraktar, Ayşe Hanım",
-      isPast: false,
-      isPersonal: true
-    },
-    {
-      id: "meet-admin-2",
-      title: "Bölge Satış Strateji Değerlendirmesi",
-      date: "2026-09-26",
-      time: "15:00",
-      type: "Yüz Yüze",
-      participants: "Ali Rıza Çelik, Zeynep Arslan",
-      isPast: false,
-      isPersonal: true
+  let adminPersonalMeetings = [];
+  try {
+    const savedPersonal = localStorage.getItem('monacard_admin_personal_meetings');
+    if (savedPersonal) {
+      adminPersonalMeetings = JSON.parse(savedPersonal);
+    } else if (!loggedInUser) {
+      adminPersonalMeetings = [
+        {
+          id: "meet-admin-1",
+          title: "VIP Yatırımcı & Yönetim Kurulu Sunumu",
+          date: "2026-09-24",
+          time: "10:30",
+          type: "Google Meet",
+          participants: "Dr. Selim Bayraktar, Ayşe Hanım",
+          isPast: false,
+          isPersonal: true
+        },
+        {
+          id: "meet-admin-2",
+          title: "Bölge Satış Strateji Değerlendirmesi",
+          date: "2026-09-26",
+          time: "15:00",
+          type: "Yüz Yüze",
+          participants: "Ali Rıza Çelik, Zeynep Arslan",
+          isPast: false,
+          isPersonal: true
+        }
+      ];
     }
-  ];
+  } catch (e) {}
 
   // 1. Apply Company Settings to Document Root & Themes
   function applyCompanySettingsToApp() {
@@ -1614,11 +2308,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const isDark = adminSettings.themeMode === 'dark';
       document.body.className = isDark ? 'role-customer theme-dark' : 'role-customer';
       if (btnRoleCustomer) btnRoleCustomer.classList.add('active');
-      if (reviewBtnText) reviewBtnText.textContent = currentLang === 'en' ? 'Leave Review' : 'Yorum Bırak';
+      if (reviewBtnText) reviewBtnText.textContent = currentLang === 'en' ? 'Leave Review' : 'Yorum Yap';
       if (reviewBtnShareIcon) reviewBtnShareIcon.style.display = 'none';
       if (btnLeaveReview) btnLeaveReview.title = currentLang === 'en' ? 'Leave Google Review' : 'Google Değerlendirmesi Bırak';
       const cancelledOverlay = document.getElementById('staffCancelledCardOverlay');
       if (cancelledOverlay) cancelledOverlay.classList.add('hidden');
+      applyProfileToUI();
       navigateToPage('pageHome');
       if (!silent) {
         showToast(currentLang === 'en' ? 'Client View Active (Simplified Card)' : 'Müşteri Ekranı Aktif (Sadeleştirilmiş Görünüm)');
@@ -1627,9 +2322,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const isDark = adminSettings.themeMode === 'dark';
       document.body.className = isDark ? 'role-staff theme-dark' : 'role-staff';
       if (btnRoleStaff) btnRoleStaff.classList.add('active');
-      if (reviewBtnText) reviewBtnText.textContent = currentLang === 'en' ? 'Share' : 'Paylaş';
-      if (reviewBtnShareIcon) reviewBtnShareIcon.style.display = 'inline-block';
-      if (btnLeaveReview) btnLeaveReview.title = currentLang === 'en' ? 'Share Google Review Link' : 'Google Yorum Bağlantısını Paylaş';
+      if (reviewBtnText) reviewBtnText.textContent = currentLang === 'en' ? 'Leave Review' : 'Yorum Yap';
+      if (reviewBtnShareIcon) reviewBtnShareIcon.style.display = 'none';
+      if (btnLeaveReview) btnLeaveReview.title = currentLang === 'en' ? 'Leave Google Review' : 'Google Değerlendirmesi Bırak';
       
       const activeStaff = adminStaffList.find(s => s.id === 'staff-1') || adminStaffList[0];
       if (activeStaff) {
@@ -1639,6 +2334,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const cancelledOverlay = document.getElementById('staffCancelledCardOverlay');
       if (cancelledOverlay) cancelledOverlay.classList.add('hidden');
 
+      applyProfileToUI();
       if (!silent) {
         showToast(currentLang === 'en' ? 'Staff Portal Active (All Management Features Enabled)' : 'Personel Paneli Aktif (Tüm Yönetim Özellikleri Açık)');
       }
@@ -1727,64 +2423,59 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function downloadFullVCard() {
-    const cleanPhone = staffProfile.phoneClean;
-    const cleanAddress = staffProfile.address.replace(/\n/g, ', ');
-    const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(cleanAddress)}`;
-    const whatsappUrl = `https://wa.me/${staffProfile.whatsapp.replace(/\D/g, '')}`;
-    const telegramUrl = `https://t.me/${staffProfile.telegram}`;
-    const linkedinUrl = `https://linkedin.com/in/${staffProfile.linkedin}`;
-    const twitterUrl = `https://x.com/${staffProfile.twitter}`;
-    const facebookUrl = `https://facebook.com/${staffProfile.facebook}`;
-    const instagramUrl = `https://instagram.com/${staffProfile.instagram}`;
-
-    const noteContent = [
-      "MonaCard Akıllı Dijital Kartvizit",
-      `Şirket: ${staffProfile.company}`,
-      `Ünvan: ${staffProfile.title}`,
-      `Telefon: ${staffProfile.phone}`,
-      `E-Posta: ${staffProfile.email}`,
-      `Web: ${staffProfile.website}`,
-      `Adres: ${cleanAddress}`,
-      `Harita: ${mapsUrl}`,
-      `WhatsApp: ${whatsappUrl}`,
-      `Telegram: ${telegramUrl}`,
-      `LinkedIn: ${linkedinUrl}`,
-      `X: ${twitterUrl}`,
-      `Facebook: ${facebookUrl}`,
-      `Instagram: ${instagramUrl}`
-    ].join('\\n');
+    const compProf = (typeof adminSettings !== 'undefined' && adminSettings.companyProfile) ? adminSettings.companyProfile : {};
+    const activeFullName = staffProfile.fullName || compProf.managerName || 'Muhiddin Öktem';
+    const activeCompany = compProf.name || staffProfile.company || 'Vedubox';
+    const activeTitle = staffProfile.title || compProf.managerTitle || '';
+    const activePhone = staffProfile.phone || compProf.phone || '+90 536 255 64 24';
+    const activePhoneClean = (staffProfile.phoneClean || activePhone).replace(/[^\d+]/g, '');
+    const activeEmail = staffProfile.email || compProf.email || 'muhiddinoktem@vedubox.com';
+    const activeWebsite = compProf.website || staffProfile.website || 'https://vedubox.com';
+    const activeAddress = compProf.address || staffProfile.address || '';
+    const cleanAddress = activeAddress.replace(/\n/g, ', ');
 
     const vcardLines = [
       'BEGIN:VCARD',
       'VERSION:3.0',
       'PRODID:-//MonaCard//Digital Business Card 2.0//TR',
-      `N:Öktem;Muhiddin;;;`,
-      `FN:${staffProfile.fullName}`,
-      `ORG:${staffProfile.company}`,
-      `TITLE:${staffProfile.title}`,
-      `TEL;TYPE=CELL,VOICE,PREF:${cleanPhone}`,
-      `TEL;TYPE=WORK,VOICE:${cleanPhone}`,
-      `EMAIL;TYPE=WORK,INTERNET,PREF:${staffProfile.email}`,
-      `URL;TYPE=WORK,PREF:${staffProfile.website}`,
-      `ADR;TYPE=WORK,POSTAL,PARCEL:;;Dalgıç Sk. Yeşilce Mh. No 3;Kağıthane;İstanbul;34418;Turkey`,
-      `URL;TYPE=LOCATION:${mapsUrl}`,
-      `X-SOCIALPROFILE;TYPE=whatsapp:${whatsappUrl}`,
-      `X-SOCIALPROFILE;TYPE=telegram:${telegramUrl}`,
-      `X-SOCIALPROFILE;TYPE=linkedin:${linkedinUrl}`,
-      `X-SOCIALPROFILE;TYPE=twitter:${twitterUrl}`,
-      `X-SOCIALPROFILE;TYPE=facebook:${facebookUrl}`,
-      `X-SOCIALPROFILE;TYPE=instagram:${instagramUrl}`,
-      `NOTE;CHARSET=UTF-8:${noteContent}`,
-      `REV:${new Date().toISOString()}`,
-      'END:VCARD'
+      `FN:${activeFullName}`,
+      `ORG:${activeCompany}`,
+      `TITLE:${activeTitle}`,
+      `TEL;TYPE=CELL,VOICE,PREF:${activePhoneClean}`,
+      `TEL;TYPE=WORK,VOICE:${activePhoneClean}`,
+      `EMAIL;TYPE=WORK,INTERNET,PREF:${activeEmail}`,
+      `URL;TYPE=WORK,PREF:${activeWebsite}`
     ];
+
+    if (cleanAddress) {
+      const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(cleanAddress)}`;
+      vcardLines.push(`ADR;TYPE=WORK,POSTAL,PARCEL:;;${cleanAddress};;;;Turkey`);
+      vcardLines.push(`URL;TYPE=LOCATION:${mapsUrl}`);
+    }
+
+    const soc = compProf.socialLinks || {};
+    const wa = staffProfile.whatsapp || soc.whatsapp;
+    if (wa) vcardLines.push(`X-SOCIALPROFILE;TYPE=whatsapp:https://wa.me/${wa.replace(/\D/g, '')}`);
+    const tg = staffProfile.telegram || soc.telegram;
+    if (tg) vcardLines.push(`X-SOCIALPROFILE;TYPE=telegram:https://t.me/${tg.replace(/^@/, '')}`);
+    const li = staffProfile.linkedin || soc.linkedin;
+    if (li) vcardLines.push(`X-SOCIALPROFILE;TYPE=linkedin:${li.startsWith('http') ? li : 'https://linkedin.com/in/' + li}`);
+    const tw = staffProfile.twitter || soc.twitter;
+    if (tw) vcardLines.push(`X-SOCIALPROFILE;TYPE=twitter:https://x.com/${tw.replace(/^@/, '')}`);
+    const fb = staffProfile.facebook || soc.facebook;
+    if (fb) vcardLines.push(`X-SOCIALPROFILE;TYPE=facebook:${fb.startsWith('http') ? fb : 'https://facebook.com/' + fb}`);
+    const ig = staffProfile.instagram || soc.instagram;
+    if (ig) vcardLines.push(`X-SOCIALPROFILE;TYPE=instagram:https://instagram.com/${ig.replace(/^@/, '')}`);
+
+    vcardLines.push(`REV:${new Date().toISOString()}`);
+    vcardLines.push('END:VCARD');
 
     const vcardContent = vcardLines.join('\r\n');
     const blob = new Blob([vcardContent], { type: 'text/vcard;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `${staffProfile.fullName.replace(/\s+/g, '_')}_MonaCard.vcf`);
+    link.setAttribute('download', `${activeFullName.replace(/\s+/g, '_')}_MonaCard.vcf`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -1856,24 +2547,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const reviewModal = document.getElementById('reviewModal');
   if (btnLeaveReview) {
     btnLeaveReview.addEventListener('click', () => {
-      if (activeRole === 'staff') {
-        const shareModal = document.getElementById('shareModal');
-        if (navigator.share) {
-          navigator.share({
-            title: `${staffProfile.fullName} - Google Değerlendirme`,
-            text: `${staffProfile.fullName} için Google değerlendirmesi bağlantısı:`,
-            url: window.location.href
-          }).catch(() => {
-            if (shareModal) openModal(shareModal);
-          });
-        } else if (shareModal) {
-          openModal(shareModal);
-        } else {
-          showToast('Google Yorum bağlantısı paylaşıldı! 🌟');
-        }
-      } else {
-        if (reviewModal) openModal(reviewModal);
-      }
+      if (reviewModal) openModal(reviewModal);
     });
   }
 
@@ -2076,10 +2750,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
-  let customers = [...initialCustomers];
+  let customers = [];
   try {
     const savedCust = localStorage.getItem('monacard_crm_customers');
-    if (savedCust) customers = JSON.parse(savedCust);
+    if (savedCust) {
+      customers = JSON.parse(savedCust);
+    } else if (!loggedInUser) {
+      customers = [...initialCustomers];
+    }
   } catch (e) {
     console.warn(e);
   }
@@ -2516,7 +3194,7 @@ document.addEventListener('DOMContentLoaded', () => {
       customer: "Zeynep Kaya (Kaya Mimarlık)",
       date: "2026-09-21",
       time: "15:00",
-      type: "Yüz Yüze",
+      type: "Bizim Ofis",
       completed: false
     },
     {
@@ -2541,15 +3219,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
-  let meetings = [...defaultMeetings];
+  let meetings = [];
   try {
     const savedM = localStorage.getItem('monacard_meetings');
     if (savedM) {
-      const saved = JSON.parse(savedM);
-      // Merge: keep saved meetings + add any new defaults not in saved
-      const savedIds = new Set(saved.map(m => m.id));
-      const newDefaults = defaultMeetings.filter(m => !savedIds.has(m.id));
-      meetings = [...saved, ...newDefaults];
+      meetings = JSON.parse(savedM);
+    } else if (!loggedInUser) {
+      meetings = [...defaultMeetings];
     }
   } catch (e) {
     console.warn(e);
@@ -2563,7 +3239,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Google Meet, Zoom Meet ve Yüz Yüze (2'li User İkonu) SVG ve Stilleri
+  // Google Meet, Zoom Meet, Teams, Bizim Ofis ve Müşteri Ofisi SVG ve Stilleri
   function getMeetingPlatformData(type) {
     const t = (type || '').toLowerCase();
     if (t.includes('zoom')) {
@@ -2575,6 +3251,20 @@ document.addEventListener('DOMContentLoaded', () => {
             <rect width="48" height="48" rx="12" fill="#2D8CFF"/>
             <path d="M12 18C12 16.3431 13.3431 15 15 15H26C27.6569 15 29 16.3431 29 18V30C29 31.6569 27.6569 33 26 33H15C13.3431 33 12 31.6569 12 30V18Z" fill="white"/>
             <path d="M30.5 21.2L36 17.5C36.6 17.1 37.5 17.5 37.5 18.3V29.7C37.5 30.5 36.6 30.9 36 30.5L30.5 26.8V21.2Z" fill="white"/>
+          </svg>
+        `
+      };
+    } else if (t.includes('team') || t.includes('microsoft')) {
+      return {
+        class: 'teams',
+        label: 'Microsoft Teams',
+        svg: `
+          <svg width="26" height="26" viewBox="0 0 48 48" fill="none">
+            <rect width="48" height="48" rx="12" fill="#505AC9"/>
+            <path d="M28.5 16.5C28.5 14.567 30.067 13 32 13C33.933 13 35.5 14.567 35.5 16.5C35.5 18.433 33.933 20 32 20C30.067 20 28.5 18.433 28.5 16.5Z" fill="#7B83EB"/>
+            <path d="M29 22H35C36.6569 22 38 23.3431 38 25V28H29V22Z" fill="#7B83EB"/>
+            <path d="M16 19C16 16.2386 18.2386 14 21 14C23.7614 14 26 16.2386 26 19C26 21.7614 23.7614 24 21 24C18.2386 24 16 21.7614 16 19Z" fill="white"/>
+            <path d="M12 28C12 25.7909 13.7909 24 16 24H26C28.2091 24 30 25.7909 30 28V34H12V28Z" fill="white"/>
           </svg>
         `
       };
@@ -2592,21 +3282,70 @@ document.addEventListener('DOMContentLoaded', () => {
           </svg>
         `
       };
-    } else {
-      // Yüz yüze veya Müşteri Ofisi: 2'li user ikonu
+    } else if (t.includes('müşteri') || t.includes('musteri') || t.includes('client')) {
       return {
-        class: 'face',
-        label: type || 'Yüz Yüze',
+        class: 'client-office',
+        label: 'Müşteri Ofisi',
         svg: `
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4338CA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+        `
+      };
+    } else {
+      // Bizim Ofis / Şube Ofisi
+      const labelText = t.includes('şube') ? 'Şube Ofisi' : 'Bizim Ofis';
+      return {
+        class: 'company-office',
+        label: labelText,
+        svg: `
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00A86B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+            <line x1="9" y1="22" x2="9" y2="22.01"></line>
+            <line x1="15" y1="22" x2="15" y2="22.01"></line>
+            <line x1="9" y1="6" x2="9" y2="6.01"></line>
+            <line x1="15" y1="6" x2="15" y2="6.01"></line>
+            <line x1="9" y1="10" x2="9" y2="10.01"></line>
+            <line x1="15" y1="10" x2="15" y2="10.01"></line>
+            <line x1="9" y1="14" x2="9" y2="14.01"></line>
+            <line x1="15" y1="14" x2="15" y2="14.01"></line>
           </svg>
         `
       };
     }
+  }
+
+  // Dinamik Toplantı Ortamı Seçeneklerini Doldurucu
+  function populateMeetingTypeOptions(selectElement, selectedValue = "") {
+    if (!selectElement) return;
+    const isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+    const companyName = (typeof adminSettings !== 'undefined' && adminSettings.companyProfile && adminSettings.companyProfile.name) || '';
+    const hasBranch = !!(typeof adminSettings !== 'undefined' && adminSettings.companyProfile && adminSettings.companyProfile.address2);
+
+    const officeLabel = isEn ? (companyName ? `Head Office (${companyName})` : 'Head Office') : (companyName ? `Bizim Ofis (${companyName})` : 'Bizim Ofis');
+    const clientOfficeLabel = isEn ? 'Client Office' : 'Müşteri Ofisi';
+    const branchLabel = isEn ? 'Branch Office' : 'Şube Ofisi';
+
+    const options = [
+      { value: 'Google Meet', label: 'Google Meet (Online)' },
+      { value: 'Zoom Meet', label: 'Zoom Meet (Online)' },
+      { value: 'Microsoft Teams', label: 'Microsoft Teams (Online)' },
+      { value: 'Bizim Ofis', label: officeLabel },
+      { value: 'Müşteri Ofisi', label: clientOfficeLabel }
+    ];
+
+    if (hasBranch) {
+      options.splice(4, 0, { value: 'Şube Ofisi', label: branchLabel });
+    }
+
+    const currentVal = selectedValue || selectElement.value || 'Google Meet';
+
+    selectElement.innerHTML = options.map(opt => `
+      <option value="${opt.value}" ${(opt.value === currentVal || currentVal.includes(opt.value)) ? 'selected' : ''}>
+        ${opt.label}
+      </option>
+    `).join('');
   }
 
   // =========================================================
@@ -2732,13 +3471,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (countBadge && placeholder) {
+        const isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
         if (newMeetingSelectedCustomers.length > 0) {
-          countBadge.textContent = `${newMeetingSelectedCustomers.length} Seçili`;
+          countBadge.textContent = isEn ? `${newMeetingSelectedCustomers.length} Selected` : `${newMeetingSelectedCustomers.length} Seçili`;
           countBadge.classList.remove('hidden');
-          placeholder.textContent = `${newMeetingSelectedCustomers.length} Katılımcı seçildi`;
+          placeholder.textContent = isEn ? `${newMeetingSelectedCustomers.length} Participants selected` : `${newMeetingSelectedCustomers.length} Katılımcı seçildi`;
         } else {
           countBadge.classList.add('hidden');
-          placeholder.textContent = "Katılımcıları seçin (Çoklu seçim)...";
+          placeholder.textContent = isEn ? "Select participants (Multi-select)..." : "Katılımcıları seçin (Çoklu seçim)...";
         }
       }
     };
@@ -2823,13 +3563,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (countBadge && placeholder) {
+      const isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
       if (editModalSelectedCustomers.length > 0) {
-        countBadge.textContent = `${editModalSelectedCustomers.length} Seçili`;
+        countBadge.textContent = isEn ? `${editModalSelectedCustomers.length} Selected` : `${editModalSelectedCustomers.length} Seçili`;
         countBadge.classList.remove('hidden');
-        placeholder.textContent = `${editModalSelectedCustomers.length} Katılımcı seçildi`;
+        placeholder.textContent = isEn ? `${editModalSelectedCustomers.length} Participants selected` : `${editModalSelectedCustomers.length} Katılımcı seçildi`;
       } else {
         countBadge.classList.add('hidden');
-        placeholder.textContent = "Katılımcı seçin...";
+        placeholder.textContent = isEn ? "Select participants..." : "Katılımcı seçin...";
       }
     }
   }
@@ -2850,8 +3591,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!m) return;
     activeMeetingIndex = index;
 
+    const isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
     const modalTitle = document.getElementById('meetDetTitle');
-    if (modalTitle) modalTitle.textContent = 'Toplantı Detayı & Düzenle';
+    if (modalTitle) modalTitle.textContent = isEn ? 'Meeting Details & Management' : 'Toplantı Detayı & Düzenle';
 
     const pData = getMeetingPlatformData(m.type);
     const logoBox = document.getElementById('meetDetPlatformLogo');
@@ -2862,12 +3604,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const titleInput = document.getElementById('editMeetTitle');
-    if (titleInput) titleInput.value = m.title;
+    if (titleInput) {
+      titleInput.value = m.title;
+      titleInput.placeholder = isEn ? 'Meeting Subject / Title' : 'Toplantı Konusu / Başlığı';
+    }
 
     const isPast = isMeetingPast(m);
     const statusBadge = document.getElementById('meetDetStatusBadge');
     if (statusBadge) {
-      statusBadge.textContent = isPast ? 'Zamanı Geçti' : 'Planlandı';
+      statusBadge.textContent = isPast ? (isEn ? 'Past / Concluded' : 'Zamanı Geçti') : (isEn ? 'Scheduled' : 'Planlandı');
       statusBadge.className = isPast ? 'meeting-status-badge done' : 'meeting-status-badge';
     }
     const badgeWrapper = document.getElementById('meetDetStatusBadgeWrapper');
@@ -2882,7 +3627,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (timeInput) timeInput.value = m.time || '14:00';
 
     const typeSelect = document.getElementById('editMeetType');
-    if (typeSelect) typeSelect.value = m.type || 'Google Meet';
+    if (typeSelect) {
+      populateMeetingTypeOptions(typeSelect, m.type || 'Google Meet');
+    }
 
     // Katılımcılar Çoklu Seçim Dropdown (Select ile)
     initEditMeetingParticipantsMultiSelect();
@@ -2901,6 +3648,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateEditMeetingChips();
 
+    const btnCancel = document.getElementById('btnCancelMeetingModal');
+    if (btnCancel) btnCancel.style.display = 'inline-flex';
+
     const meetingDetailModal = document.getElementById('meetingDetailModal');
     if (meetingDetailModal) openModal(meetingDetailModal);
   };
@@ -2909,13 +3659,14 @@ document.addEventListener('DOMContentLoaded', () => {
   window.openCreateMeetingModal = function(defaultTitle = "", defaultDate = "", defaultCust = null) {
     activeMeetingIndex = null;
 
+    const isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
     const modalTitle = document.getElementById('meetDetTitle');
-    if (modalTitle) modalTitle.textContent = 'Yeni Toplantı Planla';
+    if (modalTitle) modalTitle.textContent = isEn ? 'Schedule New Meeting' : 'Yeni Toplantı Planla';
 
     const titleInput = document.getElementById('editMeetTitle');
     if (titleInput) {
       titleInput.value = defaultTitle;
-      titleInput.placeholder = "Toplantı Konusu / Başlığı";
+      titleInput.placeholder = isEn ? 'Meeting Subject / Title' : 'Toplantı Konusu / Başlığı';
     }
 
     const dateInput = document.getElementById('editMeetDate');
@@ -2925,7 +3676,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (timeInput) timeInput.value = '14:00';
 
     const typeSelect = document.getElementById('editMeetType');
-    if (typeSelect) typeSelect.value = 'Google Meet';
+    if (typeSelect) {
+      populateMeetingTypeOptions(typeSelect, 'Google Meet');
+    }
 
     // Yeni oluştururken meet logosu ve planlandı etiketi gizlensin, sadece başlık kalsın
     const logoBox = document.getElementById('meetDetPlatformLogo');
@@ -2952,6 +3705,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateEditMeetingChips();
 
+    const btnCancel = document.getElementById('btnCancelMeetingModal');
+    if (btnCancel) btnCancel.style.display = 'none';
+
     const meetingDetailModal = document.getElementById('meetingDetailModal');
     if (meetingDetailModal) openModal(meetingDetailModal);
   };
@@ -2960,59 +3716,90 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnSaveMeetingChanges = document.getElementById('btnSaveMeetingChanges');
   if (btnSaveMeetingChanges) {
     btnSaveMeetingChanges.addEventListener('click', () => {
-      const title = document.getElementById('editMeetTitle').value.trim() || "Toplantı";
-      const date = document.getElementById('editMeetDate').value || new Date().toISOString().split('T')[0];
-      const time = document.getElementById('editMeetTime').value || "14:00";
-      const type = document.getElementById('editMeetType').value || "Google Meet";
+      try {
+        const title = document.getElementById('editMeetTitle')?.value?.trim() || "Toplantı";
+        const date = document.getElementById('editMeetDate')?.value || new Date().toISOString().split('T')[0];
+        const time = document.getElementById('editMeetTime')?.value || "14:00";
+        const type = document.getElementById('editMeetType')?.value || "Google Meet";
 
-      const customerNames = editModalSelectedCustomers.length > 0
-        ? editModalSelectedCustomers.map(c => `${c.name} (${c.company})`).join(', ')
-        : "Belirtilmedi";
+        const customerNames = (editModalSelectedCustomers && editModalSelectedCustomers.length > 0)
+          ? editModalSelectedCustomers.map(c => `${c.name} (${c.company})`).join(', ')
+          : "Belirtilmedi";
 
-      if (activeMeetingIndex !== null && meetings[activeMeetingIndex]) {
-        // Düzenleme
-        meetings[activeMeetingIndex].title = title;
-        meetings[activeMeetingIndex].date = date;
-        meetings[activeMeetingIndex].time = time;
-        meetings[activeMeetingIndex].type = type;
-        meetings[activeMeetingIndex].customer = customerNames;
-        meetings[activeMeetingIndex].isPast = isMeetingPast({ date, time });
-        meetings[activeMeetingIndex].completed = meetings[activeMeetingIndex].isPast;
-        showToast("Toplantı detayları güncellendi! 💾✅");
-      } else {
-        // Yeni Toplantı Ekleme
-        const newMeeting = {
-          id: "meet-" + Date.now(),
-          title: title,
-          date: date,
-          time: time,
-          type: type,
-          customer: customerNames,
-          isPast: isMeetingPast({ date, time }),
-          completed: false,
-          notes: []
-        };
-        meetings.unshift(newMeeting);
-        if (typeof adminPersonalMeetings !== 'undefined') {
-          adminPersonalMeetings.unshift({
-            id: newMeeting.id,
+        const hasStaff = adminStaffList && adminStaffList.length > 0;
+        const defaultStaffName = hasStaff ? adminStaffList[0].name : "Muhiddin Öktem";
+
+        if (activeMeetingIndex !== null && meetings[activeMeetingIndex]) {
+          // Düzenleme
+          meetings[activeMeetingIndex].title = title;
+          meetings[activeMeetingIndex].date = date;
+          meetings[activeMeetingIndex].time = time;
+          meetings[activeMeetingIndex].type = type;
+          meetings[activeMeetingIndex].customer = customerNames;
+          meetings[activeMeetingIndex].isPast = isMeetingPast({ date, time });
+          meetings[activeMeetingIndex].completed = meetings[activeMeetingIndex].isPast;
+          showToast("Toplantı detayları güncellendi! 💾✅");
+          if (typeof window.pushLiveNotification === 'function') {
+            window.pushLiveNotification({
+              title: "Toplantı Güncellendi 📅",
+              message: `"${title}" (${type} • ${date} ${time}) kaydedildi.`,
+              category: "meeting",
+              icon: "📅",
+              iconClass: "meeting",
+              action: "meetings"
+            });
+          }
+        } else {
+          // Yeni Toplantı Ekleme
+          const newMeeting = {
+            id: "meet-" + Date.now(),
             title: title,
             date: date,
             time: time,
             type: type,
-            participants: customerNames,
-            isPast: newMeeting.isPast,
-            isPersonal: true
-          });
+            customer: customerNames,
+            assignedStaff: defaultStaffName,
+            isPast: isMeetingPast({ date, time }),
+            completed: false,
+            notes: []
+          };
+          meetings.unshift(newMeeting);
+          if (typeof adminPersonalMeetings !== 'undefined' && Array.isArray(adminPersonalMeetings)) {
+            adminPersonalMeetings.unshift({
+              id: newMeeting.id,
+              title: title,
+              date: date,
+              time: time,
+              type: type,
+              participants: customerNames,
+              assignedStaff: defaultStaffName,
+              isPast: newMeeting.isPast,
+              isPersonal: true
+            });
+          }
+          showToast("Yeni toplantı başarıyla oluşturuldu ve takvime eklendi! 📅✨");
+          if (typeof window.pushLiveNotification === 'function') {
+            window.pushLiveNotification({
+              title: "Yeni Toplantı Planlandı 📅",
+              message: `${customerNames} ile "${title}" toplantısı (${type}) takvime eklendi.`,
+              category: "meeting",
+              icon: "📅",
+              iconClass: "meeting",
+              action: "meetings"
+            });
+          }
         }
-        showToast("Yeni toplantı başarıyla oluşturuldu ve ajandaya eklendi! 📅✨");
-      }
 
-      saveMeetingsToStorage();
-      renderMeetingsList();
-      if (typeof renderAdminCalendar === 'function') renderAdminCalendar();
-      if (typeof renderAdminDashboard === 'function') renderAdminDashboard();
-      closeModal(document.getElementById('meetingDetailModal'));
+        saveMeetingsToStorage();
+        if (typeof renderMeetingsList === 'function') renderMeetingsList();
+        if (typeof renderAdminCalendar === 'function') renderAdminCalendar();
+        if (typeof renderAdminDashboard === 'function') renderAdminDashboard();
+      } catch (err) {
+        console.error("Toplantı kaydetme hatası:", err);
+      } finally {
+        const modal = document.getElementById('meetingDetailModal');
+        if (modal) closeModal(modal);
+      }
     });
   }
 
@@ -3044,6 +3831,67 @@ document.addEventListener('DOMContentLoaded', () => {
       window.open(`mailto:${emailList}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
       closeModal(document.getElementById('meetingDetailModal'));
       showToast(`Tüm katılımcılara (${participantEmails.length || 1} kişi) hatırlatıcı e-posta hazırlandı! ✉️`);
+    });
+  }
+
+  // Toplantıyı İptal Et Butonu (Katılımcılara İptal Bildirim E-Postası Gönderir ve Listeden Kaldırır)
+  const btnCancelMeetingModal = document.getElementById('btnCancelMeetingModal');
+  if (btnCancelMeetingModal) {
+    btnCancelMeetingModal.addEventListener('click', () => {
+      if (activeMeetingIndex === null || !meetings[activeMeetingIndex]) return;
+      const m = meetings[activeMeetingIndex];
+
+      const participantEmails = (editModalSelectedCustomers && editModalSelectedCustomers.length > 0)
+        ? editModalSelectedCustomers.map(c => c.email).filter(Boolean)
+        : customers.filter(c => m.customer && m.customer.includes(c.name)).map(c => c.email).filter(Boolean);
+
+      const emailList = participantEmails.length > 0 ? participantEmails.join(',') : 'iletisim@sirket.com';
+      const participantNames = (editModalSelectedCustomers && editModalSelectedCustomers.length > 0)
+        ? editModalSelectedCustomers.map(c => c.name).join(', ')
+        : (m.customer || 'Katılımcılar');
+
+      const compName = (companyConfig && companyConfig.name) ? companyConfig.name : 'MonaCard';
+      const senderName = (staffProfile && staffProfile.fullName) ? staffProfile.fullName : 'Firma Yöneticisi';
+
+      const subject = `[İPTAL BİLDİRİMİ] Toplantı İptal Edildi: ${m.title}`;
+      const body = `Merhaba Sayın ${participantNames},\n\n` +
+        `${m.date} tarihinde saat ${m.time} için planlanan "${m.title}" (${m.type}) konulu toplantımız iptal edilmiştir.\n\n` +
+        `Toplantı Bilgileri:\n` +
+        `• Konu: ${m.title}\n` +
+        `• Tarih / Saat: ${m.date} ${m.time}\n` +
+        `• Platform: ${m.type}\n\n` +
+        `Bilgilerinize sunar, iyi çalışmalar dileriz.\n\n` +
+        `${senderName} | ${compName}`;
+
+      // Katılımcılara iptal maili taslağı aç
+      window.open(`mailto:${emailList}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+
+      // Toplantıyı listeden ve takvimden kaldır
+      const cancelledTitle = m.title;
+      meetings.splice(activeMeetingIndex, 1);
+      if (typeof adminPersonalMeetings !== 'undefined' && Array.isArray(adminPersonalMeetings)) {
+        const pIdx = adminPersonalMeetings.findIndex(pm => pm.id === m.id || pm.title === m.title);
+        if (pIdx !== -1) adminPersonalMeetings.splice(pIdx, 1);
+      }
+
+      saveMeetingsToStorage();
+      if (typeof renderMeetingsList === 'function') renderMeetingsList();
+      if (typeof renderAdminCalendar === 'function') renderAdminCalendar();
+      if (typeof renderAdminDashboard === 'function') renderAdminDashboard();
+
+      closeModal(document.getElementById('meetingDetailModal'));
+      showToast(`"${cancelledTitle}" toplantısı iptal edildi ve tüm katılımcılara iptal e-postası oluşturuldu! 🚫✉️`);
+
+      if (typeof window.pushLiveNotification === 'function') {
+        window.pushLiveNotification({
+          title: "Toplantı İptal Edildi 🚫",
+          message: `"${cancelledTitle}" toplantısı takvimden kaldırıldı ve katılımcılara iptal bildirimi gönderildi.`,
+          category: "meeting",
+          icon: "🚫",
+          iconClass: "meeting",
+          action: "meetings"
+        });
+      }
     });
   }
 
@@ -3116,6 +3964,11 @@ document.addEventListener('DOMContentLoaded', () => {
       meetDateInput.value = tomorrow.toISOString().split('T')[0];
     }
 
+    const meetTypeSelect = document.getElementById('meetType');
+    if (meetTypeSelect) {
+      populateMeetingTypeOptions(meetTypeSelect, 'Google Meet');
+    }
+
     initNewMeetingParticipantsMultiSelect();
 
     newMeetingForm.addEventListener('submit', (e) => {
@@ -3152,6 +4005,16 @@ document.addEventListener('DOMContentLoaded', () => {
       renderNewMeetingDropdown();
 
       showToast(`"${title}" toplantısı takvime eklendi! 📅`);
+      if (typeof window.pushLiveNotification === 'function') {
+        window.pushLiveNotification({
+          title: "Yeni Toplantı Planlandı 📅",
+          message: `${customerNames} ile "${title}" toplantısı (${type}) takvime eklendi.`,
+          category: "meeting",
+          icon: "📅",
+          iconClass: "meeting",
+          action: "meetings"
+        });
+      }
     });
   }
 
@@ -3476,6 +4339,7 @@ document.addEventListener('DOMContentLoaded', () => {
     viewAdminCrm: document.getElementById('viewAdminCrm'),
     viewAdminCustomerDetail: document.getElementById('viewAdminCustomerDetail'),
     viewAdminCalendar: document.getElementById('viewAdminCalendar'),
+    viewAdminIntegrations: document.getElementById('viewAdminIntegrations'),
     viewAdminSettings: document.getElementById('viewAdminSettings'),
     viewAdminProfile: document.getElementById('viewAdminProfile')
   };
@@ -3486,12 +4350,17 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentCalendarViewMode = 'month'; // 'month' or 'cards'
   let currentStaffDetailId = 'staff-1';
   let currentStaffDetailPeriod = 'month'; // 'week', 'month', '30days', '3months', 'all'
-  let calCurrentYear = 2026;
-  let calCurrentMonth = 8; // 0-indexed: 8 is September (Eylül)
+  let calCurrentYear = new Date().getFullYear();
+  let calCurrentMonth = new Date().getMonth(); // Dinamik mevcut ay (Örn: 9 = Ekim)
 
   const turkishMonths = [
     'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
     'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
+  ];
+
+  const englishMonths = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
   // Admin View Navigation
@@ -3520,10 +4389,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (viewId === 'viewAdminStaffDetail') renderStaffDetailPage();
     if (viewId === 'viewAdminCrm') renderAdminCrmTable();
     if (viewId === 'viewAdminCalendar') renderAdminCalendar();
+    if (viewId === 'viewAdminIntegrations') renderAdminIntegrations();
     if (viewId === 'viewAdminSettings') renderAdminSettings();
     if (viewId === 'viewAdminProfile') renderAdminProfile();
     // Close mobile drawer on navigation
     toggleAdminMobileSidebar(false);
+  }
+
+  function renderAdminIntegrations() {
+    const activeTabBtn = document.querySelector('.integration-tab-btn.active') || document.querySelector('.integration-tab-btn');
+    if (activeTabBtn) {
+      const targetId = activeTabBtn.getAttribute('data-integ-tab');
+      document.querySelectorAll('.integration-panel').forEach(p => p.classList.remove('active'));
+      const targetPanel = document.getElementById(targetId);
+      if (targetPanel) targetPanel.classList.add('active');
+    }
   }
 
   // Admin Mobile Drawer Toggles
@@ -3628,37 +4508,50 @@ document.addEventListener('DOMContentLoaded', () => {
     const statNewLeads = document.getElementById('statNewLeads');
     const statMonthMeetings = document.getElementById('statMonthMeetings');
 
-    if (statHotCustomers) statHotCustomers.textContent = totalHot || 125;
-    if (statWarmCustomers) statWarmCustomers.textContent = totalWarm || 51;
-    if (statNewLeads) statNewLeads.textContent = totalNewLeads || 104;
-    if (statMonthMeetings) statMonthMeetings.textContent = monthMeetingsCount || 18;
+    if (statHotCustomers) statHotCustomers.textContent = totalHot;
+    if (statWarmCustomers) statWarmCustomers.textContent = totalWarm;
+    if (statNewLeads) statNewLeads.textContent = totalNewLeads;
+    if (statMonthMeetings) statMonthMeetings.textContent = monthMeetingsCount;
+
+    const statHotTrendPct = document.getElementById('statHotTrendPct');
+    const statWarmTrendPct = document.getElementById('statWarmTrendPct');
+    const statNewLeadsTrendPct = document.getElementById('statNewLeadsTrendPct');
+    const statMonthMeetingsTrendPct = document.getElementById('statMonthMeetingsTrendPct');
+
+    const pctZero = currentLang === 'en' ? '0%' : '%0';
+    if (statHotTrendPct) statHotTrendPct.textContent = pctZero;
+    if (statWarmTrendPct) statWarmTrendPct.textContent = pctZero;
+    if (statNewLeadsTrendPct) statNewLeadsTrendPct.textContent = pctZero;
+    if (statMonthMeetingsTrendPct) statMonthMeetingsTrendPct.textContent = pctZero;
 
     // Admin greeting name
     const greetingName = document.getElementById('adminGreetingName');
     const headerName = document.getElementById('adminHeaderName');
-    if (greetingName && adminSettings.companyProfile) {
-      greetingName.textContent = adminSettings.companyProfile.managerName.split(' ')[0] || "Yönetici";
+    const mgrName = (loggedInUser && loggedInUser.name) || (adminSettings.companyProfile && adminSettings.companyProfile.managerName) || "Yönetici";
+    if (greetingName) {
+      greetingName.textContent = mgrName.split(' ')[0] || "Yönetici";
     }
-    if (headerName && adminSettings.companyProfile) {
-      headerName.textContent = adminSettings.companyProfile.managerName || "Muhiddin Öktem";
+    if (headerName) {
+      headerName.textContent = mgrName;
     }
 
     // Mini Widgets
     const miniUpcomingMeetings = document.getElementById('miniUpcomingMeetings');
     const miniSatisfaction = document.getElementById('miniSatisfaction');
     if (miniUpcomingMeetings) miniUpcomingMeetings.textContent = monthMeetingsCount;
-    if (miniSatisfaction) miniSatisfaction.textContent = "4.8 / 5";
+    if (miniSatisfaction) miniSatisfaction.textContent = totalHot + totalWarm > 0 ? "4.8 / 5" : "- / 5";
 
     // Update Donut Chart (Sıcak, Ilık, Soğuk Dağılımı %100)
-    const sumAll = totalHot + totalWarm + totalCold || 1;
+    const totalCount = totalHot + totalWarm + totalCold;
+    const sumAll = totalCount || 1;
 
-    const pctHot = Math.round((totalHot / sumAll) * 100);
-    const pctWarm = Math.round((totalWarm / sumAll) * 100);
-    const pctCold = Math.max(0, 100 - (pctHot + pctWarm));
+    const pctHot = totalCount > 0 ? Math.round((totalHot / sumAll) * 100) : 0;
+    const pctWarm = totalCount > 0 ? Math.round((totalWarm / sumAll) * 100) : 0;
+    const pctCold = totalCount > 0 ? Math.max(0, 100 - (pctHot + pctWarm)) : 0;
 
     const isEn = currentLang === 'en';
     const donutTotalCountLabel = document.getElementById('donutTotalCountLabel');
-    if (donutTotalCountLabel) donutTotalCountLabel.textContent = isEn ? `Total: ${sumAll} Records` : `Toplam: ${sumAll} Kayıt`;
+    if (donutTotalCountLabel) donutTotalCountLabel.textContent = isEn ? `Total: ${totalCount} Records` : `Toplam: ${totalCount} Kayıt`;
 
     const legendHotVal = document.getElementById('legendHotVal');
     const legendWarmVal = document.getElementById('legendWarmVal');
@@ -3739,60 +4632,83 @@ document.addEventListener('DOMContentLoaded', () => {
     const topPerformersList = document.getElementById('topPerformersList');
     if (topPerformersList) {
       const top3 = [...adminStaffList]
-        .sort((a, b) => ((b.score || 0) * 1000 + (b.totalContacts || 0)) - ((a.score || 0) * 1000 + (a.totalContacts || 0)))
+        .sort((a, b) => {
+          const scoreA = getStaffScore(a);
+          const scoreB = getStaffScore(b);
+          return (scoreB * 1000 + (b.totalContacts || 0)) - (scoreA * 1000 + (a.totalContacts || 0));
+        })
         .slice(0, 3);
 
-      topPerformersList.innerHTML = top3.map((s, idx) => {
-        const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : 'rank-3';
-        const rankIcon = idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉';
-
-        return `
-          <div class="top-performer-card">
-            <div class="top-performer-left">
-              <div class="top-rank-badge ${rankClass}" title="${idx + 1}. ${isEn ? 'Rank' : 'Sıra'}">${rankIcon}</div>
-              <div class="top-performer-info">
-                <div class="top-performer-name">
-                  <span>${s.name}</span>
-                  ${s.isLeader ? `<span title="${isEn ? 'Team Leader' : 'Takım Lideri'}" style="font-size:12px; margin-left:3px;">👑</span>` : ''}
-                </div>
-                <div class="top-performer-title">${s.title}</div>
-              </div>
+      if (top3.length === 0) {
+        topPerformersList.innerHTML = `
+          <div style="text-align:center;padding:36px 16px;color:#94A3B8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
+            <div style="font-size:14px;font-weight:600;color:#64748B;display:flex;align-items:center;gap:8px;">
+              <span>👥</span>
+              <span>${isEn ? 'No personnel registered yet.' : 'Henüz kayıtlı personel bulunmamaktadır.'}</span>
             </div>
-
-            <div class="top-performer-stats">
-              <div class="top-stat-item">
-                <span class="top-stat-label">${isEn ? 'RECORDS' : 'KAYIT'}</span>
-                <span class="top-stat-value">${s.totalContacts || 0} ${isEn ? 'People' : 'Kişi'}</span>
-              </div>
-              <div class="top-stat-item">
-                <span class="top-stat-label">${isEn ? 'HOT MEETINGS' : 'SICAK GÖRÜŞME'}</span>
-                <span class="top-stat-value" style="color: #EF4444; font-weight: 800;">🔥 ${s.hotCount || 0}</span>
-              </div>
-            </div>
-
-            <div class="top-performer-score">
-              <span class="top-score-badge">%${s.score || 85}</span>
-              <div class="top-score-bar-bg">
-                <div class="top-score-bar-fill" style="width: ${s.score || 85}%;"></div>
-              </div>
-            </div>
-
-            <button class="admin-table-action-btn primary btn-top-performer-detail" data-id="${s.id}" title="${s.name} ${isEn ? 'Open Detailed Performance Page' : 'Detaylı Performans Sayfasına Git'}">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-            </button>
+            <p style="font-size:12.5px;color:#94A3B8;margin:0;">${isEn ? 'You can track your personnel\'s leadership board here.' : 'Personelinizin liderlik panosunu buradan takip edebilirsiniz.'}</p>
           </div>
         `;
-      }).join('');
+      } else {
+        topPerformersList.innerHTML = top3.map((s, idx) => {
+          const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : 'rank-3';
+          const rankIcon = idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉';
+          const staffScore = getStaffScore(s);
 
-      topPerformersList.querySelectorAll('.btn-top-performer-detail').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.getAttribute('data-id');
-          openStaffDetailPage(id);
+          return `
+            <div class="top-performer-card">
+              <div class="top-performer-left">
+                <div class="top-rank-badge ${rankClass}" title="${idx + 1}. ${isEn ? 'Rank' : 'Sıra'}">${rankIcon}</div>
+                <div class="top-performer-info">
+                  <div class="top-performer-name">
+                    <span>${s.name}</span>
+                    ${s.isLeader ? `<span title="${isEn ? 'Team Leader' : 'Takım Lideri'}" style="font-size:12px; margin-left:3px;">👑</span>` : ''}
+                  </div>
+                  <div class="top-performer-title">${s.title}</div>
+                </div>
+              </div>
+
+              <div class="top-performer-stats">
+                <div class="top-stat-item">
+                  <span class="top-stat-label">${isEn ? 'RECORDS' : 'KAYIT'}</span>
+                  <span class="top-stat-value">${s.totalContacts || 0} ${isEn ? 'People' : 'Kişi'}</span>
+                </div>
+                <div class="top-stat-item">
+                  <span class="top-stat-label">${isEn ? 'HOT MEETINGS' : 'SICAK GÖRÜŞME'}</span>
+                  <span class="top-stat-value" style="color: #EF4444; font-weight: 800;">🔥 ${s.hotCount || 0}</span>
+                </div>
+              </div>
+
+              <div class="top-performer-score">
+                <span class="top-score-badge">%${staffScore}</span>
+                <div class="top-score-bar-bg">
+                  <div class="top-score-bar-fill" style="width: ${staffScore}%;"></div>
+                </div>
+              </div>
+
+              <button class="admin-table-action-btn primary btn-top-performer-detail" data-id="${s.id}" title="${s.name} ${isEn ? 'Open Detailed Performance Page' : 'Detaylı Performans Sayfasına Git'}">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+          `;
+        }).join('');
+
+        topPerformersList.querySelectorAll('.btn-top-performer-detail').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            openStaffDetailPage(id);
+          });
         });
-      });
+      }
     }
 
-    // "Tümünü Gör" Button
+    // Top Performers Card Header Button (Personel Ekle / Tümünü Gör)
+    const btnDashAddStaff = document.getElementById('btnDashAddStaff');
+    if (btnDashAddStaff) {
+      btnDashAddStaff.onclick = () => {
+        openStaffModalForAdd();
+      };
+    }
     const btnDashViewAllStaff = document.getElementById('btnDashViewAllStaff');
     if (btnDashViewAllStaff) {
       btnDashViewAllStaff.onclick = () => {
@@ -3800,14 +4716,101 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     }
 
+    // Donut Chart Card Header Button (+ Müşteri Ekle)
+    const btnDashAddCustomer = document.getElementById('btnDashAddCustomer');
+    if (btnDashAddCustomer) {
+      btnDashAddCustomer.onclick = () => {
+        openAddCustomerModal();
+      };
+    }
+
+    // Greeting Header Integration Button (+ Entegrasyonlar -> Yapıldıktan sonra boş kalır)
+    const btnDashIntegrations = document.getElementById('btnDashIntegrations');
+    const greetingBadgeWrap = document.getElementById('greetingBadgeWrap');
+    const isIntegrationsDone = localStorage.getItem('monacard_integrations_done') === 'true';
+
+    if (greetingBadgeWrap) {
+      if (isIntegrationsDone) {
+        greetingBadgeWrap.innerHTML = '';
+      } else if (btnDashIntegrations) {
+        btnDashIntegrations.style.display = 'inline-flex';
+        btnDashIntegrations.onclick = () => {
+          navigateToAdminView('viewAdminIntegrations');
+        };
+      }
+    }
+
     // Initialize 7-Day Weekly Timeline Schedule Widget
     initWeeklyTimelineWidget();
   }
 
   // =========================================================
-  // 1.1 WEEKLY TIMELINE WIDGET (Image 2 Calendar UI)
+  // 1.05 DEDICATED ADD CUSTOMER MODAL
   // =========================================================
-  let weeklyCurrentMonthIdx = 8; // 8 = Eylül (0-indexed: Ocak=0, ..., Eylül=8)
+  const modalAddCustomer = document.getElementById('modalAddCustomer');
+  const formAddCustomerModal = document.getElementById('formAddCustomerModal');
+  const modalCustStaff = document.getElementById('modalCustStaff');
+
+  function openAddCustomerModal() {
+    if (!modalAddCustomer) return;
+    if (formAddCustomerModal) formAddCustomerModal.reset();
+    if (modalCustStaff) {
+      const mgrName = (loggedInUser && loggedInUser.name) || (adminSettings.companyProfile && adminSettings.companyProfile.managerName) || 'Yönetici';
+      modalCustStaff.innerHTML = `<option value="${mgrName}">Yönetici (${mgrName})</option>` +
+        adminStaffList.map(s => `<option value="${s.name}">${s.name} (${s.title})</option>`).join('');
+    }
+    openModal(modalAddCustomer);
+  }
+
+  if (formAddCustomerModal) {
+    formAddCustomerModal.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('modalCustName').value.trim();
+      const company = document.getElementById('modalCustCompany').value.trim();
+      const title = document.getElementById('modalCustTitle').value.trim() || 'Yetkili';
+      const phone = document.getElementById('modalCustPhone').value.trim();
+      const email = document.getElementById('modalCustEmail').value.trim();
+      const stage = document.getElementById('modalCustStage').value;
+      const assignedStaff = modalCustStaff ? modalCustStaff.value : 'Yönetici';
+      const note = document.getElementById('modalCustNote').value.trim();
+
+      const initials = name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+
+      const newCust = {
+        id: "cust-" + Date.now(),
+        name,
+        company: company || 'Bireysel Müşteri',
+        title,
+        phone,
+        email,
+        stage,
+        assignedStaff,
+        initials,
+        notes: note ? [{
+          id: "note-" + Date.now(),
+          type: "text",
+          text: note,
+          time: "Bugün " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          hubspotSynced: true
+        }] : []
+      };
+
+      customers.unshift(newCust);
+      saveCustomersToStorage();
+      closeModal(modalAddCustomer);
+      renderAdminDashboard();
+      if (typeof renderCrmList === 'function') renderCrmList();
+      if (typeof renderAdminCrmTable === 'function') renderAdminCrmTable();
+      showToast(`${name} başarıyla müşteri havuzuna eklendi! 🎯🔥`);
+    });
+  }
+
+  // =========================================================
+  // 1.1 DYNAMIC WEEKLY TIMELINE WIDGET (Image 2 Calendar UI)
+  // =========================================================
+  let weeklyCurrentDate = new Date(); // Dinamik mevcut tarih (Örn: Ekim 2026)
+  let weeklySelectedDate = new Date(); // Aktif seçili gün
+
   const monthNamesTr = [
     "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
     "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
@@ -3816,71 +4819,179 @@ document.addEventListener('DOMContentLoaded', () => {
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
   ];
-  let weeklyTimelineInitDone = false;
+  const dayNamesTrShort = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"];
+  const dayNamesEnShort = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+  function getWeekMonday(date) {
+    const d = new Date(date);
+    const day = d.getDay(); // 0: Sun, 1: Mon, ..., 6: Sat
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(d.getFullYear(), d.getMonth(), diff);
+  }
 
   function initWeeklyTimelineWidget() {
     const prevBtn = document.getElementById('btnWeeklyPrevMonth');
     const nextBtn = document.getElementById('btnWeeklyNextMonth');
     const titleEl = document.getElementById('weeklyTimelineTitle');
-    const dayItems = document.querySelectorAll('.weekly-day-item');
-    const gridCols = document.querySelectorAll('.weekly-grid-col');
+    const daysRow = document.getElementById('weeklyDaysRow');
+    const gridColsBg = document.getElementById('weeklyGridColumnsBg');
+    const eventsLayer = document.getElementById('weeklyEventsLayer');
 
-    if (!titleEl) return;
+    if (!titleEl || !daysRow) return;
 
-    function updateWeeklyHeader() {
-      const isEn = currentLang === 'en';
-      const mNames = isEn ? monthNamesEn : monthNamesTr;
-      const prevIdx = (weeklyCurrentMonthIdx + 11) % 12;
-      const nextIdx = (weeklyCurrentMonthIdx + 1) % 12;
-      
-      if (prevBtn) prevBtn.textContent = `< ${mNames[prevIdx]}`;
-      titleEl.textContent = `${mNames[weeklyCurrentMonthIdx]} 2026`;
-      if (nextBtn) nextBtn.textContent = `${mNames[nextIdx]} >`;
+    const isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+    const mNames = isEn ? monthNamesEn : monthNamesTr;
+    const dNames = isEn ? dayNamesEnShort : dayNamesTrShort;
+
+    const currentYear = weeklyCurrentDate.getFullYear();
+    const currentMonthIdx = weeklyCurrentDate.getMonth();
+    const prevIdx = (currentMonthIdx + 11) % 12;
+    const nextIdx = (currentMonthIdx + 1) % 12;
+
+    if (prevBtn) prevBtn.textContent = `< ${mNames[prevIdx]}`;
+    titleEl.textContent = `${mNames[currentMonthIdx]} ${currentYear}`;
+    if (nextBtn) nextBtn.textContent = `${mNames[nextIdx]} >`;
+
+    // Aktif haftanın 7 gününü hesapla (Pazartesi'den Pazar'a)
+    const monday = getWeekMonday(weeklyCurrentDate);
+    const selectedStr = weeklySelectedDate.toDateString();
+
+    let daysHtml = '<div class="weekly-time-col-spacer"></div>';
+    let colsHtml = '';
+
+    for (let i = 0; i < 7; i++) {
+      const dayDate = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i);
+      const isSelected = (dayDate.toDateString() === selectedStr);
+
+      daysHtml += `
+        <div class="weekly-day-item ${isSelected ? 'active' : ''}" data-day-index="${i}" data-iso="${dayDate.toISOString().split('T')[0]}">
+          <span class="weekly-day-name">${dNames[i]}</span>
+          <span class="weekly-day-num">${dayDate.getDate()}</span>
+        </div>
+      `;
+
+      colsHtml += `<div class="weekly-grid-col ${isSelected ? 'active' : ''}"></div>`;
     }
 
-    if (!weeklyTimelineInitDone) {
-      weeklyTimelineInitDone = true;
+    daysRow.innerHTML = daysHtml;
+    if (gridColsBg) gridColsBg.innerHTML = colsHtml;
 
-      if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-          weeklyCurrentMonthIdx = (weeklyCurrentMonthIdx + 11) % 12;
-          updateWeeklyHeader();
-          const isEn = currentLang === 'en';
-          const mNames = isEn ? monthNamesEn : monthNamesTr;
-          showToast(isEn ? `Calendar shifted to ${mNames[weeklyCurrentMonthIdx]} 2026 📅` : `Takvim ${mNames[weeklyCurrentMonthIdx]} 2026 dönemine kaydırıldı 📅`);
-        });
-      }
+    // Gün kartlarına tıklama olayı
+    const dayItems = daysRow.querySelectorAll('.weekly-day-item');
+    dayItems.forEach((item, index) => {
+      item.addEventListener('click', () => {
+        const dayDate = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + index);
+        weeklySelectedDate = dayDate;
+        weeklyCurrentDate = dayDate;
+        initWeeklyTimelineWidget();
 
-      if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-          weeklyCurrentMonthIdx = (weeklyCurrentMonthIdx + 1) % 12;
-          updateWeeklyHeader();
-          const isEn = currentLang === 'en';
-          const mNames = isEn ? monthNamesEn : monthNamesTr;
-          showToast(isEn ? `Calendar shifted to ${mNames[weeklyCurrentMonthIdx]} 2026 📅` : `Takvim ${mNames[weeklyCurrentMonthIdx]} 2026 dönemine kaydırıldı 📅`);
-        });
-      }
-
-      dayItems.forEach((item, index) => {
-        item.addEventListener('click', () => {
-          dayItems.forEach(d => d.classList.remove('active'));
-          item.classList.add('active');
-
-          if (gridCols.length > index) {
-            gridCols.forEach(c => c.classList.remove('active'));
-            gridCols[index].classList.add('active');
-          }
-
-          const dayNum = item.getAttribute('data-day') || item.querySelector('.weekly-day-num')?.textContent;
-          const dayName = item.querySelector('.weekly-day-name')?.textContent || '';
-          const isEn = currentLang === 'en';
-          const mNames = isEn ? monthNamesEn : monthNamesTr;
-          showToast(isEn ? `${mNames[weeklyCurrentMonthIdx]} ${dayNum} (${dayName}) selected 🗓️` : `${dayNum} ${mNames[weeklyCurrentMonthIdx]} (${dayName}) seçildi 🗓️`);
-        });
+        const dayNum = dayDate.getDate();
+        const mName = mNames[dayDate.getMonth()];
+        const dName = dNames[index];
+        showToast(isEn ? `${mName} ${dayNum} (${dName}) selected 🗓️` : `${dayNum} ${mName} (${dName}) seçildi 🗓️`);
       });
+    });
+
+    // Ay geçiş butonları
+    if (prevBtn) {
+      prevBtn.onclick = () => {
+        weeklyCurrentDate = new Date(weeklyCurrentDate.getFullYear(), weeklyCurrentDate.getMonth() - 1, weeklyCurrentDate.getDate());
+        weeklySelectedDate = new Date(weeklyCurrentDate);
+        initWeeklyTimelineWidget();
+        showToast(isEn ? `Calendar shifted to ${mNames[weeklyCurrentDate.getMonth()]} ${weeklyCurrentDate.getFullYear()} 📅` : `Takvim ${mNames[weeklyCurrentDate.getMonth()]} ${weeklyCurrentDate.getFullYear()} dönemine kaydırıldı 📅`);
+      };
     }
 
-    updateWeeklyHeader();
+    if (nextBtn) {
+      nextBtn.onclick = () => {
+        weeklyCurrentDate = new Date(weeklyCurrentDate.getFullYear(), weeklyCurrentDate.getMonth() + 1, weeklyCurrentDate.getDate());
+        weeklySelectedDate = new Date(weeklyCurrentDate);
+        initWeeklyTimelineWidget();
+        showToast(isEn ? `Calendar shifted to ${mNames[weeklyCurrentDate.getMonth()]} ${weeklyCurrentDate.getFullYear()} 📅` : `Takvim ${mNames[weeklyCurrentDate.getMonth()]} ${weeklyCurrentDate.getFullYear()} dönemine kaydırıldı 📅`);
+      };
+    }
+
+    // Etkinlik katmanını dinamik oluştur
+    if (eventsLayer) {
+      const activeUserName = (loggedInUser && loggedInUser.name) || (adminSettings.companyProfile && adminSettings.companyProfile.managerName) || 'Hakan Yavuz';
+      const userInitials = activeUserName.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+
+      eventsLayer.innerHTML = `
+        <!-- Interactive Event Card 1: Google Meet Sprint Meeting -->
+        <div class="weekly-event-card purple" style="left: 2%; width: 52%; top: 12px; height: 68px;" onclick="window.openMeetingDetail(0)">
+          <div class="weekly-event-pill-top">
+            <span class="weekly-event-type meet" title="Google Meet">
+              <svg class="weekly-platform-icon meet-icon" width="18" height="18" viewBox="0 0 48 48" fill="none">
+                <path d="M42 14.5L34 20.5V13C34 11.3431 32.6569 10 31 10H7C5.34315 10 4 11.3431 4 13V35C4 36.6569 5.34315 38 7 38H31C32.6569 38 34 36.6569 34 35V27.5L42 33.5C43.1046 34.3284 44 33.8807 44 32.5V15.5C44 14.1193 43.1046 13.6716 42 14.5Z" fill="#00832D"/>
+                <path d="M34 27.5V35C34 36.6569 32.6569 38 31 38H7C5.34315 38 4 36.6569 4 35V30L19 22L34 27.5Z" fill="#0066DA"/>
+                <path d="M4 17L19 25L34 19.5V13C34 11.3431 32.6569 10 31 10H7C5.34315 10 4 11.3431 4 13V17Z" fill="#E53935"/>
+                <path d="M4 17V30L19 23.5L4 17Z" fill="#FBBC04"/>
+                <path d="M34 20.5L42 14.5C43.1046 13.6716 44 14.1193 44 15.5V32.5C44 33.8807 43.1046 34.3284 42 33.5L34 27.5V20.5Z" fill="#00AC47"/>
+              </svg>
+              <span class="weekly-event-type-name">Google Meet</span>
+            </span>
+            <span class="weekly-event-time">09:30 - 10:45</span>
+          </div>
+          <div class="weekly-event-text">
+            <h4 class="weekly-event-title">${isEn ? 'MonaCard SaaS &amp; CRM Sprint Planning' : 'MonaCard SaaS &amp; CRM Sprint Planlaması'}</h4>
+            <p class="weekly-event-desc">👤 ${activeUserName}, Zeynep &amp; ${isEn ? '3 others' : '3 kişi'}</p>
+          </div>
+          <div class="weekly-avatar-stack">
+            <div class="stack-avatar initial" style="background:#5B4FEB;">${userInitials}</div>
+            <div class="stack-avatar initial" style="background:#10B981;">ZA</div>
+            <span class="stack-badge purple">+2</span>
+          </div>
+        </div>
+
+        <!-- Interactive Event Card 2: Zoom Müşteri Sunumu -->
+        <div class="weekly-event-card amber" style="left: 44%; width: 54%; top: 105px; height: 68px;" onclick="window.openMeetingDetail(1)">
+          <div class="weekly-event-pill-top">
+            <span class="weekly-event-type zoom" title="Zoom Meet">
+              <svg class="weekly-platform-icon zoom-icon" width="18" height="18" viewBox="0 0 48 48" fill="none">
+                <rect width="48" height="48" rx="12" fill="#2D8CFF"/>
+                <path d="M12 18C12 16.3431 13.3431 15 15 15H26C27.6569 15 29 16.3431 29 18V30C29 31.6569 27.6569 33 26 33H15C13.3431 33 12 31.6569 12 30V18Z" fill="white"/>
+                <path d="M30.5 21.2L36 17.5C36.6 17.1 37.5 17.5 37.5 18.3V29.7C37.5 30.5 36.6 30.9 36 30.5L30.5 26.8V21.2Z" fill="white"/>
+              </svg>
+              <span class="weekly-event-type-name">Zoom Meet</span>
+            </span>
+            <span class="weekly-event-time">11:30 - 12:30</span>
+          </div>
+          <div class="weekly-event-text">
+            <h4 class="weekly-event-title">${isEn ? 'TechPlus Corporate Pitch &amp; Demo' : 'TechPlus Kurumsal Sunum'}</h4>
+            <p class="weekly-event-desc">Ali Rıza &amp; Kemal Yılmaz</p>
+          </div>
+          <div class="weekly-avatar-stack">
+            <div class="stack-avatar initial" style="background:#F59E0B;">AR</div>
+            <div class="stack-avatar initial" style="background:#10B981;">KY</div>
+          </div>
+        </div>
+
+        <!-- Interactive Event Card 3: VIP Kurumsal Değerlendirme (Mavi Kart) -->
+        <div class="weekly-event-card blue" style="left: 16%; width: 50%; top: 195px; height: 68px;" onclick="window.openMeetingDetail(2)">
+          <div class="weekly-event-pill-top">
+            <span class="weekly-event-type meet" title="Google Meet">
+              <svg class="weekly-platform-icon meet-icon" width="18" height="18" viewBox="0 0 48 48" fill="none">
+                <path d="M42 14.5L34 20.5V13C34 11.3431 32.6569 10 31 10H7C5.34315 10 4 11.3431 4 13V35C4 36.6569 5.34315 38 7 38H31C32.6569 38 34 36.6569 34 35V27.5L42 33.5C43.1046 34.3284 44 33.8807 44 32.5V15.5C44 14.1193 43.1046 13.6716 42 14.5Z" fill="#00832D"/>
+                <path d="M34 27.5V35C34 36.6569 32.6569 38 31 38H7C5.34315 38 4 36.6569 4 35V30L19 22L34 27.5Z" fill="#0066DA"/>
+                <path d="M4 17L19 25L34 19.5V13C34 11.3431 32.6569 10 31 10H7C5.34315 10 4 11.3431 4 13V17Z" fill="#E53935"/>
+                <path d="M4 17V30L19 23.5L4 17Z" fill="#FBBC04"/>
+                <path d="M34 20.5L42 14.5C43.1046 13.6716 44 14.1193 44 15.5V32.5C44 33.8807 43.1046 34.3284 42 33.5L34 27.5V20.5Z" fill="#00AC47"/>
+              </svg>
+              <span class="weekly-event-type-name">Google Meet</span>
+            </span>
+            <span class="weekly-event-time">14:00 - 15:00</span>
+          </div>
+          <div class="weekly-event-text">
+            <h4 class="weekly-event-title">${isEn ? 'VIP Enterprise Solution &amp; Demo' : 'VIP Kurumsal Çözüm &amp; Demo'}</h4>
+            <p class="weekly-event-desc">TechPlus Bilişim &amp; Demo</p>
+          </div>
+          <div class="weekly-avatar-stack">
+            <div class="stack-avatar initial" style="background:#2563EB;">${userInitials}</div>
+            <span class="stack-badge blue">+1</span>
+          </div>
+        </div>
+      `;
+    }
   }
 
   // 2. STAFF & LEADER MANAGEMENT
@@ -3913,7 +5024,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pillCountNewStaff = document.getElementById('pillCountNewStaff');
 
     const leadersCount = adminStaffList.filter(s => s.isLeader).length;
-    const topCount = adminStaffList.filter(s => (s.score || 0) >= 85).length;
+    const topCount = adminStaffList.filter(s => getStaffScore(s) >= 85).length;
     const newCount = adminStaffList.filter(s => s.newLeads >= 10).length;
 
     if (pillCountAllStaff) pillCountAllStaff.textContent = adminStaffList.length;
@@ -3942,7 +5053,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentStaffStatusFilter === 'leaders') {
       filtered = filtered.filter(s => s.isLeader);
     } else if (currentStaffStatusFilter === 'top') {
-      filtered = filtered.filter(s => (s.score || 0) >= 85);
+      filtered = filtered.filter(s => getStaffScore(s) >= 85);
     } else if (currentStaffStatusFilter === 'new') {
       filtered = filtered.filter(s => s.newLeads >= 10);
     }
@@ -3968,7 +5079,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Sorting
     const sortVal = staffSortSelect ? staffSortSelect.value : 'performance';
     if (sortVal === 'performance') {
-      filtered.sort((a, b) => (b.score || 0) - (a.score || 0));
+      filtered.sort((a, b) => getStaffScore(b) - getStaffScore(a));
     } else if (sortVal === 'leads') {
       filtered.sort((a, b) => (b.totalContacts || 0) - (a.totalContacts || 0));
     } else if (sortVal === 'name') {
@@ -4320,9 +5431,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. Col 2: Organized Meetings List
     const meetingsListEl = document.getElementById('staffDetMeetingsList');
     const meetingBadge = document.getElementById('staffDetMeetingCountBadge');
-    const staffMeetings = meetings.filter((m, idx) => {
-      const assigned = adminStaffList[idx % adminStaffList.length].name;
-      return assigned === staff.name || idx % 2 === 0;
+    const hasStaff = adminStaffList && adminStaffList.length > 0;
+    const staffMeetings = (meetings || []).filter((m, idx) => {
+      const assigned = m.assignedStaff || (hasStaff ? adminStaffList[idx % adminStaffList.length]?.name : 'Ekip');
+      return assigned === (staff ? staff.name : '') || idx % 2 === 0;
     }).slice(0, 4);
 
     if (meetingBadge) meetingBadge.textContent = `${staffMeetings.length} ${isEn ? 'Meetings' : 'Toplantı'}`;
@@ -4543,7 +5655,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="transfer-staff-info">
             <div class="transfer-staff-name">${t.name} ${t.isLeader ? '<span style="font-size:11px;">👑 Lider</span>' : ''}</div>
             <div class="transfer-staff-title">${t.title}</div>
-            <div class="transfer-staff-stats">${t.totalContacts || 0} Mevcut Müşteri • %${t.score || 85} Performans</div>
+            <div class="transfer-staff-stats">${t.totalContacts || 0} Mevcut Müşteri • %${getStaffScore(t)} Performans</div>
           </div>
           <div class="transfer-radio-circle ${isSelected ? 'active' : ''}">
             ${isSelected ? '<div class="radio-inner-dot"></div>' : ''}
@@ -4791,8 +5903,9 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    const hasStaffForCrm = adminStaffList && adminStaffList.length > 0;
     adminCrmTableBody.innerHTML = list.map((c, i) => {
-      const assignedStaff = adminStaffList[i % adminStaffList.length].name;
+      const assignedStaff = c.assignedStaff || (hasStaffForCrm ? adminStaffList[i % adminStaffList.length]?.name : 'Ekip');
       const stagePill = c.stage === 'hot'
         ? `<span class="stage-badge-sm hot font-bold">🔥 ${isEn ? 'Hot Lead' : 'Sıcak Müşteri'}</span>`
         : c.stage === 'warm'
@@ -5215,10 +6328,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnGcalToday) {
     btnGcalToday.addEventListener('click', () => {
-      calCurrentYear = 2026;
-      calCurrentMonth = 8; // September
+      calCurrentYear = new Date().getFullYear();
+      calCurrentMonth = new Date().getMonth();
       renderAdminMonthlyCalendar();
-      showToast("Eylül 2026 bugünkü takvime dönüldü 📅");
+      showToast(currentLang === 'en' ? `Returned to ${englishMonths[calCurrentMonth] || ''} ${calCurrentYear} today's calendar 📅` : `${turkishMonths[calCurrentMonth] || ''} ${calCurrentYear} bugünkü takvime dönüldü 📅`);
     });
   }
 
@@ -5232,9 +6345,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Populate Staff Select in Calendar
     if (adminCalStaffSelect) {
       const currentVal = adminCalStaffSelect.value;
+      const staffOptions = (adminStaffList || []).map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+      const allText = currentLang === 'en' ? 'All Staff Appointments' : 'Tüm Personellerin Randevuları';
       adminCalStaffSelect.innerHTML = `
-        <option value="all">Tüm Personellerin Randevuları</option>
-        ${adminStaffList.map(s => `<option value="${s.name}">${s.name}</option>`).join('')}
+        <option value="all">${allText}</option>
+        ${staffOptions}
       `;
       adminCalStaffSelect.value = currentVal || "all";
     }
@@ -5255,7 +6370,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!gcalDaysGrid) return;
 
     if (gcalMonthTitle) {
-      gcalMonthTitle.textContent = `${turkishMonths[calCurrentMonth]} ${calCurrentYear}`;
+      const monthName = currentLang === 'en' ? (englishMonths[calCurrentMonth] || '') : (turkishMonths[calCurrentMonth] || '');
+      gcalMonthTitle.textContent = `${monthName} ${calCurrentYear}`;
     }
 
     // Days in current month & first day of month (Monday start)
@@ -5268,20 +6384,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Filter relevant meetings
     let calendarEvents = [];
-    if (currentCalendarTab === 'personal') {
-      calendarEvents = adminPersonalMeetings.map(m => ({ ...m, isPersonal: true }));
-    } else {
-      const selectedStaff = adminCalStaffSelect ? adminCalStaffSelect.value : 'all';
-      calendarEvents = meetings.map((m, idx) => ({
-        ...m,
-        assignedStaff: adminStaffList[idx % adminStaffList.length].name,
-        meetingIndex: idx
-      }));
+    try {
+      if (currentCalendarTab === 'personal') {
+        calendarEvents = (adminPersonalMeetings || []).map(m => ({ ...m, isPersonal: true }));
+      } else {
+        const selectedStaff = adminCalStaffSelect ? adminCalStaffSelect.value : 'all';
+        const hasStaff = adminStaffList && adminStaffList.length > 0;
+        calendarEvents = (meetings || []).map((m, idx) => ({
+          ...m,
+          assignedStaff: m.assignedStaff || (hasStaff ? adminStaffList[idx % adminStaffList.length]?.name : 'Ekip Üyesi'),
+          meetingIndex: idx
+        }));
 
-      if (selectedStaff !== 'all') {
-        calendarEvents = calendarEvents.filter(m => m.assignedStaff === selectedStaff);
+        if (selectedStaff && selectedStaff !== 'all') {
+          calendarEvents = calendarEvents.filter(m => m.assignedStaff === selectedStaff);
+        }
       }
+    } catch (e) {
+      console.warn("Calendar events mapping warning:", e);
+      calendarEvents = meetings || [];
     }
+
+    const todayObj = new Date();
+    const todayY = todayObj.getFullYear();
+    const todayM = todayObj.getMonth();
+    const todayD = todayObj.getDate();
 
     let gridHtml = '';
 
@@ -5302,7 +6429,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Current Month
         dayNum = i - firstDayMondayBased + 1;
         cellDateStr = `${calCurrentYear}-${String(calCurrentMonth + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
-        if (calCurrentYear === 2026 && calCurrentMonth === 8 && dayNum === 20) {
+        if (calCurrentYear === todayY && calCurrentMonth === todayM && dayNum === todayD) {
           isToday = true;
         }
       } else {
@@ -5314,32 +6441,41 @@ document.addEventListener('DOMContentLoaded', () => {
         cellDateStr = `${nextY}-${String(nextM + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
       }
 
-      // Check events on this date
+      // Check events on this date (handles YYYY-MM-DD and DD.MM.YYYY)
       const dayEvents = calendarEvents.filter(e => {
-        if (!e.date) return false;
-        // Normalize date to YYYY-MM-DD
-        const eDateStr = e.date.trim();
+        if (!e || !e.date) return false;
+        let eDateStr = String(e.date).trim();
+        if (eDateStr.includes('.')) {
+          const parts = eDateStr.split('.');
+          if (parts.length === 3) {
+            eDateStr = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+          }
+        }
         return eDateStr === cellDateStr;
       });
 
       const eventsMarkup = dayEvents.map(e => {
         let pillTypeClass = 'meet';
-        if (e.type && e.type.toLowerCase().includes('zoom')) pillTypeClass = 'zoom';
-        else if (e.type && (e.type.toLowerCase().includes('yüz') || e.type.toLowerCase().includes('ofis'))) pillTypeClass = 'inperson';
+        const typeStr = (e.type || '').toLowerCase();
+        if (typeStr.includes('zoom')) pillTypeClass = 'zoom';
+        else if (typeStr.includes('team')) pillTypeClass = 'teams';
+        else if (typeStr.includes('yüz') || typeStr.includes('ofis') || typeStr.includes('müşteri ofisi')) pillTypeClass = 'inperson';
 
         return `
-          <div class="gcal-event-pill ${pillTypeClass}" title="${e.title} (${e.time} - ${e.assignedStaff || 'VIP'})" onclick="event.stopPropagation(); window.openMeetingDetail(${e.meetingIndex !== undefined ? e.meetingIndex : 0})">
-            <span class="font-mono">${e.time || '10:00'}</span>
-            <strong>${e.title}</strong>
+          <div class="gcal-event-pill ${pillTypeClass}" title="${e.title || (currentLang === 'en' ? 'Meeting' : 'Toplantı')} (${e.time || '14:00'} - ${e.assignedStaff || 'VIP'})" onclick="event.stopPropagation(); window.openMeetingDetail(${e.meetingIndex !== undefined ? e.meetingIndex : 0})">
+            <span class="font-mono">${e.time || '14:00'}</span>
+            <strong>${e.title || (currentLang === 'en' ? 'Meeting' : 'Toplantı')}</strong>
           </div>
         `;
       }).join('');
+
+      const todayBadgeText = currentLang === 'en' ? 'Today' : 'Bugün';
 
       gridHtml += `
         <div class="gcal-day-cell ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''}" data-date="${cellDateStr}" onclick="window.quickPlanForDate('${cellDateStr}')">
           <div class="gcal-day-header">
             <span class="gcal-day-number">${dayNum}</span>
-            ${isToday ? '<span class="gcal-today-badge">Bugün</span>' : ''}
+            ${isToday ? `<span class="gcal-today-badge">${todayBadgeText}</span>` : ''}
           </div>
           <div class="gcal-day-events">
             ${eventsMarkup}
@@ -5359,36 +6495,38 @@ document.addEventListener('DOMContentLoaded', () => {
   // Card view renderer (Alternative view)
   function renderAdminCalendarCards() {
     if (!adminMeetingsGrid) return;
+    const isEn = currentLang === 'en';
 
     if (currentCalendarTab === 'personal') {
-      adminMeetingsGrid.innerHTML = adminPersonalMeetings.map(m => `
+      adminMeetingsGrid.innerHTML = (adminPersonalMeetings || []).map(m => `
         <div class="admin-meeting-card card-blue-glow">
           <div>
             <div class="admin-meet-top">
-              <span class="stage-badge-sm hot">⭐ Yönetici Özel VIP</span>
+              <span class="stage-badge-sm hot">${isEn ? '⭐ Executive VIP Agenda' : '⭐ Yönetici Özel VIP'}</span>
               <span class="text-xs font-mono font-bold text-slate-500">${m.time}</span>
             </div>
             <h4 class="admin-meet-title">${m.title}</h4>
             <div class="admin-meet-meta">
               <span>📅 ${m.date}</span>
-              <span>👥 Katılımcılar: <strong>${m.participants}</strong></span>
-              <span>🌐 Platform: <strong>${m.type}</strong></span>
+              <span>👥 ${isEn ? 'Participants:' : 'Katılımcılar:'} <strong>${m.participants}</strong></span>
+              <span>🌐 ${isEn ? 'Platform:' : 'Platform:'} <strong>${m.type}</strong></span>
             </div>
           </div>
           <div class="flex items-center justify-between mt-3 pt-3 border-t">
-            <span class="meeting-status-badge">Planlandı</span>
-            <button class="btn-primary btn-sm" onclick="alert('Toplantı bağlantısı açılıyor: ${m.type}')">Toplantıya Katıl ➔</button>
+            <span class="meeting-status-badge">${isEn ? 'Scheduled' : 'Planlandı'}</span>
+            <button class="btn-primary btn-sm" onclick="alert('${isEn ? 'Opening meeting link: ' : 'Toplantı bağlantısı açılıyor: '}${m.type}')">${isEn ? 'Join Meeting ➔' : 'Toplantıya Katıl ➔'}</button>
           </div>
         </div>
       `).join('');
       return;
     }
 
-    let allMeetingsList = [...meetings];
+    let allMeetingsList = [...(meetings || [])];
     const selectedStaff = adminCalStaffSelect ? adminCalStaffSelect.value : 'all';
+    const hasStaff = adminStaffList && adminStaffList.length > 0;
 
     adminMeetingsGrid.innerHTML = allMeetingsList.map((m, i) => {
-      const assignedStaff = adminStaffList[i % adminStaffList.length].name;
+      const assignedStaff = m.assignedStaff || (hasStaff ? adminStaffList[i % adminStaffList.length]?.name : (isEn ? 'Team Member' : 'Ekip Üyesi'));
       if (selectedStaff !== 'all' && assignedStaff !== selectedStaff) {
         return '';
       }
@@ -5404,13 +6542,13 @@ document.addEventListener('DOMContentLoaded', () => {
             <h4 class="admin-meet-title">${m.title}</h4>
             <div class="admin-meet-meta">
               <span>📅 ${m.date}</span>
-              <span>👥 Müşteri: <strong>${m.customer || 'Belirtilmedi'}</strong></span>
-              <span>🌐 Platform: <strong>${m.type}</strong></span>
+              <span>👥 ${isEn ? 'Client:' : 'Müşteri:'} <strong>${m.customer || (isEn ? 'Not Specified' : 'Belirtilmedi')}</strong></span>
+              <span>🌐 ${isEn ? 'Platform:' : 'Platform:'} <strong>${m.type}</strong></span>
             </div>
           </div>
           <div class="flex items-center justify-between mt-3 pt-3 border-t">
-            <span class="meeting-status-badge ${isPast ? 'done' : ''}">${isPast ? 'Tamamlandı' : 'Planlandı'}</span>
-            <button class="btn-outline btn-sm" onclick="window.openMeetingDetail(${i})">Detay &amp; Düzenle</button>
+            <span class="meeting-status-badge ${isPast ? 'done' : ''}">${isPast ? (isEn ? 'Concluded' : 'Tamamlandı') : (isEn ? 'Scheduled' : 'Planlandı')}</span>
+            <button class="btn-outline btn-sm" onclick="window.openMeetingDetail(${i})">${isEn ? 'Details & Edit' : 'Detay & Düzenle'}</button>
           </div>
         </div>
       `;
@@ -5418,7 +6556,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Staff Modal for Add / Edit
+  // =========================================================
+  // STAFF ONBOARDING: 3-CHOICE MODAL & ONBOARDING METHODS
+  // =========================================================
   const btnAdminAddStaff = document.getElementById('btnAdminAddStaff');
+  const adminStaffAddChoiceModal = document.getElementById('adminStaffAddChoiceModal');
+  const modalStaffInviteLink = document.getElementById('modalStaffInviteLink');
+  const modalStaffExcelImport = document.getElementById('modalStaffExcelImport');
   const adminStaffModal = document.getElementById('adminStaffModal');
   const adminStaffForm = document.getElementById('adminStaffForm');
   const staffInputIsLeader = document.getElementById('staffInputIsLeader');
@@ -5426,8 +6570,346 @@ document.addEventListener('DOMContentLoaded', () => {
   const staffLeaderSelectGroup = document.getElementById('staffLeaderSelectGroup');
   const staffInputMonthlyTarget = document.getElementById('staffInputMonthlyTarget');
 
+  // Main Add Button -> Opens the 3-choice modal
   if (btnAdminAddStaff) {
     btnAdminAddStaff.addEventListener('click', () => {
+      if (adminStaffAddChoiceModal) {
+        openModal(adminStaffAddChoiceModal);
+      } else {
+        openStaffModalForAdd();
+      }
+    });
+  }
+
+  // --- SEÇENEK 1: Davet Linki & QR ---
+  const btnChoiceInviteLink = document.getElementById('btnChoiceInviteLink');
+  const staffInviteLinkInput = document.getElementById('staffInviteLinkInput');
+  const btnCopyStaffInviteLink = document.getElementById('btnCopyStaffInviteLink');
+  const copyLinkBtnText = document.getElementById('copyLinkBtnText');
+  const btnShareInviteWhatsApp = document.getElementById('btnShareInviteWhatsApp');
+  const btnShareInviteEmail = document.getElementById('btnShareInviteEmail');
+  const btnDownloadInviteQR = document.getElementById('btnDownloadInviteQR');
+  const btnBackToChoiceFromInvite = document.getElementById('btnBackToChoiceFromInvite');
+
+  if (btnChoiceInviteLink) {
+    btnChoiceInviteLink.addEventListener('click', () => {
+      closeModal(adminStaffAddChoiceModal);
+      // Generate dynamic invite link
+      const compSlug = (companyConfig && companyConfig.name ? companyConfig.name.toLowerCase().replace(/[^a-z0-9]/g, '') : 'vedubox');
+      if (staffInviteLinkInput) {
+        staffInviteLinkInput.value = `http://monacard2.test/join/${compSlug}?token=mca-${Math.random().toString(36).substring(2, 8)}`;
+      }
+      openModal(modalStaffInviteLink);
+    });
+  }
+
+  if (btnCopyStaffInviteLink && staffInviteLinkInput) {
+    btnCopyStaffInviteLink.addEventListener('click', () => {
+      staffInviteLinkInput.select();
+      navigator.clipboard.writeText(staffInviteLinkInput.value).then(() => {
+        if (copyLinkBtnText) copyLinkBtnText.textContent = "Kopyalandı! ✅";
+        showToast("Davet bağlantısı panoya kopyalandı! 📋");
+        setTimeout(() => {
+          if (copyLinkBtnText) copyLinkBtnText.textContent = "Kopyala";
+        }, 2200);
+      }).catch(() => {
+        document.execCommand('copy');
+        showToast("Davet bağlantısı kopyalandı! 📋");
+      });
+    });
+  }
+
+  const btnShareInviteSlack = document.getElementById('btnShareInviteSlack');
+  const btnShareInviteTelegram = document.getElementById('btnShareInviteTelegram');
+
+  if (btnShareInviteWhatsApp && staffInviteLinkInput) {
+    btnShareInviteWhatsApp.addEventListener('click', () => {
+      const link = staffInviteLinkInput.value;
+      const compName = companyConfig && companyConfig.name ? companyConfig.name : 'MonaCard';
+      const text = encodeURIComponent(`Merhaba! ${compName} bünyesinde dijital kartvizit profilinizi oluşturmak için aşağıdaki bağlantıya tıklayarak saniyeler içinde bilgilerinizi doldurabilirsiniz:\n\n${link}`);
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    });
+  }
+
+  if (btnShareInviteSlack && staffInviteLinkInput) {
+    btnShareInviteSlack.addEventListener('click', () => {
+      const link = staffInviteLinkInput.value;
+      const compName = companyConfig && companyConfig.name ? companyConfig.name : 'MonaCard';
+      const announcement = `📢 *${compName} Dijital Kartvizit Katılımı*\nDeğerli Ekip Arkadaşlarımız,\nŞirketimizin MonaCard dijital kartvizit sistemine dahil olmak ve profilinizi oluşturmak için lütfen aşağıdaki bağlantıya tıklayarak bilgilerinizi tamamlayın:\n🔗 ${link}`;
+      
+      navigator.clipboard.writeText(announcement).then(() => {
+        showToast("Slack & Teams formatında duyuru metni panoya kopyalandı! 🚀");
+      }).catch(() => {
+        showToast("Duyuru metni kopyalandı!");
+      });
+    });
+  }
+
+  if (btnShareInviteTelegram && staffInviteLinkInput) {
+    btnShareInviteTelegram.addEventListener('click', () => {
+      const link = staffInviteLinkInput.value;
+      const compName = companyConfig && companyConfig.name ? companyConfig.name : 'MonaCard';
+      const text = encodeURIComponent(`${compName} bünyesinde dijital kartvizit profilinizi oluşturmak için bağlantıya tıklayın:`);
+      window.open(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${text}`, '_blank');
+    });
+  }
+
+  if (btnShareInviteEmail && staffInviteLinkInput) {
+    btnShareInviteEmail.addEventListener('click', () => {
+      const link = staffInviteLinkInput.value;
+      const compName = companyConfig && companyConfig.name ? companyConfig.name : 'MonaCard';
+      const subject = encodeURIComponent(`${compName} - Dijital Kartvizit Personel Daveti`);
+      const body = encodeURIComponent(`Merhaba,\n\n${compName} ekibi dijital kartvizit sistemimize katılmanız için davet edildiniz.\n\nAşağıdaki bağlantıyı açarak bilgilerinizi, ünvanınızı ve profil fotoğrafınızı ekleyebilirsiniz:\n${link}\n\nİyi çalışmalar dileriz.`);
+      window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+    });
+  }
+
+  if (btnDownloadInviteQR) {
+    btnDownloadInviteQR.addEventListener('click', () => {
+      showToast("Şirket katılım QR kodu görsel olarak indirildi! 📥");
+    });
+  }
+
+  if (btnBackToChoiceFromInvite) {
+    btnBackToChoiceFromInvite.addEventListener('click', () => {
+      closeModal(modalStaffInviteLink);
+      openModal(adminStaffAddChoiceModal);
+    });
+  }
+
+  // --- SEÇENEK 2: Excel / CSV ile Toplu Yükleme ---
+  const btnChoiceExcelImport = document.getElementById('btnChoiceExcelImport');
+  const btnDownloadStaffTemplate = document.getElementById('btnDownloadStaffTemplate');
+  const excelDropZone = document.getElementById('excelDropZone');
+  const excelStaffFileInput = document.getElementById('excelStaffFileInput');
+  const btnBrowseExcelFile = document.getElementById('btnBrowseExcelFile');
+  const selectedExcelFileName = document.getElementById('selectedExcelFileName');
+  const excelPreviewSection = document.getElementById('excelPreviewSection');
+  const excelParsedCount = document.getElementById('excelParsedCount');
+  const excelPreviewTableBody = document.getElementById('excelPreviewTableBody');
+  const btnClearExcelParsed = document.getElementById('btnClearExcelParsed');
+  const btnConfirmExcelImport = document.getElementById('btnConfirmExcelImport');
+  const btnConfirmExcelImportText = document.getElementById('btnConfirmExcelImportText');
+
+  let parsedStaffRows = [];
+
+  if (btnChoiceExcelImport) {
+    btnChoiceExcelImport.addEventListener('click', () => {
+      closeModal(adminStaffAddChoiceModal);
+      resetExcelImportForm();
+      openModal(modalStaffExcelImport);
+    });
+  }
+
+  // Step 1: Download Sample CSV Template
+  if (btnDownloadStaffTemplate) {
+    btnDownloadStaffTemplate.addEventListener('click', () => {
+      const csvHeader = "\uFEFFAd Soyad,Ünvan,E-Posta,Telefon,Aylık Hedef,Takım Lideri Mi\n";
+      const sampleRows = [
+        "Ahmet Can Yılmaz,Kıdemli Satış Temsilcisi,ahmet.yilmaz@vedubox.com,+90 532 111 22 33,20,Hayır",
+        "Zeynep Kaya,Kurumsal Satış Danışmanı,zeynep.kaya@vedubox.com,+90 533 222 33 44,25,Evet",
+        "Murat Demir,Müşteri Deneyimi Yöneticisi,murat.demir@vedubox.com,+90 534 333 44 55,15,Hayır",
+        "Büşra Çelik,Saha Satış Uzmanı,busra.celik@vedubox.com,+90 535 444 55 66,18,Hayır"
+      ].join("\n");
+
+      const blob = new Blob([csvHeader + sampleRows], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'monacard_personel_ekleme_sablonu.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("Örnek personel şablonu (.CSV) indirildi! 📥");
+    });
+  }
+
+  // Step 2: Upload Zone & Drag-Drop
+  if (btnBrowseExcelFile && excelStaffFileInput) {
+    btnBrowseExcelFile.addEventListener('click', (e) => {
+      e.stopPropagation();
+      excelStaffFileInput.click();
+    });
+  }
+
+  if (excelDropZone && excelStaffFileInput) {
+    excelDropZone.addEventListener('click', () => {
+      excelStaffFileInput.click();
+    });
+
+    excelDropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      excelDropZone.classList.add('dragover');
+    });
+
+    excelDropZone.addEventListener('dragleave', () => {
+      excelDropZone.classList.remove('dragover');
+    });
+
+    excelDropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      excelDropZone.classList.remove('dragover');
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        handleExcelFileSelected(e.dataTransfer.files[0]);
+      }
+    });
+
+    excelStaffFileInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        handleExcelFileSelected(e.target.files[0]);
+      }
+    });
+  }
+
+  function handleExcelFileSelected(file) {
+    if (!file) return;
+    if (selectedExcelFileName) {
+      selectedExcelFileName.textContent = `📄 Seçilen Dosya: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const content = evt.target.result;
+      parseCSVStaffContent(content);
+    };
+    reader.readAsText(file, 'UTF-8');
+  }
+
+  function parseCSVStaffContent(text) {
+    if (!text || !text.trim()) {
+      showToast("Seçilen dosya boş görünüyor!", "warning");
+      return;
+    }
+
+    // Split lines
+    const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+    if (lines.length <= 1) {
+      showToast("Dosyada başlık dışında personel kaydı bulunamadı!", "warning");
+      return;
+    }
+
+    // Parse header and rows
+    const delimiter = lines[0].includes(';') ? ';' : ',';
+    parsedStaffRows = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const rowText = lines[i];
+      // Basic CSV split considering quotes
+      const cols = rowText.split(delimiter).map(c => c.replace(/^["']|["']$/g, '').trim());
+      if (cols.length >= 2 && cols[0]) {
+        const name = cols[0];
+        const title = cols[1] || 'Satış Temsilcisi';
+        const email = cols[2] || `${name.toLowerCase().replace(/[^a-z0-9]/g, '')}@vedubox.com`;
+        const phone = cols[3] || '+90 5XX XXX XX XX';
+        const target = parseInt(cols[4], 10) || 15;
+        const isLeaderStr = (cols[5] || '').toLowerCase();
+        const isLeader = isLeaderStr.includes('evet') || isLeaderStr.includes('true') || isLeaderStr.includes('1') || isLeaderStr.includes('lider');
+
+        parsedStaffRows.push({
+          id: 'staff-' + Date.now() + '-' + i,
+          name,
+          title,
+          email,
+          phone,
+          avatar: '',
+          isLeader,
+          leaderId: '',
+          monthlyTarget: target,
+          newLeads: 0,
+          existingLeads: 0,
+          totalContacts: 0,
+          hotCount: 0,
+          warmCount: 0,
+          coldCount: 0,
+          convertedCount: 0,
+          revenue: 0,
+          satisfactionRate: 0,
+          score: 0
+        });
+      }
+    }
+
+    if (parsedStaffRows.length === 0) {
+      showToast("Dosya formatı okunamadı. Lütfen örnek şablonu kullanın.", "error");
+      return;
+    }
+
+    renderExcelPreview();
+    showToast(`${parsedStaffRows.length} personel dosyadan başarıyla okundu! ✅`);
+  }
+
+  function renderExcelPreview() {
+    if (!excelPreviewSection || !excelPreviewTableBody) return;
+
+    if (parsedStaffRows.length > 0) {
+      excelPreviewSection.style.display = 'block';
+      if (excelParsedCount) {
+        excelParsedCount.textContent = `${parsedStaffRows.length} Personel Hazır`;
+      }
+      if (btnConfirmExcelImport) {
+        btnConfirmExcelImport.removeAttribute('disabled');
+      }
+      if (btnConfirmExcelImportText) {
+        btnConfirmExcelImportText.textContent = `${parsedStaffRows.length} Personeli Sisteme Aktar`;
+      }
+
+      excelPreviewTableBody.innerHTML = parsedStaffRows.map(s => `
+        <tr>
+          <td><strong style="color: #0F172A;">${s.name}</strong></td>
+          <td>${s.title}</td>
+          <td>${s.email}</td>
+          <td>${s.phone}</td>
+          <td><span style="font-weight:700; color:#4F46E5;">${s.monthlyTarget} Adet</span></td>
+          <td>${s.isLeader ? '<span style="color:#7E22CE; font-weight:700;">👑 Takım Lideri</span>' : '<span style="color:#64748B;">Personel</span>'}</td>
+        </tr>
+      `).join('');
+    } else {
+      resetExcelImportForm();
+    }
+  }
+
+  function resetExcelImportForm() {
+    parsedStaffRows = [];
+    if (excelStaffFileInput) excelStaffFileInput.value = '';
+    if (selectedExcelFileName) selectedExcelFileName.textContent = '';
+    if (excelPreviewSection) excelPreviewSection.style.display = 'none';
+    if (excelPreviewTableBody) excelPreviewTableBody.innerHTML = '';
+    if (btnConfirmExcelImport) btnConfirmExcelImport.setAttribute('disabled', 'true');
+    if (btnConfirmExcelImportText) btnConfirmExcelImportText.textContent = '0 Personeli Sisteme Aktar';
+  }
+
+  if (btnClearExcelParsed) {
+    btnClearExcelParsed.addEventListener('click', () => {
+      resetExcelImportForm();
+      showToast("Yüklenen dosya temizlendi.");
+    });
+  }
+
+  if (btnConfirmExcelImport) {
+    btnConfirmExcelImport.addEventListener('click', () => {
+      if (parsedStaffRows.length === 0) return;
+
+      const count = parsedStaffRows.length;
+      // Add all parsed rows to the beginning of adminStaffList
+      parsedStaffRows.forEach(item => {
+        adminStaffList.unshift(item);
+      });
+
+      saveStaffToStorage();
+      renderAdminStaffTable();
+      renderAdminDashboard();
+      closeModal(modalStaffExcelImport);
+      resetExcelImportForm();
+
+      showToast(`🎉 ${count} yeni personel sisteme başarıyla aktarıldı!`);
+    });
+  }
+
+  // --- SEÇENEK 3: Tek Tek Manuel Form ile Ekle ---
+  const btnChoiceSingleManual = document.getElementById('btnChoiceSingleManual');
+  if (btnChoiceSingleManual) {
+    btnChoiceSingleManual.addEventListener('click', () => {
+      closeModal(adminStaffAddChoiceModal);
       openStaffModalForAdd();
     });
   }
@@ -5535,8 +7017,8 @@ document.addEventListener('DOMContentLoaded', () => {
           coldCount: 0,
           convertedCount: 0,
           revenue: 0,
-          satisfactionRate: 5.0,
-          score: 80
+          satisfactionRate: 0,
+          score: 0
         };
         adminStaffList.unshift(newStaff);
         showToast(`${name} personele eklendi! 🚀`);
@@ -5687,6 +7169,15 @@ document.addEventListener('DOMContentLoaded', () => {
           clientId: document.getElementById('integZoomClientId') ? document.getElementById('integZoomClientId').value.trim() : 'zm_client_849201948',
           clientSecret: document.getElementById('integZoomClientSecret') ? document.getElementById('integZoomClientSecret').value.trim() : 'zm_secret_k84920f92j1923'
         },
+        teams: {
+          autoMeeting: document.getElementById('integTeamsAutoMeeting') ? document.getElementById('integTeamsAutoMeeting').checked : true,
+          calendarSync: document.getElementById('integTeamsCalendarSync') ? document.getElementById('integTeamsCalendarSync').checked : true,
+          channelNotify: document.getElementById('integTeamsChannelNotify') ? document.getElementById('integTeamsChannelNotify').checked : true,
+          tenantId: document.getElementById('integTeamsTenantId') ? document.getElementById('integTeamsTenantId').value.trim() : '72f988bf-86f1-41af-91ab-2d7cd011db47',
+          clientId: document.getElementById('integTeamsClientId') ? document.getElementById('integTeamsClientId').value.trim() : '9a8b7c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4d',
+          clientSecret: document.getElementById('integTeamsClientSecret') ? document.getElementById('integTeamsClientSecret').value.trim() : 'ms_secret_984129841029384',
+          webhookUrl: document.getElementById('integTeamsWebhookUrl') ? document.getElementById('integTeamsWebhookUrl').value.trim() : 'https://vedubox.webhook.office.com/webhookb2/teams-meeting-leads'
+        },
         hubspot: {
           autoSyncContacts: document.getElementById('integHubspotAutoSyncContacts') ? document.getElementById('integHubspotAutoSyncContacts').checked : true,
           autoSyncVoice: document.getElementById('integHubspotAutoSyncVoice') ? document.getElementById('integHubspotAutoSyncVoice').checked : true,
@@ -5730,10 +7221,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Integration Test Action Simulator
   window.testIntegration = function(service) {
+    try {
+      localStorage.setItem('monacard_integrations_done', 'true');
+      const greetingBadgeWrap = document.getElementById('greetingBadgeWrap');
+      if (greetingBadgeWrap) greetingBadgeWrap.innerHTML = '';
+    } catch (e) {}
+
     if (service === 'google') {
       showToast("Google Workspace & Google Meet bağlantısı başarıyla doğrulandı ve 18 randevu senkronize edildi! 🚀");
     } else if (service === 'zoom') {
       showToast("Zoom API bağlantısı başarılı (200 OK) & Server-to-Server OAuth yetkisi aktif! 📹");
+    } else if (service === 'teams') {
+      showToast("Microsoft Teams & Office 365 Graph API bağlantısı doğrulandı & 12 toplantı senkronize edildi! 🟣⚡");
     } else if (service === 'hubspot') {
       showToast("HubSpot CRM bağlantısı doğrulandı & 148 müşteri kişisi başarıyla senkronize edildi! 🟠✨");
     } else if (service === 'salesforce') {
@@ -5785,6 +7284,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.getElementById('integZoomClientId')) document.getElementById('integZoomClientId').value = integ.zoom.clientId || '';
         if (document.getElementById('integZoomClientSecret')) document.getElementById('integZoomClientSecret').value = integ.zoom.clientSecret || '';
       }
+      if (integ.teams) {
+        if (document.getElementById('integTeamsAutoMeeting')) document.getElementById('integTeamsAutoMeeting').checked = !!integ.teams.autoMeeting;
+        if (document.getElementById('integTeamsCalendarSync')) document.getElementById('integTeamsCalendarSync').checked = !!integ.teams.calendarSync;
+        if (document.getElementById('integTeamsChannelNotify')) document.getElementById('integTeamsChannelNotify').checked = !!integ.teams.channelNotify;
+        if (document.getElementById('integTeamsTenantId')) document.getElementById('integTeamsTenantId').value = integ.teams.tenantId || '';
+        if (document.getElementById('integTeamsClientId')) document.getElementById('integTeamsClientId').value = integ.teams.clientId || '';
+        if (document.getElementById('integTeamsClientSecret')) document.getElementById('integTeamsClientSecret').value = integ.teams.clientSecret || '';
+        if (document.getElementById('integTeamsWebhookUrl')) document.getElementById('integTeamsWebhookUrl').value = integ.teams.webhookUrl || '';
+      }
       if (integ.hubspot) {
         if (document.getElementById('integHubspotAutoSyncContacts')) document.getElementById('integHubspotAutoSyncContacts').checked = !!integ.hubspot.autoSyncContacts;
         if (document.getElementById('integHubspotAutoSyncVoice')) document.getElementById('integHubspotAutoSyncVoice').checked = !!integ.hubspot.autoSyncVoice;
@@ -5817,24 +7325,26 @@ document.addEventListener('DOMContentLoaded', () => {
       adminSettings.companyProfile = { ...defaultAdminSettings.companyProfile };
     }
 
-    const compName = document.getElementById('adminCompName') ? document.getElementById('adminCompName').value.trim() : adminSettings.companyProfile.name;
-    const compSector = document.getElementById('adminCompSector') ? document.getElementById('adminCompSector').value.trim() : adminSettings.companyProfile.sector;
-    const compWebsite = document.getElementById('adminCompWebsite') ? document.getElementById('adminCompWebsite').value.trim() : (adminSettings.companyProfile.website || 'https://vedubox.com');
-    const managerName = document.getElementById('adminManagerName') ? document.getElementById('adminManagerName').value.trim() : adminSettings.companyProfile.managerName;
-    const managerTitle = document.getElementById('adminManagerTitle') ? document.getElementById('adminManagerTitle').value.trim() : adminSettings.companyProfile.managerTitle;
-    const compEmail = document.getElementById('adminCompEmail') ? document.getElementById('adminCompEmail').value.trim() : adminSettings.companyProfile.email;
-    const compPhone = document.getElementById('adminCompPhone') ? document.getElementById('adminCompPhone').value.trim() : adminSettings.companyProfile.phone;
+    const compName = document.getElementById('adminCompName') ? document.getElementById('adminCompName').value.trim() : (adminSettings.companyProfile.name || '');
+    const compSector = document.getElementById('adminCompSector') ? document.getElementById('adminCompSector').value.trim() : (adminSettings.companyProfile.sector || '');
+    const compWebsite = document.getElementById('adminCompWebsite') ? document.getElementById('adminCompWebsite').value.trim() : (adminSettings.companyProfile.website || '');
+    const managerName = document.getElementById('adminManagerName') ? document.getElementById('adminManagerName').value.trim() : (adminSettings.companyProfile.managerName || '');
+    const managerTitle = document.getElementById('adminManagerTitle') ? document.getElementById('adminManagerTitle').value.trim() : (adminSettings.companyProfile.managerTitle || '');
+    const compEmail = document.getElementById('adminCompEmail') ? document.getElementById('adminCompEmail').value.trim() : (adminSettings.companyProfile.email || '');
+    const compPhone = document.getElementById('adminCompPhone') ? document.getElementById('adminCompPhone').value.trim() : (adminSettings.companyProfile.phone || '');
     const compPhone2 = document.getElementById('adminCompPhone2') ? document.getElementById('adminCompPhone2').value.trim() : (adminSettings.companyProfile.phone2 || '');
-    const compAddress = document.getElementById('adminCompAddress') ? document.getElementById('adminCompAddress').value.trim() : adminSettings.companyProfile.address;
+    const compAddress = document.getElementById('adminCompAddress') ? document.getElementById('adminCompAddress').value.trim() : (adminSettings.companyProfile.address || '');
+    const compAddress2 = document.getElementById('adminCompAddress2') ? document.getElementById('adminCompAddress2').value.trim() : (adminSettings.companyProfile.address2 || '');
 
     const socialLinks = {
-      whatsapp: document.getElementById('adminSocialWhatsapp') ? document.getElementById('adminSocialWhatsapp').value.trim() : '905362556424',
-      linkedin: document.getElementById('adminSocialLinkedin') ? document.getElementById('adminSocialLinkedin').value.trim() : 'muhiddinoktem',
-      instagram: document.getElementById('adminSocialInstagram') ? document.getElementById('adminSocialInstagram').value.trim() : 'muhiddinoktem',
-      twitter: document.getElementById('adminSocialTwitter') ? document.getElementById('adminSocialTwitter').value.trim() : 'muhiddinoktem',
-      telegram: document.getElementById('adminSocialTelegram') ? document.getElementById('adminSocialTelegram').value.trim() : 'muhiddinoktem',
-      facebook: document.getElementById('adminSocialFacebook') ? document.getElementById('adminSocialFacebook').value.trim() : 'muhiddinoktem',
-      youtube: document.getElementById('adminSocialYoutube') ? document.getElementById('adminSocialYoutube').value.trim() : 'vedubox'
+      whatsapp: document.getElementById('adminSocialWhatsapp') ? document.getElementById('adminSocialWhatsapp').value.trim() : '',
+      linkedin: document.getElementById('adminSocialLinkedin') ? document.getElementById('adminSocialLinkedin').value.trim() : '',
+      instagram: document.getElementById('adminSocialInstagram') ? document.getElementById('adminSocialInstagram').value.trim() : '',
+      twitter: document.getElementById('adminSocialTwitter') ? document.getElementById('adminSocialTwitter').value.trim() : '',
+      telegram: document.getElementById('adminSocialTelegram') ? document.getElementById('adminSocialTelegram').value.trim() : '',
+      facebook: document.getElementById('adminSocialFacebook') ? document.getElementById('adminSocialFacebook').value.trim() : '',
+      youtube: document.getElementById('adminSocialYoutube') ? document.getElementById('adminSocialYoutube').value.trim() : '',
+      tiktok: document.getElementById('adminSocialTiktok') ? document.getElementById('adminSocialTiktok').value.trim() : ''
     };
 
     adminSettings.companyProfile = {
@@ -5848,15 +7358,25 @@ document.addEventListener('DOMContentLoaded', () => {
       phone: compPhone,
       phone2: compPhone2,
       address: compAddress,
+      address2: compAddress2,
       socialLinks: socialLinks,
-      products: adminSettings.companyProfile.products || defaultAdminSettings.companyProfile.products
+      products: (adminSettings.companyProfile && Array.isArray(adminSettings.companyProfile.products)) ? adminSettings.companyProfile.products : []
     };
 
     // Synchronize to staffProfile (Digital Business Card)
     staffProfile.company = compName;
     staffProfile.website = compWebsite;
     staffProfile.address = compAddress;
-    if (staffProfile.fullName === managerName || !staffProfile.fullName) {
+    staffProfile.whatsapp = socialLinks.whatsapp || '';
+    staffProfile.telegram = socialLinks.telegram || '';
+    staffProfile.linkedin = socialLinks.linkedin || '';
+    staffProfile.twitter = socialLinks.twitter || '';
+    staffProfile.facebook = socialLinks.facebook || '';
+    staffProfile.instagram = socialLinks.instagram || '';
+    staffProfile.youtube = socialLinks.youtube || '';
+    staffProfile.tiktok = socialLinks.tiktok || '';
+
+    if (managerName) {
       staffProfile.fullName = managerName;
       staffProfile.title = managerTitle;
       staffProfile.email = compEmail;
@@ -5873,8 +7393,9 @@ document.addEventListener('DOMContentLoaded', () => {
     saveAdminSettingsToStorage();
     applyProfileToUI();
     renderCardProducts();
+    renderCardSocialLinks();
     renderAdminDashboard();
-    showToast("Firma kimlik bilgileri, sosyal medya hesapları ve ürün vitrini kaydedildi ve tüm personellere aktarıldı! 🏢✨");
+    showToast("Firma kimlik bilgileri, sosyal medya hesapları ve ürün vitrini kaydedildi ve tüm kartlara aktarıldı! 🏢✨");
   }
 
   if (adminCompanyProfileForm) {
@@ -5892,19 +7413,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Render Admin Profile Form & Products
   function renderAdminProfile() {
-    const prof = adminSettings.companyProfile || defaultAdminSettings.companyProfile;
+    const prof = (adminSettings && adminSettings.companyProfile) ? adminSettings.companyProfile : defaultAdminSettings.companyProfile;
     if (document.getElementById('adminCompName')) document.getElementById('adminCompName').value = prof.name || '';
     if (document.getElementById('adminCompSector')) document.getElementById('adminCompSector').value = prof.sector || '';
-    if (document.getElementById('adminCompWebsite')) document.getElementById('adminCompWebsite').value = prof.website || 'https://vedubox.com';
+    if (document.getElementById('adminCompWebsite')) document.getElementById('adminCompWebsite').value = prof.website || '';
     if (document.getElementById('adminManagerName')) document.getElementById('adminManagerName').value = prof.managerName || '';
     if (document.getElementById('adminManagerTitle')) document.getElementById('adminManagerTitle').value = prof.managerTitle || '';
     if (document.getElementById('adminCompEmail')) document.getElementById('adminCompEmail').value = prof.email || '';
     if (document.getElementById('adminCompPhone')) document.getElementById('adminCompPhone').value = prof.phone || '';
     if (document.getElementById('adminCompPhone2')) document.getElementById('adminCompPhone2').value = prof.phone2 || '';
     if (document.getElementById('adminCompAddress')) document.getElementById('adminCompAddress').value = prof.address || '';
+    if (document.getElementById('adminCompAddress2')) document.getElementById('adminCompAddress2').value = prof.address2 || '';
 
     // Social accounts
-    const soc = prof.socialLinks || (defaultAdminSettings.companyProfile && defaultAdminSettings.companyProfile.socialLinks) || {};
+    const soc = prof.socialLinks || {};
     if (document.getElementById('adminSocialWhatsapp')) document.getElementById('adminSocialWhatsapp').value = soc.whatsapp || '';
     if (document.getElementById('adminSocialLinkedin')) document.getElementById('adminSocialLinkedin').value = soc.linkedin || '';
     if (document.getElementById('adminSocialInstagram')) document.getElementById('adminSocialInstagram').value = soc.instagram || '';
@@ -5912,6 +7434,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('adminSocialTelegram')) document.getElementById('adminSocialTelegram').value = soc.telegram || '';
     if (document.getElementById('adminSocialFacebook')) document.getElementById('adminSocialFacebook').value = soc.facebook || '';
     if (document.getElementById('adminSocialYoutube')) document.getElementById('adminSocialYoutube').value = soc.youtube || '';
+    if (document.getElementById('adminSocialTiktok')) document.getElementById('adminSocialTiktok').value = soc.tiktok || '';
 
     renderAdminProductsList();
   }
@@ -5920,6 +7443,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderAdminProductsList() {
     const container = document.getElementById('adminProductsListContainer');
     if (!container) return;
+    const isEn = currentLang === 'en';
 
     const products = (adminSettings.companyProfile && adminSettings.companyProfile.products) 
       ? adminSettings.companyProfile.products 
@@ -5929,15 +7453,15 @@ document.addEventListener('DOMContentLoaded', () => {
       container.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; padding: 32px 16px; background: var(--admin-hover-bg, #F8FAFC); border: 1.5px dashed var(--admin-card-border, #E2E8F0); border-radius: 16px;">
           <div style="font-size: 28px; margin-bottom: 6px;">📦</div>
-          <h4 style="font-size: 14px; font-weight: 700; color: var(--admin-text-main, #0F172A);">Henüz Ürün veya Hizmet Eklenmedi</h4>
-          <p style="font-size: 12.5px; color: var(--admin-text-sub, #64748B); margin-top: 4px;">Şirketinizin ürün ve markalarını ekleyerek tüm personellerin kartvizitinde yayınlayın.</p>
+          <h4 style="font-size: 14px; font-weight: 700; color: var(--admin-text-main, #0F172A);">${isEn ? 'No Products or Services Added Yet' : 'Henüz Ürün veya Hizmet Eklenmedi'}</h4>
+          <p style="font-size: 12.5px; color: var(--admin-text-sub, #64748B); margin-top: 4px;">${isEn ? 'Add your company products and brands to feature them on all staff digital business cards.' : 'Şirketinizin ürün ve markalarını ekleyerek tüm personellerin kartvizitinde yayınlayın.'}</p>
         </div>
       `;
       return;
     }
 
     container.innerHTML = products.map(p => {
-      const isImg = p.logo && (p.logo.includes('.') || p.logo.startsWith('http'));
+      const isImg = p.logo && (p.logo.includes('.') || p.logo.startsWith('http') || p.logo.startsWith('data:image'));
       return `
         <div class="admin-product-item-card">
           <div class="admin-prod-logo">
@@ -5949,21 +7473,115 @@ document.addEventListener('DOMContentLoaded', () => {
             <h4 class="admin-prod-name">${p.name}</h4>
             <p class="admin-prod-subtitle">${p.subtitle || ''}</p>
             <a href="${p.url || '#'}" target="_blank" rel="noopener noreferrer" class="admin-prod-link">
-              <span>${(p.url || '').replace(/^https?:\/\//, '') || 'Bağlantı Aç'}</span>
+              <span>${(p.url || '').replace(/^https?:\/\//, '') || (isEn ? 'Open Link' : 'Bağlantı Aç')}</span>
               <span>↗</span>
             </a>
           </div>
           <div class="admin-prod-actions">
-            <button type="button" class="admin-prod-btn" onclick="window.openEditProductModal('${p.id}')" title="Ürünü Düzenle">
+            <button type="button" class="admin-prod-btn" onclick="window.openEditProductModal('${p.id}')" title="${isEn ? 'Edit Product' : 'Ürünü Düzenle'}">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
             </button>
-            <button type="button" class="admin-prod-btn delete" onclick="window.deleteAdminProduct('${p.id}')" title="Ürünü Sil">
+            <button type="button" class="admin-prod-btn delete" onclick="window.deleteAdminProduct('${p.id}')" title="${isEn ? 'Delete Product' : 'Ürünü Sil'}">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
             </button>
           </div>
         </div>
       `;
     }).join('');
+  }
+
+  // Helper Functions: Logo Upload & Preview
+  function resetProductLogoUpload() {
+    const hiddenLogoInput = document.getElementById('prodInputLogo');
+    const fileInput = document.getElementById('prodInputLogoFile');
+    const dropzone = document.getElementById('prodLogoDropzone');
+    const previewCard = document.getElementById('prodLogoPreviewCard');
+    const previewImg = document.getElementById('prodLogoPreviewImg');
+    const fileNameEl = document.getElementById('prodLogoFileName');
+
+    if (hiddenLogoInput) hiddenLogoInput.value = '';
+    if (fileInput) fileInput.value = '';
+    if (dropzone) dropzone.style.display = 'flex';
+    if (previewCard) previewCard.style.display = 'none';
+    if (previewImg) previewImg.src = '';
+    if (fileNameEl) fileNameEl.textContent = 'Logo Yüklendi';
+  }
+
+  function setProductLogoUpload(logoValue, prodName = '') {
+    const hiddenLogoInput = document.getElementById('prodInputLogo');
+    const dropzone = document.getElementById('prodLogoDropzone');
+    const previewCard = document.getElementById('prodLogoPreviewCard');
+    const previewImg = document.getElementById('prodLogoPreviewImg');
+    const fileNameEl = document.getElementById('prodLogoFileName');
+
+    if (hiddenLogoInput) hiddenLogoInput.value = logoValue || '';
+
+    if (logoValue) {
+      if (dropzone) dropzone.style.display = 'none';
+      if (previewCard) previewCard.style.display = 'flex';
+      if (previewImg) previewImg.src = logoValue;
+      if (fileNameEl) {
+        fileNameEl.textContent = prodName ? `${prodName} Logosu` : 'Seçilen Logo';
+      }
+    } else {
+      resetProductLogoUpload();
+    }
+  }
+
+  function handleProductLogoFile(file) {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      showToast('Lütfen geçerli bir görsel dosyası seçin (PNG, JPG, SVG, WebP). ⚠️');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      showToast('Görsel boyutu en fazla 5MB olabilir. ⚠️');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target.result;
+      const cleanName = file.name.replace(/\.[^/.]+$/, "");
+      setProductLogoUpload(dataUrl, cleanName);
+      showToast('Logo başarıyla yüklendi! 🎨');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  const prodInputLogoFile = document.getElementById('prodInputLogoFile');
+  if (prodInputLogoFile) {
+    prodInputLogoFile.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (file) handleProductLogoFile(file);
+    });
+  }
+
+  const prodLogoDropzone = document.getElementById('prodLogoDropzone');
+  if (prodLogoDropzone) {
+    prodLogoDropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      prodLogoDropzone.classList.add('drag-over');
+    });
+    prodLogoDropzone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      prodLogoDropzone.classList.remove('drag-over');
+    });
+    prodLogoDropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      prodLogoDropzone.classList.remove('drag-over');
+      const file = e.dataTransfer.files && e.dataTransfer.files[0];
+      if (file) handleProductLogoFile(file);
+    });
+  }
+
+  const btnRemoveProdLogo = document.getElementById('btnRemoveProdLogo');
+  if (btnRemoveProdLogo) {
+    btnRemoveProdLogo.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      resetProductLogoUpload();
+    });
   }
 
   // Open Product Modal (Add Mode)
@@ -5973,6 +7591,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('adminProductModalTitle').textContent = "Yeni Ürün / Hizmet Ekle";
       document.getElementById('editProductId').value = "";
       adminProductForm.reset();
+      resetProductLogoUpload();
       openModal(adminProductModal);
     });
   }
@@ -5989,7 +7608,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('prodInputName').value = prod.name || '';
     document.getElementById('prodInputSubtitle').value = prod.subtitle || '';
     document.getElementById('prodInputUrl').value = prod.url || '';
-    document.getElementById('prodInputLogo').value = prod.logo || '';
+    
+    setProductLogoUpload(prod.logo || '', prod.name || '');
 
     openModal(adminProductModal);
   };
@@ -7664,6 +9284,267 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // =========================================================
+  // NOTIFICATION SYSTEM & LIVE ACTIVITY FEED
+  // =========================================================
+  const defaultNotifications = [
+    {
+      id: 'notif-1',
+      category: 'lead',
+      iconClass: 'lead',
+      icon: '🤝',
+      title: 'Yeni Müşteri Kartı Bırakıldı',
+      message: 'Ahmet Yılmaz (Tekno Bilişim A.Ş.) dijital kartvizitiniz üzerinden iletişim bilgilerini iletti.',
+      time: '5 dakika önce',
+      unread: true,
+      action: 'crm'
+    },
+    {
+      id: 'notif-2',
+      category: 'meeting',
+      iconClass: 'meeting',
+      icon: '📅',
+      title: 'Yaklaşan Toplantı',
+      message: 'Yarın 14:00 - Vedubox Dijital Dönüşüm Sunumu (Bizim Ofis)',
+      time: '1 saat önce',
+      unread: true,
+      action: 'meetings'
+    },
+    {
+      id: 'notif-3',
+      category: 'system',
+      iconClass: 'target',
+      icon: '🎯',
+      title: 'Satış Hedefi Güncellemesi',
+      message: 'Ekibiniz bu ayki kurumsal kart hedefinin %85\'ine ulaştı. Tebrikler!',
+      time: '3 saat önce',
+      unread: true,
+      action: 'staff'
+    },
+    {
+      id: 'notif-4',
+      category: 'system',
+      iconClass: 'system',
+      icon: '🏢',
+      title: 'Şirket Profili Güncellendi',
+      message: 'Firma merkez adresi ve 2. şube bilgileri başarıyla kaydedildi.',
+      time: 'Dün',
+      unread: false,
+      action: 'profile'
+    },
+    {
+      id: 'notif-5',
+      category: 'meeting',
+      iconClass: 'meeting',
+      icon: '📹',
+      title: 'Toplantı Planlandı',
+      message: 'Selin Demir (Finans Global) ile Zoom Meet toplantısı oluşturuldu.',
+      time: '2 gün önce',
+      unread: false,
+      action: 'meetings'
+    }
+  ];
+
+  let appNotifications = [];
+  try {
+    const savedN = localStorage.getItem('monacard_notifications');
+    if (savedN) {
+      appNotifications = JSON.parse(savedN);
+    } else {
+      appNotifications = [...defaultNotifications];
+    }
+  } catch (e) {
+    appNotifications = [...defaultNotifications];
+  }
+
+  function saveNotificationsToStorage() {
+    try {
+      localStorage.setItem('monacard_notifications', JSON.stringify(appNotifications));
+    } catch (e) {}
+  }
+
+  function renderNotificationsUI(filter = 'all') {
+    const container = document.getElementById('adminNotifListContainer');
+    const superContainer = document.getElementById('superNotifListContainer');
+    const unreadCount = appNotifications.filter(n => n.unread).length;
+
+    // Update unread badge indicators
+    const adminDot = document.getElementById('adminNotifBadgeDot');
+    const superDot = document.getElementById('superNotifBadgeDot');
+    const adminBadge = document.getElementById('adminNotifUnreadBadge');
+    const superBadge = document.getElementById('superNotifUnreadBadge');
+
+    if (adminDot) adminDot.style.display = unreadCount > 0 ? 'block' : 'none';
+    if (superDot) superDot.style.display = unreadCount > 0 ? 'block' : 'none';
+    if (adminBadge) adminBadge.textContent = unreadCount > 0 ? `${unreadCount} Yeni` : 'Tümü Okundu';
+    if (superBadge) superBadge.textContent = unreadCount > 0 ? `${unreadCount} Yeni` : 'Tümü Okundu';
+
+    const renderListInto = (targetEl) => {
+      if (!targetEl) return;
+      const filtered = appNotifications.filter(n => {
+        if (filter === 'all') return true;
+        return n.category === filter;
+      });
+
+      if (filtered.length === 0) {
+        targetEl.innerHTML = `
+          <div style="text-align:center; padding: 36px 16px; color: #94A3B8;">
+            <div style="font-size: 28px; margin-bottom: 6px;">✨</div>
+            <p style="font-size: 13px; font-weight:600; color:#64748B;">Bu kategoride bildirim bulunmuyor.</p>
+          </div>
+        `;
+        return;
+      }
+
+      targetEl.innerHTML = filtered.map((n) => `
+        <div class="notif-item ${n.unread ? 'unread' : ''}" data-id="${n.id}" data-action="${n.action || ''}">
+          <div class="notif-icon-box ${n.iconClass || 'system'}">
+            ${n.icon || '🔔'}
+          </div>
+          <div class="notif-body">
+            <div class="notif-item-title">
+              <span>${n.title}</span>
+              ${n.unread ? '<span class="notif-unread-dot"></span>' : ''}
+            </div>
+            <p class="notif-item-text">${n.message}</p>
+            <span class="notif-item-time">${n.time}</span>
+          </div>
+        </div>
+      `).join('');
+
+      // Click on item marks as read
+      targetEl.querySelectorAll('.notif-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const id = item.getAttribute('data-id');
+          const act = item.getAttribute('data-action');
+          const notif = appNotifications.find(x => x.id === id);
+          if (notif) {
+            notif.unread = false;
+            saveNotificationsToStorage();
+            renderNotificationsUI(filter);
+          }
+          if (act === 'meetings') {
+            navigateToPage('pageMeetings');
+          } else if (act === 'crm') {
+            navigateToPage('pageCrm');
+          } else if (act === 'staff' && typeof navigateToAdminView === 'function') {
+            navigateToAdminView('viewAdminStaff');
+          } else if (act === 'profile' && typeof navigateToAdminView === 'function') {
+            navigateToAdminView('viewAdminProfile');
+          }
+        });
+      });
+    };
+
+    renderListInto(container);
+    renderListInto(superContainer);
+  }
+
+  // Push Live Notification
+  window.pushLiveNotification = function({ title, message, category = 'system', icon = '🔔', iconClass = 'system', action = '' }) {
+    const newNotif = {
+      id: 'notif-' + Date.now(),
+      category,
+      iconClass,
+      icon,
+      title,
+      message,
+      time: 'Az önce',
+      unread: true,
+      action
+    };
+
+    appNotifications.unshift(newNotif);
+    saveNotificationsToStorage();
+    renderNotificationsUI('all');
+    showToast(`🔔 ${title}: ${message}`);
+  };
+
+  // Init Notification Event Listeners
+  function initNotificationListeners() {
+    const btnAdminNotif = document.getElementById('btnAdminNotifications');
+    const adminDropdown = document.getElementById('adminNotificationsDropdown');
+    const btnSuperNotif = document.getElementById('btnSuperNotifications');
+    const superDropdown = document.getElementById('superNotificationsDropdown');
+
+    if (btnAdminNotif && adminDropdown) {
+      btnAdminNotif.addEventListener('click', (e) => {
+        e.stopPropagation();
+        adminDropdown.classList.toggle('hidden');
+        renderNotificationsUI('all');
+      });
+    }
+
+    if (btnSuperNotif && superDropdown) {
+      btnSuperNotif.addEventListener('click', (e) => {
+        e.stopPropagation();
+        superDropdown.classList.toggle('hidden');
+        renderNotificationsUI('all');
+      });
+    }
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (adminDropdown && !adminDropdown.contains(e.target) && !btnAdminNotif.contains(e.target)) {
+        adminDropdown.classList.add('hidden');
+      }
+      if (superDropdown && !superDropdown.contains(e.target) && !btnSuperNotif.contains(e.target)) {
+        superDropdown.classList.add('hidden');
+      }
+    });
+
+    // Mark all read button
+    const btnMarkAll = document.getElementById('btnAdminMarkAllRead');
+    if (btnMarkAll) {
+      btnMarkAll.addEventListener('click', (e) => {
+        e.stopPropagation();
+        appNotifications.forEach(n => n.unread = false);
+        saveNotificationsToStorage();
+        renderNotificationsUI('all');
+        showToast("Tüm bildirimler okundu olarak işaretlendi. ✨");
+      });
+    }
+
+    const btnSuperMarkAll = document.getElementById('btnSuperMarkAllRead');
+    if (btnSuperMarkAll) {
+      btnSuperMarkAll.addEventListener('click', (e) => {
+        e.stopPropagation();
+        appNotifications.forEach(n => n.unread = false);
+        saveNotificationsToStorage();
+        renderNotificationsUI('all');
+        showToast("Tüm demo bildirimleri okundu olarak işaretlendi. ✨");
+      });
+    }
+
+    // Clear notifications
+    const btnClear = document.getElementById('btnAdminClearNotifs');
+    if (btnClear) {
+      btnClear.addEventListener('click', (e) => {
+        e.stopPropagation();
+        appNotifications = [];
+        saveNotificationsToStorage();
+        renderNotificationsUI('all');
+        showToast("Bildirim kutusu temizlendi.");
+      });
+    }
+
+    // Tabs filter
+    const tabs = document.querySelectorAll('#adminNotifTabs .notif-tab-btn');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        e.stopPropagation();
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const filter = tab.getAttribute('data-filter');
+        renderNotificationsUI(filter);
+      });
+    });
+  }
+
+  // Initialize notifications
+  initNotificationListeners();
+  renderNotificationsUI('all');
 
   // Apply initial active role (Customer, Staff, Admin, or SuperAdmin)
   setRole(activeRole, true);

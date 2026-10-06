@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\BusinessCard;
+use App\Models\Company;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,7 +25,7 @@ class AuthController extends Controller
 
         $user = User::with(['company', 'businessCard'])->where('email', $validated['email'])->first();
 
-        if (!$user || !Hash::check($validated['password'], $user->password)) {
+        if (! $user || ! Hash::check($validated['password'], $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['Geçersiz e-posta veya şifre.'],
             ]);
@@ -74,10 +76,14 @@ class AuthController extends Controller
             'title' => 'nullable|string|max:255',
         ]);
 
-        $company = \App\Models\Company::create([
+        $company = Company::create([
             'name' => $validated['company_name'],
-            'slug' => str($validated['company_name'])->slug() . '-' . rand(100, 999),
-            'sector' => $validated['sector'] ?? 'Bilişim & Hizmet',
+            'slug' => str($validated['company_name'])->slug().'-'.rand(100, 999),
+            'sector' => $validated['sector'] ?? null,
+            'ceo_name' => $validated['name'],
+            'ceo_title' => $validated['title'] ?? 'Kurucu & Yönetici',
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
             'user_quota' => 10,
             'plan' => 'enterprise_trial',
             'subscription_status' => 'active',
@@ -100,14 +106,14 @@ class AuthController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'phone' => $validated['phone'] ?? null,
-            'title' => $validated['title'] ?? 'Kurucu & Yönetici',
+            'title' => $validated['title'] ?? null,
             'department' => 'Yönetim',
             'role' => 'company_admin',
             'status' => 'active',
         ]);
 
-        $cardSlug = str($user->name)->slug() . '-' . rand(100, 999);
-        $card = \App\Models\BusinessCard::create([
+        $cardSlug = str($user->name)->slug().'-'.rand(100, 999);
+        $card = BusinessCard::create([
             'user_id' => $user->id,
             'company_id' => $company->id,
             'slug' => $cardSlug,
@@ -128,6 +134,7 @@ class AuthController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
+                    'phone' => $user->phone,
                     'role' => $user->role,
                     'title' => $user->title,
                     'department' => $user->department,

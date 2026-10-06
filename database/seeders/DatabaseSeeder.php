@@ -303,6 +303,24 @@ class DatabaseSeeder extends Seeder
             'last_synced_at' => now(),
         ]);
 
+        CompanyIntegration::create([
+            'company_id' => $company->id,
+            'provider' => 'teams',
+            'is_active' => true,
+            'credentials' => [
+                'tenant_id' => '72f988bf-86f1-41af-91ab-2d7cd011db47',
+                'client_id' => '9a8b7c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4d',
+                'client_secret' => 'ms_secret_984129841029384',
+            ],
+            'settings' => [
+                'auto_meeting' => true,
+                'calendar_sync' => true,
+                'channel_notify' => true,
+                'webhook_url' => 'https://vedubox.webhook.office.com/webhookb2/teams-meeting-leads',
+            ],
+            'last_synced_at' => now(),
+        ]);
+
         // 12. Pricing Tiers
         PricingTier::create([
             'name' => '1 - 10 Kullanıcı',
