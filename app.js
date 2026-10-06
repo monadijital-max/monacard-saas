@@ -391,13 +391,97 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Mobile Bottom Bar Navigation
-    const navItemSpans = document.querySelectorAll('.bottom-bar .nav-item span');
-    if (navItemSpans.length >= 4) {
-      navItemSpans[0].textContent = isEn ? 'Home' : 'Anasayfa';
-      navItemSpans[1].textContent = isEn ? 'Meetings' : 'Toplantılar';
-      navItemSpans[2].textContent = isEn ? 'Calendar' : 'Takvim';
-      navItemSpans[3].textContent = isEn ? 'CRM' : 'CRM';
+    const tHome = document.querySelector('#tabAnasayfa .nav-title');
+    if (tHome) tHome.textContent = isEn ? 'Home' : 'Anasayfa';
+    const tMeet = document.querySelector('#tabToplanti .nav-title');
+    if (tMeet) tMeet.textContent = isEn ? 'Meetings' : 'Toplantı';
+    const tCal = document.querySelector('#tabTakvim .nav-title');
+    if (tCal) tCal.textContent = isEn ? 'Calendar' : 'Takvim';
+    const tCrm = document.querySelector('#tabCrm .nav-title');
+    if (tCrm) tCrm.textContent = isEn ? 'CRM' : 'Crm';
+
+    const bHome = document.getElementById('tabAnasayfa');
+    if (bHome) bHome.title = isEn ? 'Digital Card' : 'Kartvizit';
+    const bMeet = document.getElementById('tabToplanti');
+    if (bMeet) bMeet.title = isEn ? 'Meetings' : 'Toplantı Düzenle';
+    const bCal = document.getElementById('tabTakvim');
+    if (bCal) bCal.title = isEn ? 'Calendar & Events' : 'Etkinlik ve Hatırlatıcı';
+    const bCrm = document.getElementById('tabCrm');
+    if (bCrm) bCrm.title = isEn ? 'Client CRM' : 'Müşteri Yönetimi (CRM)';
+
+    // FAB Button
+    const mainFab = document.getElementById('mainFabBtn');
+    if (mainFab) {
+      mainFab.title = isEn ? 'Capture Client Contact Details' : 'Müşteri Kartvizit Bilgisi Al';
+      mainFab.setAttribute('aria-label', isEn ? 'Capture Client Contact Details' : 'Müşteri Kartvizit Bilgilerini Oku');
     }
+
+    // Card Capture Modal
+    const cardCapTitle = document.getElementById('cardCapTitle');
+    if (cardCapTitle) cardCapTitle.textContent = isEn ? 'Capture Client Contact Details' : 'Müşteri Kartvizit Bilgisi Al';
+    const cardCapSub = document.querySelector('#cardCaptureModal .modal-subtitle');
+    if (cardCapSub) cardCapSub.textContent = isEn ? 'Choose an import method to capture contact details' : 'Bilgileri içeri aktarmak için bir okuma yöntemi seçin';
+
+    const nfcOpt = document.getElementById('btnCaptureNfc');
+    if (nfcOpt) {
+      const h4 = nfcOpt.querySelector('h4');
+      const p = nfcOpt.querySelector('p');
+      if (h4) h4.textContent = isEn ? 'Scan with NFC' : 'NFC ile Oku';
+      if (p) p.textContent = isEn ? "Tap client's digital business card on the back of your phone." : 'Müşterinin dijital kartını telefonun arkasına dokundurun.';
+    }
+    const qrOpt = document.getElementById('btnCaptureQr');
+    if (qrOpt) {
+      const h4 = qrOpt.querySelector('h4');
+      const p = qrOpt.querySelector('p');
+      if (h4) h4.textContent = isEn ? 'Scan QR Code' : 'QR Kod Oku';
+      if (p) p.textContent = isEn ? "Point your camera at client's business card QR code." : 'Kameranızı müşterinin kartvizit QR koduna doğrultun.';
+    }
+    const ocrOpt = document.getElementById('btnCaptureOcr');
+    if (ocrOpt) {
+      const h4 = ocrOpt.querySelector('h4');
+      const p = ocrOpt.querySelector('p');
+      if (h4) h4.textContent = isEn ? 'Scan with OCR' : 'OCR ile Oku';
+      if (p) p.textContent = isEn ? 'Scan physical paper card to automatically extract text.' : 'Fiziksel kağıt kartviziti tarayıp metinleri otomatik kaydedin.';
+    }
+    const manOpt = document.getElementById('btnCaptureManual');
+    if (manOpt) {
+      const h4 = manOpt.querySelector('h4');
+      const p = manOpt.querySelector('p');
+      if (h4) h4.textContent = isEn ? 'Add Manually' : 'Manuel Ekle';
+      if (p) p.textContent = isEn ? 'Manually enter client name, company, and contact details.' : 'Müşteri adını, şirketini ve iletişim bilgilerini elle girin.';
+    }
+
+    // QR Modal
+    const qrTitle = document.getElementById('qrModalTitle');
+    if (qrTitle) qrTitle.textContent = isEn ? 'MonaCard QR Code' : 'MonaCard Karekod';
+    const qrDesc = document.querySelector('#qrModal .modal-desc');
+    if (qrDesc) qrDesc.textContent = isEn ? 'When your client points their camera at this code, they will instantly access your digital card.' : 'Müşteriniz kamerasını bu koda doğrulttuğunda doğrudan kartvizit profilinize ulaşır.';
+    const qrNfcBadge = document.querySelector('#qrModal .nfc-badge span');
+    if (qrNfcBadge) qrNfcBadge.textContent = isEn ? 'NFC & QR MonaCard Enabled' : 'NFC & QR MonaCard Desteği';
+    const btnDlQr = document.getElementById('btnDownloadQr');
+    if (btnDlQr) btnDlQr.textContent = isEn ? 'Download QR' : 'QR İndir';
+    const btnCpProf = document.getElementById('btnCopyProfileUrl');
+    if (btnCpProf) btnCpProf.textContent = isEn ? 'Copy Link' : 'Bağlantıyı Kopyala';
+
+    // Share Modal
+    const shTitle = document.getElementById('shareModalTitle');
+    if (shTitle) shTitle.textContent = isEn ? 'Share Digital Card' : 'Kartviziti Paylaş';
+    const shCopyBtn = document.querySelector('#shareCopyLink span');
+    if (shCopyBtn) shCopyBtn.textContent = isEn ? 'Copy' : 'Kopyala';
+    const shInlineCopy = document.getElementById('btnCopyInline');
+    if (shInlineCopy) shInlineCopy.textContent = isEn ? 'Copy' : 'Kopyala';
+
+    // Review Modal
+    const revTitle = document.getElementById('reviewModalTitle');
+    if (revTitle) revTitle.textContent = isEn ? 'Review on Google' : "Google'da Değerlendir";
+    const revDesc = document.querySelector('#reviewModal .modal-desc');
+    if (revDesc) revDesc.textContent = isEn ? 'Review your experience with Muhiddin Öktem and Vedubox.' : 'Muhiddin Öktem ve Vedubox ile olan deneyiminizi değerlendirin.';
+    const revComm = document.getElementById('reviewComment');
+    if (revComm) revComm.placeholder = isEn ? 'Write your review and feedback...' : 'Yorumunuzu ve deneyiminizi yazın...';
+    const revCancel = document.querySelector('#reviewModal button[data-close="reviewModal"]');
+    if (revCancel) revCancel.textContent = isEn ? 'Cancel' : 'Vazgeç';
+    const revSub = document.getElementById('btnSubmitReview');
+    if (revSub) revSub.textContent = isEn ? 'Publish Review' : 'Yorumu Yayınla';
 
     // 3. Staff Subpages (Profile, Meetings, Calendar, CRM)
     const profileSubTitle = document.querySelector('#pageProfile .subpage-title');
@@ -424,17 +508,132 @@ document.addEventListener('DOMContentLoaded', () => {
     const upcomingMeetHeader = document.querySelector('#pageMeetings .section-subtitle') || document.querySelector('#pageMeetings .card-box-title.upcoming');
     if (upcomingMeetHeader) upcomingMeetHeader.textContent = isEn ? 'Upcoming Meetings' : 'Yaklaşan Toplantılar';
 
+    // Calendar & Reminders subpage
     const calSubTitle = document.querySelector('#pageCalendar h2');
     if (calSubTitle) calSubTitle.textContent = isEn ? 'Calendar & Agenda' : 'Ajanda & Takvim';
-    const crmSubTitle = document.querySelector('#pageCrm h2');
-    if (crmSubTitle) crmSubTitle.textContent = isEn ? 'Client Portfolio' : 'Müşteri Portföyü';
-    const crmSubDesc = document.querySelector('#pageCrm .page-subpage-desc');
-    if (crmSubDesc) crmSubDesc.textContent = isEn ? 'Track contacts, companies, and interaction stages from here.' : 'Görüştüğünüz kişileri, şirketleri ve etkileşim durumlarını buradan takip edin.';
+    const calRemSub = document.querySelector('#pageCalendar .subpage-desc');
+    if (calRemSub) calRemSub.textContent = isEn ? 'Plan your day, set reminders, and track follow-ups.' : 'Gününüzü planlayın, önemli görüşmeler için hatırlatıcı kurun.';
+    const remBoxTitle = document.querySelector('#pageCalendar .card-box-title');
+    if (remBoxTitle) remBoxTitle.textContent = isEn ? 'Add New Reminder' : 'Yeni Hatırlatıcı Ekle';
+    const lblRemTxt = document.querySelector('label[for="remText"]');
+    if (lblRemTxt) lblRemTxt.textContent = isEn ? 'Reminder Title / Task *' : 'Hatırlatıcı Başlığı *';
+    const inpRemTxt = document.getElementById('remText');
+    if (inpRemTxt) inpRemTxt.placeholder = isEn ? 'E.g., Call Kemal Bey regarding contract' : 'Örn: Kemal Bey aranacak, teklif sorulacak';
+    const lblRemDt = document.querySelector('label[for="remDate"]');
+    if (lblRemDt) lblRemDt.textContent = isEn ? 'Date *' : 'Tarih *';
+    const lblRemPr = document.querySelector('label[for="remPriority"]');
+    if (lblRemPr) lblRemPr.textContent = isEn ? 'Priority Level' : 'Öncelik Seviyesi';
+    const selRemPr = document.getElementById('remPriority');
+    if (selRemPr && selRemPr.options.length >= 3) {
+      selRemPr.options[0].text = isEn ? 'High (Urgent)' : 'Yüksek (Acil)';
+      selRemPr.options[1].text = isEn ? 'Normal' : 'Normal';
+      selRemPr.options[2].text = isEn ? 'Low' : 'Düşük';
+    }
+    const btnSaveRem = document.querySelector('.btn-reminder-save');
+    if (btnSaveRem) btnSaveRem.textContent = isEn ? 'Save Reminder' : 'Hatırlatıcıyı Kaydet';
+    const remListTitle = document.querySelector('#pageCalendar .section-sub-header h4');
+    if (remListTitle) remListTitle.textContent = isEn ? 'Agenda & Reminders' : 'Ajanda & Hatırlatıcı Listesi';
+
+    // Reminder Detail Modal
+    const remDetT = document.getElementById('remDetTitle');
+    if (remDetT) remDetT.textContent = isEn ? 'Reminder Details' : 'Hatırlatıcı Detayı';
+    const remDetS = document.querySelector('#reminderDetailModal .modal-subtitle');
+    if (remDetS) remDetS.textContent = isEn ? 'Agenda task and follow-up status' : 'Ajanda görevi ve takip durumu';
+    const remSecLbls = document.querySelectorAll('#reminderDetailModal .reminder-section-label');
+    if (remSecLbls.length >= 2) {
+      remSecLbls[0].textContent = isEn ? 'Task Description:' : 'Görev Açıklaması:';
+      remSecLbls[1].textContent = isEn ? '📅 Scheduled Date:' : '📅 Planlanan Tarih:';
+    }
+
+    // Staff CRM page
+    const crmSubTitle = document.querySelector('#pageCrm h2') || document.querySelector('#pageCrm .subpage-title');
+    if (crmSubTitle) crmSubTitle.textContent = isEn ? 'Client Pipeline (CRM)' : 'Müşteri İlişkileri (CRM)';
+    const crmSubDesc = document.querySelector('#pageCrm .page-subpage-desc') || document.querySelector('#pageCrm .subpage-desc');
+    if (crmSubDesc) crmSubDesc.textContent = isEn ? 'Manage client portfolio, track interaction stages and HubSpot sync.' : 'Müşteri havuzunuzu yönetin, durumlarına göre takip edin.';
     const btnCrmAdd = document.getElementById('btnOpenAddCustomerModal');
     if (btnCrmAdd) {
       const sp = btnCrmAdd.querySelector('span');
       if (sp) sp.textContent = isEn ? 'Add New Client' : 'Yeni Müşteri Ekle';
     }
+    const crmCompSel = document.querySelector('#crmCompanyFilter option[value="all"]');
+    if (crmCompSel) crmCompSel.textContent = isEn ? 'All Companies (All)' : 'Tüm Firmalar (Tümü)';
+    const crmStaffSearch = document.getElementById('crmSearchInput');
+    if (crmStaffSearch) crmStaffSearch.placeholder = isEn ? 'Search client or company...' : 'Müşteri veya şirket ara...';
+    const btnOpenNewCust = document.getElementById('btnOpenNewCustomerForm');
+    if (btnOpenNewCust) btnOpenNewCust.textContent = isEn ? '+ New Client' : '+ Yeni Müşteri';
+
+    // Staff CRM direct form
+    const ncBoxTitle = document.querySelector('#newCustomerBox .card-box-title');
+    if (ncBoxTitle) ncBoxTitle.textContent = isEn ? 'Add New Client' : 'Yeni Müşteri Ekle';
+    const lblNcName = document.querySelector('label[for="ncName"]');
+    if (lblNcName) lblNcName.textContent = isEn ? 'Full Name *' : 'Ad Soyad *';
+    const lblNcComp = document.querySelector('label[for="ncCompany"]');
+    if (lblNcComp) lblNcComp.textContent = isEn ? 'Company *' : 'Şirket *';
+    const lblNcPhone = document.querySelector('label[for="ncPhone"]');
+    if (lblNcPhone) lblNcPhone.textContent = isEn ? 'Phone *' : 'Telefon *';
+    const lblNcEmail = document.querySelector('label[for="ncEmail"]');
+    if (lblNcEmail) lblNcEmail.textContent = isEn ? 'Email' : 'E-Posta';
+    const lblNcStage = document.querySelector('label[for="ncStage"]');
+    if (lblNcStage) lblNcStage.textContent = isEn ? 'Client Stage *' : 'Müşteri Durumu *';
+    const selNcStage = document.getElementById('ncStage');
+    if (selNcStage && selNcStage.options.length >= 3) {
+      selNcStage.options[0].text = isEn ? '🔥 Hot (Near Deal)' : '🔥 Sıcak (Teklif / Anlaşmaya Yakın)';
+      selNcStage.options[1].text = isEn ? '⚡ Warm (Under Proposal)' : '⚡ Ilık (Teklif / İletişim Aşamasında)';
+      selNcStage.options[2].text = isEn ? '❄️ Cold (Initial Contact)' : '❄️ Soğuk (İlk Temas / Beklemede)';
+    }
+    const lblNcTitle = document.querySelector('label[for="ncTitle"]');
+    if (lblNcTitle) lblNcTitle.textContent = isEn ? 'Position / Title' : 'Pozisyon / Ünvan';
+    const lblNcNote = document.querySelector('label[for="ncInitialNote"]');
+    if (lblNcNote) lblNcNote.textContent = isEn ? 'Initial Note' : 'İlk Not';
+    const btnCancelNc = document.getElementById('btnCancelNewCustomer');
+    if (btnCancelNc) btnCancelNc.textContent = isEn ? 'Cancel' : 'Vazgeç';
+    const btnSaveNc = document.querySelector('#newCustomerDirectForm button[type="submit"]');
+    if (btnSaveNc) btnSaveNc.textContent = isEn ? 'Save' : 'Kaydet';
+
+    // Staff CRM Detail Page
+    const crmDetDesc = document.querySelector('#pageCrmDetail .subpage-desc');
+    if (crmDetDesc) crmDetDesc.textContent = isEn ? 'Client digital business card, voice & written notes, and HubSpot sync.' : 'Müşteri dijital kartviziti, sesli & yazılı notlar ve HubSpot senkronizasyonu.';
+    const custCallAct = document.querySelector('#custCallBtn .cust-contact-action');
+    if (custCallAct) custCallAct.textContent = isEn ? 'Call ➔' : 'Ara ➔';
+    const custMailAct = document.querySelector('#custMailBtn .cust-contact-action');
+    if (custMailAct) custMailAct.textContent = isEn ? 'Email ➔' : 'E-Posta ➔';
+    const custStatBottomLbl = document.querySelector('.cust-status-bottom-label span:last-child');
+    if (custStatBottomLbl) custStatBottomLbl.textContent = isEn ? 'Client Stage:' : 'Müşteri Durumu:';
+    const selCustStatBottom = document.getElementById('custStatusSelect');
+    if (selCustStatBottom && selCustStatBottom.options.length >= 3) {
+      selCustStatBottom.options[0].text = isEn ? '🔥 Hot' : '🔥 Sıcak';
+      selCustStatBottom.options[1].text = isEn ? '⚡ Warm' : '⚡ Ilık';
+      selCustStatBottom.options[2].text = isEn ? '❄️ Cold' : '❄️ Soğuk';
+    }
+
+    const hubTitle = document.querySelector('.hubspot-sync-status-box .hubspot-title');
+    if (hubTitle) hubTitle.textContent = isEn ? 'HubSpot CRM Integration' : 'HubSpot CRM Entegrasyonu';
+    const hubPill = document.querySelector('.hubspot-sync-status-box .hubspot-status-pill');
+    if (hubPill) hubPill.textContent = isEn ? '● Automated Sync' : '● Otomatik Senkron';
+    const hubDesc = document.querySelector('.hubspot-sync-status-box .hubspot-desc');
+    if (hubDesc) hubDesc.textContent = isEn ? 'Voice and text notes recorded on this client are instantly synced to HubSpot CRM.' : 'Bu müşteriye düşeceğiniz sesli ve yazılı notlar anında HubSpot CRM müşteri kartına kaydedilir.';
+
+    const tabTxtN = document.getElementById('tabTextNote');
+    if (tabTxtN) tabTxtN.textContent = isEn ? '✏️ Text Note' : '✏️ Yazılı Not';
+    const tabVcN = document.getElementById('tabVoiceNote');
+    if (tabVcN) tabVcN.textContent = isEn ? '🎙️ Voice Note' : '🎙️ Sesli Not';
+    const txtNoteInp = document.getElementById('textNoteInput');
+    if (txtNoteInp) txtNoteInp.placeholder = isEn ? 'Write client meeting details, proposal notes, or follow-ups...' : 'Müşteri görüşmesi, teklif detayları veya hatırlatma yazın...';
+    const btnSaveTxtN = document.querySelector('#btnSaveTextNote span');
+    if (btnSaveTxtN) btnSaveTxtN.textContent = isEn ? 'Save Note & Push to HubSpot' : "Notu Kaydet & HubSpot'a İlet";
+
+    const vcStatus = document.getElementById('voiceStatusText');
+    if (vcStatus) vcStatus.textContent = isEn ? 'Press the microphone button to start voice recording' : 'Ses kaydı almak için mikrofon butonuna basın';
+    const btnSaveVcN = document.querySelector('#btnSaveVoiceNote span');
+    if (btnSaveVcN) btnSaveVcN.textContent = isEn ? 'Send Recording to HubSpot' : "Kaydı HubSpot'a Gönder";
+    const notesHistH4 = document.querySelector('.notes-timeline-header h4');
+    if (notesHistH4) notesHistH4.textContent = isEn ? 'Meeting & Interaction History' : 'Görüşme & Not Geçmişi';
+
+    // Logout Tooltips
+    const admLogBtn = document.querySelector('.admin-logout-btn');
+    if (admLogBtn) admLogBtn.title = isEn ? 'Log Out' : 'Çıkış Yap';
+    const supLogBtn = document.querySelector('.super-logout-btn');
+    if (supLogBtn) supLogBtn.title = isEn ? 'Log Out' : 'Çıkış Yap';
 
     // CRM Filter Tabs
     const crmFilterBtns = document.querySelectorAll('#pageCrm .crm-filter-btn');
@@ -1587,14 +1786,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const prods = (typeof adminSettings !== 'undefined' && adminSettings.companyProfile && Array.isArray(adminSettings.companyProfile.products))
       ? adminSettings.companyProfile.products
       : [];
+    const isEn = currentLang === 'en';
 
     if (countBadge) {
-      countBadge.textContent = `${prods.length} Marka / Ürün`;
+      countBadge.textContent = isEn ? `${prods.length} Brands / Products` : `${prods.length} Marka / Ürün`;
     }
 
     if (grid) {
       if (prods.length === 0) {
-        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:24px 16px;color:#94A3B8;font-size:12.5px;background:#F8FAFC;border:1px dashed #CBD5E1;border-radius:14px;">Henüz şirket ürünü eklenmedi.</div>`;
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:24px 16px;color:#94A3B8;font-size:12.5px;background:#F8FAFC;border:1px dashed #CBD5E1;border-radius:14px;">${isEn ? 'No company products added yet.' : 'Henüz şirket ürünü eklenmedi.'}</div>`;
         return;
       }
 
@@ -1733,12 +1933,13 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
+    const isEn = currentLang === 'en';
     if (countBadge) {
-      countBadge.textContent = `${platforms.length} Platform`;
+      countBadge.textContent = isEn ? `${platforms.length} Platforms` : `${platforms.length} Platform`;
     }
 
     if (platforms.length === 0) {
-      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:24px 16px;color:#94A3B8;font-size:12.5px;background:#F8FAFC;border:1px dashed #CBD5E1;border-radius:14px;">Henüz sosyal medya kanalı eklenmedi.</div>`;
+      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:24px 16px;color:#94A3B8;font-size:12.5px;background:#F8FAFC;border:1px dashed #CBD5E1;border-radius:14px;">${isEn ? 'No social media channels added yet.' : 'Henüz sosyal medya kanalı eklenmedi.'}</div>`;
       return;
     }
 
@@ -2363,7 +2564,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Apply staff interface visibility restrictions set by manager
     applyStaffInterfaceVisibility();
+
+    // Ensure translations and dynamic sections re-render with active language
+    updateStaticTranslations();
+    renderCardProducts();
+    renderCardSocialLinks();
   }
+
+  // Logout Function: Clear authentication, reset to customer role, and open login modal
+  function logoutUser() {
+    try {
+      localStorage.removeItem('monacard_token');
+      localStorage.removeItem('monacard_user');
+    } catch (e) {}
+
+    const authBtnLabel = document.getElementById('authBtnLabel');
+    if (authBtnLabel) {
+      authBtnLabel.textContent = currentLang === 'en' ? '🔑 Sign In' : '🔑 Giriş Yap';
+    }
+
+    // Switch role to customer view
+    setRole('customer', true);
+
+    // Open login modal
+    const modalAuth = document.getElementById('modalAuth');
+    if (modalAuth) {
+      modalAuth.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      const tabBtnLogin = document.getElementById('tabBtnLogin');
+      const tabBtnRegister = document.getElementById('tabBtnRegister');
+      const authPanelLogin = document.getElementById('authPanelLogin');
+      const authPanelRegister = document.getElementById('authPanelRegister');
+      if (tabBtnLogin && tabBtnRegister) {
+        tabBtnLogin.classList.add('active');
+        tabBtnRegister.classList.remove('active');
+        if (authPanelLogin) authPanelLogin.classList.remove('hidden');
+        if (authPanelRegister) authPanelRegister.classList.add('hidden');
+      }
+    }
+
+    showToast(currentLang === 'en' ? 'Logged out successfully.' : 'Başarıyla çıkış yapıldı.');
+  }
+  window.logoutUser = logoutUser;
 
   if (btnRoleCustomer) {
     btnRoleCustomer.addEventListener('click', () => setRole('customer'));
@@ -2378,11 +2620,32 @@ document.addEventListener('DOMContentLoaded', () => {
     btnRoleSuperAdmin.addEventListener('click', () => setRole('superadmin'));
   }
   if (btnAdminSwitchStaff) {
-    btnAdminSwitchStaff.addEventListener('click', () => setRole('staff'));
+    btnAdminSwitchStaff.addEventListener('click', (e) => {
+      e.preventDefault();
+      logoutUser();
+    });
   }
   if (btnSuperSwitchAdmin) {
-    btnSuperSwitchAdmin.addEventListener('click', () => setRole('admin'));
+    btnSuperSwitchAdmin.addEventListener('click', (e) => {
+      e.preventDefault();
+      logoutUser();
+    });
   }
+
+  const headerLogoutBtn = document.getElementById('headerLogoutBtn');
+  if (headerLogoutBtn) {
+    headerLogoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      logoutUser();
+    });
+  }
+
+  document.querySelectorAll('.admin-logout-btn, .super-logout-btn, .header-logout-btn, .btn-logout-action').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      logoutUser();
+    });
+  });
 
   const btnSwitchAdminFromCancelled = document.getElementById('btnSwitchAdminFromCancelled');
   if (btnSwitchAdminFromCancelled) {
@@ -2792,6 +3055,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderCrmList() {
     const container = document.getElementById('customerCardsContainer');
     const searchVal = (document.getElementById('crmSearchInput')?.value || '').toLowerCase().trim();
+    const isEn = currentLang === 'en';
 
     if (!container) return;
 
@@ -2816,7 +3080,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filtered.length === 0) {
       container.innerHTML = `
         <div class="text-center py-8 text-muted" style="padding: 24px; font-size: 13px;">
-          Bu filtrede henüz müşteri bulunmuyor.
+          ${isEn ? 'No clients found matching this filter.' : 'Bu filtrede henüz müşteri bulunmuyor.'}
         </div>
       `;
       return;
@@ -2824,12 +3088,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     container.innerHTML = filtered.map(c => {
       const stagePill = c.stage === 'hot' 
-        ? '<span class="customer-stage-pill hot" title="Sıcak Müşteri">🔥</span>' 
+        ? `<span class="customer-stage-pill hot" title="${isEn ? 'Hot Lead' : 'Sıcak Müşteri'}">🔥</span>` 
         : c.stage === 'warm' 
-        ? '<span class="customer-stage-pill warm" title="Ilık Müşteri">⚡</span>' 
-        : '<span class="customer-stage-pill cold" title="Soğuk Müşteri">❄️</span>';
+        ? `<span class="customer-stage-pill warm" title="${isEn ? 'Warm Lead' : 'Ilık Müşteri'}">⚡</span>` 
+        : `<span class="customer-stage-pill cold" title="${isEn ? 'Cold Lead' : 'Soğuk Müşteri'}">❄️</span>`;
 
-      const lastNote = c.notes && c.notes.length > 0 ? c.notes[0].text : 'Henüz not düşülmedi.';
+      const lastNote = c.notes && c.notes.length > 0 ? c.notes[0].text : (isEn ? 'No notes added yet.' : 'Henüz not düşülmedi.');
 
       return `
         <div class="customer-card-item" data-id="${c.id}">
@@ -2913,7 +3177,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const phone = document.getElementById('ncPhone').value.trim();
       const email = document.getElementById('ncEmail').value.trim();
       const stage = document.getElementById('ncStage').value;
-      const title = document.getElementById('ncTitle').value.trim() || 'Yetkili';
+      const title = document.getElementById('ncTitle').value.trim() || (currentLang === 'en' ? 'Executive' : 'Yetkili');
       const initialNote = document.getElementById('ncInitialNote').value.trim();
 
       const initials = name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
@@ -2931,7 +3195,7 @@ document.addEventListener('DOMContentLoaded', () => {
           id: "note-" + Date.now(),
           type: "text",
           text: initialNote,
-          time: "Şimdi",
+          time: currentLang === 'en' ? 'Now' : "Şimdi",
           hubspotSynced: true
         }] : []
       };
@@ -2942,7 +3206,7 @@ document.addEventListener('DOMContentLoaded', () => {
       newCustomerBox.classList.add('hidden');
       populateCompanyFilter();
       renderCrmList();
-      showToast(`${name} CRM'e kaydedildi ve HubSpot'a aktarıldı! 🚀`);
+      showToast(currentLang === 'en' ? `${name} saved to CRM & pushed to HubSpot! 🚀` : `${name} CRM'e kaydedildi ve HubSpot'a aktarıldı! 🚀`);
     });
   }
 
@@ -2951,29 +3215,30 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================================================
   function openCustomerProfile(cust) {
     activeSelectedCustomer = cust;
+    const isEn = currentLang === 'en';
 
     document.getElementById('custProfName').textContent = cust.name;
     document.getElementById('custProfInitials').textContent = cust.initials || cust.name.substring(0, 2).toUpperCase();
     document.getElementById('custCardFullName').textContent = cust.name;
     document.getElementById('custCardCompany').textContent = cust.company;
-    document.getElementById('custCardTitle').textContent = cust.title || 'Müşteri';
+    document.getElementById('custCardTitle').textContent = cust.title || (isEn ? 'Client' : 'Müşteri');
     
     document.getElementById('custPhoneLabel').textContent = cust.phone;
     document.getElementById('custCallBtn').href = `tel:${cust.phone.replace(/[^\d+]/g, '')}`;
 
-    document.getElementById('custEmailLabel').textContent = cust.email || 'E-posta belirtilmedi';
+    document.getElementById('custEmailLabel').textContent = cust.email || (isEn ? 'Email not specified' : 'E-posta belirtilmedi');
     document.getElementById('custMailBtn').href = cust.email ? `mailto:${cust.email}` : '#';
 
     const stagePill = document.getElementById('custProfStage');
     if (cust.stage === 'hot') {
       stagePill.className = 'customer-stage-pill hot';
-      stagePill.textContent = '🔥 Sıcak Müşteri';
+      stagePill.textContent = isEn ? '🔥 Hot Lead' : '🔥 Sıcak Müşteri';
     } else if (cust.stage === 'warm') {
       stagePill.className = 'customer-stage-pill warm';
-      stagePill.textContent = '⚡ Ilık Müşteri';
+      stagePill.textContent = isEn ? '⚡ Warm Lead' : '⚡ Ilık Müşteri';
     } else {
       stagePill.className = 'customer-stage-pill cold';
-      stagePill.textContent = '❄️ Soğuk Müşteri';
+      stagePill.textContent = isEn ? '❄️ Cold Lead' : '❄️ Soğuk Müşteri';
     }
 
     const custStatusSelect = document.getElementById('custStatusSelect');
@@ -2990,20 +3255,21 @@ document.addEventListener('DOMContentLoaded', () => {
       activeSelectedCustomer.stage = e.target.value;
       saveCustomersToStorage();
       renderCrmList();
+      const isEn = currentLang === 'en';
 
       const stagePill = document.getElementById('custProfStage');
       if (activeSelectedCustomer.stage === 'hot') {
         stagePill.className = 'customer-stage-pill hot';
-        stagePill.textContent = '🔥 Sıcak Müşteri';
+        stagePill.textContent = isEn ? '🔥 Hot Lead' : '🔥 Sıcak Müşteri';
       } else if (activeSelectedCustomer.stage === 'warm') {
         stagePill.className = 'customer-stage-pill warm';
-        stagePill.textContent = '⚡ Ilık Müşteri';
+        stagePill.textContent = isEn ? '⚡ Warm Lead' : '⚡ Ilık Müşteri';
       } else {
         stagePill.className = 'customer-stage-pill cold';
-        stagePill.textContent = '❄️ Soğuk Müşteri';
+        stagePill.textContent = isEn ? '❄️ Cold Lead' : '❄️ Soğuk Müşteri';
       }
 
-      showToast(`Müşteri durumu güncellendi ve HubSpot'a iletildi! 🔄`);
+      showToast(isEn ? 'Client stage updated & pushed to HubSpot! 🔄' : `Müşteri durumu güncellendi ve HubSpot'a iletildi! 🔄`);
     });
   }
 
@@ -3011,14 +3277,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('customerNotesTimeline');
     const countLabel = document.getElementById('notesCountLabel');
     if (!container || !activeSelectedCustomer) return;
+    const isEn = currentLang === 'en';
 
     const notes = activeSelectedCustomer.notes || [];
-    if (countLabel) countLabel.textContent = `${notes.length} Not`;
+    if (countLabel) countLabel.textContent = isEn ? `${notes.length} Notes` : `${notes.length} Not`;
 
     if (notes.length === 0) {
       container.innerHTML = `
         <div class="text-center py-6 text-muted" style="padding: 16px; font-size: 12px;">
-          Henüz bu müşteriye not eklenmemiş. Yukarıdan sesli veya yazılı not düşebilirsiniz.
+          ${isEn ? 'No notes added for this client yet. You can add a voice or text note above.' : 'Henüz bu müşteriye not eklenmemiş. Yukarıdan sesli veya yazılı not düşebilirsiniz.'}
         </div>
       `;
       return;
@@ -3030,21 +3297,21 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="note-history-card">
           <div class="note-history-top">
             <span class="note-type-tag ${isVoice ? 'voice' : 'text'}">
-              ${isVoice ? '🎙️ Sesli Not' : '✏️ Yazılı Not'}
+              ${isVoice ? (isEn ? '🎙️ Voice Note' : '🎙️ Sesli Not') : (isEn ? '✏️ Text Note' : '✏️ Yazılı Not')}
             </span>
-            <span class="note-time">${n.time || 'Bugün'}</span>
+            <span class="note-time">${n.time || (isEn ? 'Today' : 'Bugün')}</span>
           </div>
           <p class="note-body-text">${n.text}</p>
           ${isVoice ? `
             <div class="voice-player-bar">
-              <button class="voice-play-btn" onclick="alert('Ses kaydı oynatılıyor: ${n.duration || '00:15'}')">▶</button>
+              <button class="voice-play-btn" onclick="alert('${isEn ? 'Playing voice note: ' : 'Ses kaydı oynatılıyor: '}${n.duration || '00:15'}')">▶</button>
               <div class="voice-progress-track"><div class="voice-progress-fill"></div></div>
               <span style="font-size: 11px; font-family: monospace; color:#64748B;">${n.duration || '00:15'}</span>
             </div>
           ` : ''}
           <div class="hubspot-synced-confirmation">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-            <span>HubSpot CRM'e senkronize edildi</span>
+            <span>${isEn ? 'Synced to HubSpot CRM' : 'HubSpot CRM\'e senkronize edildi'}</span>
           </div>
         </div>
       `;
@@ -3902,11 +4169,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('meetingsListContainer');
     const badge = document.getElementById('meetingCountBadge');
     if (!container) return;
+    const isEn = currentLang === 'en';
 
-    if (badge) badge.textContent = `${meetings.length} Toplantı`;
+    if (badge) badge.textContent = isEn ? `${meetings.length} Meetings` : `${meetings.length} Toplantı`;
 
     if (meetings.length === 0) {
-      container.innerHTML = `<p class="text-muted text-center py-4" style="font-size:12px;">Henüz planlanmış toplantı yok.</p>`;
+      container.innerHTML = `<p class="text-muted text-center py-4" style="font-size:12px;">${isEn ? 'No scheduled meetings yet.' : 'Henüz planlanmış toplantı yok.'}</p>`;
       return;
     }
 
@@ -3914,10 +4182,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const pData = getMeetingPlatformData(m.type);
       const isPast = isMeetingPast(m);
       const cardClass = isPast ? 'meeting-card-item past-meeting' : 'meeting-card-item';
-      const pastTag = isPast ? '<span class="past-status-tag">Zamanı Geçti</span>' : '';
+      const pastTag = isPast ? `<span class="past-status-tag">${isEn ? 'Concluded' : 'Zamanı Geçti'}</span>` : '';
 
       return `
-        <div class="${cardClass}" onclick="window.openMeetingDetail(${index})" title="Detayları görüntülemek, düzenlemek ve hatırlatıcı göndermek için tıklayın">
+        <div class="${cardClass}" onclick="window.openMeetingDetail(${index})" title="${isEn ? 'Click to view details, edit, or notify participants' : 'Detayları görüntülemek, düzenlemek ve hatırlatıcı göndermek için tıklayın'}">
           <!-- Üst Alan: Platform Logosu, Toplantı Konusu ve Müşteri -->
           <div class="meeting-card-top">
             <div class="meeting-platform-logo-box ${pData.class}" title="${pData.label}">
@@ -4059,23 +4327,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('remindersListContainer');
     const badge = document.getElementById('reminderCountBadge');
     if (!container) return;
+    const isEn = currentLang === 'en';
 
-    if (badge) badge.textContent = `${reminders.length} Hatırlatıcı`;
+    if (badge) badge.textContent = isEn ? `${reminders.length} Reminders` : `${reminders.length} Hatırlatıcı`;
 
     if (reminders.length === 0) {
-      container.innerHTML = `<p class="text-muted text-center py-4" style="font-size:12px;">Henüz hatırlatıcı bulunmuyor.</p>`;
+      container.innerHTML = `<p class="text-muted text-center py-4" style="font-size:12px;">${isEn ? 'No active reminders found.' : 'Henüz hatırlatıcı bulunmuyor.'}</p>`;
       return;
     }
 
     container.innerHTML = reminders.map((r, index) => {
       const isDone = !!r.completed;
       const pLevel = r.priority || 'medium';
-      const pLabel = pLevel === 'high' ? 'Acil' : pLevel === 'medium' ? 'Normal' : 'Düşük';
+      const pLabel = pLevel === 'high' ? (isEn ? 'Urgent' : 'Acil') : pLevel === 'medium' ? (isEn ? 'Normal' : 'Normal') : (isEn ? 'Low' : 'Düşük');
 
       return `
         <div class="reminder-item-card ${isDone ? 'is-completed' : ''}">
           <!-- Check Solda (Basınca tikli hale gelir) -->
-          <button type="button" class="reminder-check-btn ${isDone ? 'checked' : ''}" onclick="window.toggleReminderComplete(${index}, event)" title="${isDone ? 'Tamamlandı (Geri al)' : 'Tamamla'}" aria-label="Görevi Tamamla">
+          <button type="button" class="reminder-check-btn ${isDone ? 'checked' : ''}" onclick="window.toggleReminderComplete(${index}, event)" title="${isDone ? (isEn ? 'Completed (Undo)' : 'Tamamlandı (Geri al)') : (isEn ? 'Mark as Completed' : 'Tamamla')}" aria-label="${isEn ? 'Complete Task' : 'Görevi Tamamla'}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="20 6 9 17 4 12"></polyline>
             </svg>
@@ -4087,7 +4356,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="reminder-card-date">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
               <span>${r.date}</span>
-              <span class="click-detail-hint">• Detay</span>
+              <span class="click-detail-hint">• ${isEn ? 'Details' : 'Detay'}</span>
             </div>
           </div>
 
@@ -4106,13 +4375,14 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('monacard_reminders', JSON.stringify(reminders));
     } catch (e) {}
     renderRemindersList();
-    showToast(reminders[index].completed ? 'Hatırlatıcı tamamlandı! ✅' : 'Hatırlatıcı tekrar aktif edildi! 🔄');
+    showToast(reminders[index].completed ? (currentLang === 'en' ? 'Task marked as completed! ✅' : 'Hatırlatıcı tamamlandı! ✅') : (currentLang === 'en' ? 'Task reopened! 🔄' : 'Hatırlatıcı tekrar aktif edildi! 🔄'));
   };
 
   window.openReminderDetail = function(index) {
     const r = reminders[index];
     if (!r) return;
     activeReminderForDetail = { ...r, index };
+    const isEn = currentLang === 'en';
 
     const hl = document.getElementById('remDetHeadline');
     if (hl) hl.textContent = r.title;
@@ -4123,12 +4393,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const pb = document.getElementById('remDetPriorityBadge');
     if (pb) {
       pb.className = `reminder-modal-priority-badge ${r.priority || 'medium'}`;
-      pb.textContent = r.priority === 'high' ? 'Acil Öncelik' : r.priority === 'medium' ? 'Normal Öncelik' : 'Düşük Öncelik';
+      pb.textContent = r.priority === 'high' ? (isEn ? 'Urgent Priority' : 'Acil Öncelik') : r.priority === 'medium' ? (isEn ? 'Normal Priority' : 'Normal Öncelik') : (isEn ? 'Low Priority' : 'Düşük Öncelik');
     }
 
     const sb = document.getElementById('remDetStatusBadge');
     if (sb) {
-      sb.textContent = r.completed ? '✅ Tamamlandı' : '⏳ Bekliyor';
+      sb.textContent = r.completed ? (isEn ? '✅ Completed' : '✅ Tamamlandı') : (isEn ? '⏳ Pending' : '⏳ Bekliyor');
       sb.className = r.completed ? 'rem-status-pill done' : 'rem-status-pill';
     }
 
@@ -4140,14 +4410,14 @@ document.addEventListener('DOMContentLoaded', () => {
             <polyline points="1 4 1 10 7 10"></polyline>
             <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
           </svg>
-          <span>Görevi Aktif Et</span>
+          <span>${isEn ? 'Reopen Task' : 'Görevi Aktif Et'}</span>
         `;
       } else {
         toggleBtn.innerHTML = `
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
-          <span>Tamamlandı</span>
+          <span>${isEn ? 'Mark Completed' : 'Tamamlandı'}</span>
         `;
       }
     }

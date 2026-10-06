@@ -100,6 +100,14 @@
           </svg>
           <span class="edit-badge-dot" title="Düzenleme Aktif"></span>
         </button>
+
+        <button class="profile-icon-btn staff-only admin-logout-btn" id="headerLogoutBtn" aria-label="Çıkış Yap" title="Çıkış Yap" style="margin-left: 2px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </button>
       </div>
     </header>
 
@@ -2766,10 +2774,10 @@
         </button>
       </nav>
 
-      <!-- Sidebar Bottom: Switch to Firma Yöneticisi -->
+      <!-- Sidebar Bottom: Logout -->
       <div class="super-sidebar-bottom">
-        <button class="super-logout-btn" id="btnSuperSwitchAdmin" title="Firma Yöneticisi Paneline Hızlı Geçiş">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <button class="super-logout-btn" id="btnSuperSwitchAdmin" title="Çıkış Yap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
         </button>
       </div>
     </aside>
