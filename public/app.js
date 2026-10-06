@@ -2412,18 +2412,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedStaff = localStorage.getItem('monacard_admin_staff');
     if (savedStaff) {
       const parsed = JSON.parse(savedStaff);
-      // Ensure monthlyTarget exists for each and zero-out empty staff scores
-      adminStaffList = parsed.map((s, idx) => {
-        let score = (s.score !== undefined) ? s.score : 0;
-        if ((!s.totalContacts || s.totalContacts === 0) && (!s.hotCount || s.hotCount === 0) && (!s.newLeads || s.newLeads === 0)) {
-          score = 0;
-        }
-        return {
-          ...s,
-          score: score,
-          monthlyTarget: s.monthlyTarget || (initialAdminStaff[idx] ? initialAdminStaff[idx].monthlyTarget : 15)
-        };
-      });
+      // Ensure monthlyTarget exists for each, filter out corrupted binary lines, and zero-out empty staff scores
+      adminStaffList = parsed
+        .filter(s => {
+          if (!s || !s.name) return false;
+          // Filter out binary / zip XML artifacts from previous upload bug
+          const combined = (s.name + ' ' + (s.title || '') + ' ' + (s.email || ''));
+          if (/docProps|printerSettings|PK\x03|\ufffd|[\x00-\x08\x0B\x0C\x0E-\x1F]|word\/|xl\//i.test(combined)) {
+            return false;
+          }
+          // Filter out accidental header lines
+          if (/^(ad\s*soyad|full\s*name|personel\s*adı|ad\s+soyad)$/i.test(s.name.trim().toLowerCase())) {
+            return false;
+          }
+          return true;
+        })
+        .map((s, idx) => {
+          let score = (s.score !== undefined) ? s.score : 0;
+          if ((!s.totalContacts || s.totalContacts === 0) && (!s.hotCount || s.hotCount === 0) && (!s.newLeads || s.newLeads === 0)) {
+            score = 0;
+          }
+          return {
+            ...s,
+            score: score,
+            monthlyTarget: s.monthlyTarget || (initialAdminStaff[idx] ? initialAdminStaff[idx].monthlyTarget : 15)
+          };
+        });
+
+      if (adminStaffList.length === 0 && !loggedInUser) {
+        adminStaffList = [...initialAdminStaff];
+      }
+      // Save cleaned list back to storage
+      localStorage.setItem('monacard_admin_staff', JSON.stringify(adminStaffList));
     } else if (!loggedInUser) {
       adminStaffList = [...initialAdminStaff];
     }
@@ -7111,52 +7131,130 @@ document.addEventListener('DOMContentLoaded', () => {
       selectedExcelFileName.textContent = `📄 Seçilen Dosya: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
     }
 
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-      const content = evt.target.result;
-      parseCSVStaffContent(content);
-    };
-    reader.readAsText(file, 'UTF-8');
-  }
+    const fileName = file.name.toLowerCase();
+    const isExcelBinary = fileName.endsWith('.xlsx') || fileName.endsWith('.xls') || fileName.endsWith('.xlsm') || fileName.endsWith('.xlsb');
 
-  function parseCSVStaffContent(text) {
-    if (!text || !text.trim()) {
-      showToast("Seçilen dosya boş görünüyor!", "warning");
-      return;
-    }
+    // Function to process 2D array of rows from XLSX or CSV
+    function processParsedGrid(rawRows) {
+      if (!rawRows || rawRows.length === 0) {
+        showToast("Seçilen dosyada veri bulunamadı!", "warning");
+        return;
+      }
 
-    // Split lines
-    const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
-    if (lines.length <= 1) {
-      showToast("Dosyada başlık dışında personel kaydı bulunamadı!", "warning");
-      return;
-    }
+      // Filter out empty rows and trim cells
+      const cleanRows = rawRows
+        .map(r => Array.isArray(r) ? r.map(c => String(c !== undefined && c !== null ? c : '').trim()) : [])
+        .filter(r => r.some(c => c.length > 0));
 
-    // Parse header and rows
-    const delimiter = lines[0].includes(';') ? ';' : ',';
-    parsedStaffRows = [];
+      if (cleanRows.length === 0) {
+        showToast("Seçilen dosya boş görünüyor!", "warning");
+        return;
+      }
 
-    for (let i = 1; i < lines.length; i++) {
-      const rowText = lines[i];
-      // Basic CSV split considering quotes
-      const cols = rowText.split(delimiter).map(c => c.replace(/^["']|["']$/g, '').trim());
-      if (cols.length >= 2 && cols[0]) {
-        const name = cols[0];
-        const title = cols[1] || 'Satış Temsilcisi';
-        const email = cols[2] || `${name.toLowerCase().replace(/[^a-z0-9]/g, '')}@vedubox.com`;
-        const phone = cols[3] || '+90 5XX XXX XX XX';
-        const target = parseInt(cols[4], 10) || 15;
-        const isLeaderStr = (cols[5] || '').toLowerCase();
-        const isLeader = isLeaderStr.includes('evet') || isLeaderStr.includes('true') || isLeaderStr.includes('1') || isLeaderStr.includes('lider');
+      let nameIdx = -1;
+      let titleIdx = -1;
+      let emailIdx = -1;
+      let phoneIdx = -1;
+      let targetIdx = -1;
+      let leaderIdx = -1;
+      let hasHeader = false;
+
+      // Analyze first row for headers
+      const firstRow = cleanRows[0];
+      firstRow.forEach((val, idx) => {
+        const v = val.toLowerCase();
+        if (nameIdx === -1 && (/ad\s*soyad/i.test(v) || /^(ad|isim|name|full\s*name)$/i.test(v))) {
+          nameIdx = idx;
+          hasHeader = true;
+        } else if (titleIdx === -1 && /(ünvan|unvan|pozisyon|title|görev|departman|role)/i.test(v)) {
+          titleIdx = idx;
+          hasHeader = true;
+        } else if (emailIdx === -1 && /(e-?posta|email|mail)/i.test(v)) {
+          emailIdx = idx;
+          hasHeader = true;
+        } else if (phoneIdx === -1 && /(telefon|phone|tel|gsm|mobil|mobile)/i.test(v)) {
+          phoneIdx = idx;
+          hasHeader = true;
+        } else if (targetIdx === -1 && /(hedef|target|görüşme\s*hedefi|kota)/i.test(v)) {
+          targetIdx = idx;
+          hasHeader = true;
+        } else if (leaderIdx === -1 && /(lider|leader|yetki|takım\s*lideri)/i.test(v)) {
+          leaderIdx = idx;
+          hasHeader = true;
+        }
+      });
+
+      // Fallback detection if header row exists
+      if (!hasHeader) {
+        const combinedFirstRow = firstRow.join(' ').toLowerCase();
+        if (combinedFirstRow.includes('ad') || combinedFirstRow.includes('ünvan') || combinedFirstRow.includes('unvan') || combinedFirstRow.includes('posta') || combinedFirstRow.includes('telefon') || combinedFirstRow.includes('name')) {
+          hasHeader = true;
+        }
+      }
+
+      if (nameIdx === -1) nameIdx = 0;
+      if (titleIdx === -1) titleIdx = 1;
+      if (emailIdx === -1) emailIdx = 2;
+      if (phoneIdx === -1) phoneIdx = 3;
+      if (targetIdx === -1) targetIdx = 4;
+      if (leaderIdx === -1) leaderIdx = 5;
+
+      const startIndex = hasHeader ? 1 : 0;
+      parsedStaffRows = [];
+
+      for (let i = startIndex; i < cleanRows.length; i++) {
+        const cols = cleanRows[i];
+        const name = (cols[nameIdx] || '').trim();
+        if (!name) continue;
+
+        // Skip accidental header repeats
+        if (/^(ad\s*soyad|ad\s+ve\s+soyad|full\s*name|personel\s*adı|isim)$/i.test(name.toLowerCase())) continue;
+
+        const title = (cols[titleIdx] || 'Saha Satış Uzmanı').trim();
+
+        // Phone formatting
+        let rawPhone = (cols[phoneIdx] || '').trim();
+        let phone = rawPhone;
+        if (rawPhone) {
+          const digits = rawPhone.replace(/[^\d]/g, '');
+          if (digits.length === 10 && digits.startsWith('5')) {
+            phone = `0${digits.substring(0,3)} ${digits.substring(3,6)} ${digits.substring(6,8)} ${digits.substring(8,10)}`;
+          } else if (digits.length === 11 && digits.startsWith('05')) {
+            phone = `0${digits.substring(1,4)} ${digits.substring(4,7)} ${digits.substring(7,9)} ${digits.substring(9,11)}`;
+          } else if (digits.length === 12 && digits.startsWith('905')) {
+            phone = `+90 ${digits.substring(2,5)} ${digits.substring(5,8)} ${digits.substring(8,10)} ${digits.substring(10,12)}`;
+          }
+        } else {
+          phone = '+90 5XX XXX XX XX';
+        }
+
+        // Email formatting
+        let email = (cols[emailIdx] || '').trim();
+        if (!email || !email.includes('@')) {
+          const cleanEmailName = name.toLowerCase()
+            .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+            .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+            .replace(/[^a-z0-9]/g, '.');
+          email = `${cleanEmailName}@sirket.com.tr`;
+        }
+
+        // Monthly Target
+        let target = parseInt(cols[targetIdx], 10);
+        if (isNaN(target) || target <= 0) target = 15;
+
+        // Leader
+        const isLeaderStr = (cols[leaderIdx] || '').toLowerCase();
+        const isLeader = isLeaderStr.includes('evet') || isLeaderStr.includes('true') || isLeaderStr.includes('1') || isLeaderStr.includes('lider') || isLeaderStr.includes('leader');
 
         parsedStaffRows.push({
-          id: 'staff-' + Date.now() + '-' + i,
-          name,
-          title,
-          email,
-          phone,
+          id: 'staff-' + Date.now() + '-' + i + '-' + Math.random().toString(36).substr(2, 5),
+          name: name,
+          title: title,
+          email: email,
+          phone: phone,
           avatar: '',
-          isLeader,
+          status: 'active',
+          isLeader: isLeader,
           leaderId: '',
           monthlyTarget: target,
           newLeads: 0,
@@ -7167,19 +7265,63 @@ document.addEventListener('DOMContentLoaded', () => {
           coldCount: 0,
           convertedCount: 0,
           revenue: 0,
-          satisfactionRate: 0,
+          satisfactionRate: 5.0,
           score: 0
         });
       }
+
+      if (parsedStaffRows.length === 0) {
+        showToast("Dosyada geçerli personel satırı bulunamadı. Lütfen dosya sütunlarını kontrol edin.", "error");
+        return;
+      }
+
+      renderExcelPreview();
+      showToast(`${parsedStaffRows.length} personel dosyadan başarıyla okundu! ✅`);
     }
 
-    if (parsedStaffRows.length === 0) {
-      showToast("Dosya formatı okunamadı. Lütfen örnek şablonu kullanın.", "error");
-      return;
+    // Check if SheetJS XLSX is available or load dynamically
+    if (window.XLSX) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = window.XLSX.read(data, { type: 'array' });
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+          const rawGrid = window.XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
+          processParsedGrid(rawGrid);
+        } catch (err) {
+          console.error("XLSX parsing error:", err);
+          showToast("Excel dosyası okunurken hata oluştu. Lütfen dosya formatını kontrol edin.", "error");
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    } else if (isExcelBinary) {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+      script.onload = () => {
+        handleExcelFileSelected(file);
+      };
+      script.onerror = () => {
+        showToast("Excel kütüphanesi yüklenemedi. Lütfen CSV formatında deneyin.", "error");
+      };
+      document.head.appendChild(script);
+    } else {
+      // Plain text / CSV fallback
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const text = e.target.result;
+        if (!text || !text.trim()) {
+          showToast("Seçilen dosya boş görünüyor!", "warning");
+          return;
+        }
+        const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+        const delimiter = lines[0].includes(';') ? ';' : (lines[0].includes('\t') ? '\t' : ',');
+        const rawGrid = lines.map(line => line.split(delimiter).map(c => c.replace(/^["']|["']$/g, '').trim()));
+        processParsedGrid(rawGrid);
+      };
+      reader.readAsText(file, 'UTF-8');
     }
-
-    renderExcelPreview();
-    showToast(`${parsedStaffRows.length} personel dosyadan başarıyla okundu! ✅`);
   }
 
   function renderExcelPreview() {
