@@ -1593,6 +1593,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof renderMeetingsList === 'function') renderMeetingsList();
     if (typeof renderCrmList === 'function') renderCrmList();
     if (typeof renderRemindersList === 'function') renderRemindersList();
+    if (typeof updateQuickScheduleModalI18n === 'function') updateQuickScheduleModalI18n();
+    if (typeof initWeeklyTimelineWidget === 'function') initWeeklyTimelineWidget();
 
     const detPage = document.getElementById('viewStaffPerformanceDetail');
     if (detPage && detPage.classList.contains('active') && typeof renderStaffDetailPage === 'function') {
@@ -2466,7 +2468,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Manager Personal VIP Meetings
   let adminPersonalMeetings = [];
   try {
-    const savedPersonal = localStorage.getItem('monacard_admin_personal_meetings');
+    const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : null);
+    const storageKey = userCompId ? `monacard_admin_personal_meetings_${userCompId}` : 'monacard_admin_personal_meetings';
+    const savedPersonal = localStorage.getItem(storageKey);
     if (savedPersonal) {
       adminPersonalMeetings = JSON.parse(savedPersonal);
     } else if (!loggedInUser) {
@@ -2492,8 +2496,18 @@ document.addEventListener('DOMContentLoaded', () => {
           isPersonal: true
         }
       ];
+    } else {
+      adminPersonalMeetings = [];
     }
   } catch (e) {}
+
+  function savePersonalMeetingsToStorage() {
+    try {
+      const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : null);
+      const storageKey = userCompId ? `monacard_admin_personal_meetings_${userCompId}` : 'monacard_admin_personal_meetings';
+      localStorage.setItem(storageKey, JSON.stringify(adminPersonalMeetings));
+    } catch (e) {}
+  }
 
   // 1. Apply Company Settings to Document Root & Themes
   function applyCompanySettingsToApp() {
@@ -3582,11 +3596,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let meetings = [];
   try {
-    const savedM = localStorage.getItem('monacard_meetings');
+    const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : null);
+    const storageKey = userCompId ? `monacard_meetings_${userCompId}` : 'monacard_meetings';
+    const savedM = localStorage.getItem(storageKey);
     if (savedM) {
       meetings = JSON.parse(savedM);
     } else if (!loggedInUser) {
       meetings = [...defaultMeetings];
+    } else {
+      meetings = [];
     }
   } catch (e) {
     console.warn(e);
@@ -3594,7 +3612,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function saveMeetingsToStorage() {
     try {
-      localStorage.setItem('monacard_meetings', JSON.stringify(meetings));
+      const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : null);
+      const storageKey = userCompId ? `monacard_meetings_${userCompId}` : 'monacard_meetings';
+      localStorage.setItem(storageKey, JSON.stringify(meetings));
+      if (typeof savePersonalMeetingsToStorage === 'function') savePersonalMeetingsToStorage();
     } catch (e) {
       console.warn(e);
     }
@@ -4072,6 +4093,289 @@ document.addEventListener('DOMContentLoaded', () => {
     const meetingDetailModal = document.getElementById('meetingDetailModal');
     if (meetingDetailModal) openModal(meetingDetailModal);
   };
+
+  // =========================================================
+  // HIZLI PLANLAMA & HATIRLATICI MODALI (Tab Menülü & Çift Dilli)
+  // =========================================================
+  function updateQuickScheduleModalI18n() {
+    const isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+    
+    // Header
+    const modalTitle = document.getElementById('quickSchedModalTitle');
+    const modalSubtitle = document.getElementById('quickSchedModalSubtitle');
+    if (modalTitle) modalTitle.textContent = isEn ? '📅 Add New Schedule' : '📅 Yeni Planlama Ekle';
+    if (modalSubtitle) modalSubtitle.textContent = isEn ? 'Create an event or reminder for selected time slot' : 'Seçilen gün ve saat dilimi için etkinlik oluşturun';
+
+    // Tabs
+    const tabMeeting = document.getElementById('tabQuickMeeting');
+    const tabReminder = document.getElementById('tabQuickReminder');
+    if (tabMeeting) tabMeeting.textContent = isEn ? '📅 Schedule Meeting' : '📅 Toplantı Planla';
+    if (tabReminder) tabReminder.textContent = isEn ? '⏰ Add Reminder' : '⏰ Hatırlatıcı Ekle';
+
+    // Meeting Form Labels & Placeholders
+    const lblMeetTitle = document.getElementById('lblQuickMeetTitle');
+    if (lblMeetTitle) lblMeetTitle.textContent = isEn ? '📝 MEETING SUBJECT / TITLE' : '📝 TOPLANTI BAŞLIĞI / KONUSU';
+    const meetTitle = document.getElementById('quickMeetTitle');
+    if (meetTitle) meetTitle.placeholder = isEn ? 'e.g., Sprint Planning, Client Demo Pitch' : 'Örn: Sprint Planlaması, Müşteri Demo Sunumu';
+
+    const lblMeetDate = document.getElementById('lblQuickMeetDate');
+    if (lblMeetDate) lblMeetDate.textContent = isEn ? '📅 DATE' : '📅 TARİH';
+
+    const lblMeetTime = document.getElementById('lblQuickMeetTime');
+    if (lblMeetTime) lblMeetTime.textContent = isEn ? '⏰ TIME' : '⏰ SAAT';
+
+    const lblMeetType = document.getElementById('lblQuickMeetType');
+    if (lblMeetType) lblMeetType.textContent = isEn ? '🌐 MEETING PLATFORM' : '🌐 TOPLANTI ORTAMI';
+    const meetType = document.getElementById('quickMeetType');
+    if (meetType && typeof populateMeetingTypeOptions === 'function') {
+      populateMeetingTypeOptions(meetType, meetType.value || 'Google Meet');
+    }
+
+    const lblMeetCust = document.getElementById('lblQuickMeetCust');
+    if (lblMeetCust) lblMeetCust.textContent = isEn ? '👥 PARTICIPANT / CLIENT' : '👥 KATILIMCI / MÜŞTERİ';
+    const meetCust = document.getElementById('quickMeetCustomer');
+    if (meetCust) {
+      const selectedVal = meetCust.value;
+      let custHtml = `<option value="">${isEn ? '-- Select Client / Lead --' : '-- Müşteri / Katılımcı Seçin --'}</option>`;
+      if (Array.isArray(customers) && customers.length > 0) {
+        custHtml += customers.map(c => `
+          <option value="${c.name} (${c.company || ''})" ${selectedVal === `${c.name} (${c.company || ''})` ? 'selected' : ''}>${c.name} ${c.company ? `(${c.company})` : ''} - ${c.title || (isEn ? 'Client' : 'Müşteri')}</option>
+        `).join('');
+      }
+      if (Array.isArray(adminStaffList) && adminStaffList.length > 0) {
+        custHtml += `<optgroup label="${isEn ? 'Team Members' : 'Ekip Üyeleri'}">`;
+        custHtml += adminStaffList.map(s => `
+          <option value="${s.name} (${s.title || (isEn ? 'Staff' : 'Personel')})" ${selectedVal === `${s.name} (${s.title || (isEn ? 'Staff' : 'Personel')})` ? 'selected' : ''}>👤 ${s.name} - ${s.title || ''}</option>
+        `).join('');
+        custHtml += `</optgroup>`;
+      }
+      meetCust.innerHTML = custHtml;
+    }
+
+    const lblMeetNote = document.getElementById('lblQuickMeetNote');
+    if (lblMeetNote) lblMeetNote.textContent = isEn ? '💬 MEETING NOTE (OPTIONAL)' : '💬 TOPLANTI NOTU (İSTEĞE BAĞLI)';
+    const meetNote = document.getElementById('quickMeetNote');
+    if (meetNote) meetNote.placeholder = isEn ? 'Agenda items and notes...' : 'Gündem maddeleri ve notlar...';
+
+    const btnSubMeeting = document.querySelector('#btnSubmitQuickMeeting span');
+    if (btnSubMeeting) btnSubMeeting.textContent = isEn ? '📅 Add Meeting to Calendar' : '📅 Toplantıyı Takvime Ekle';
+
+    // Reminder Form Labels & Placeholders
+    const lblRemTitle = document.getElementById('lblQuickRemTitle');
+    if (lblRemTitle) lblRemTitle.textContent = isEn ? '⏰ REMINDER / TASK TITLE' : '⏰ HATIRLATICI / GÖREV BAŞLIĞI';
+    const remTitle = document.getElementById('quickRemTitle');
+    if (remTitle) remTitle.placeholder = isEn ? 'e.g., Review contract, Call client' : 'Örn: Teklif sözleşmesini kontrol et, Müşteriyi ara';
+
+    const lblRemDate = document.getElementById('lblQuickRemDate');
+    if (lblRemDate) lblRemDate.textContent = isEn ? '📅 DATE' : '📅 TARİH';
+
+    const lblRemTime = document.getElementById('lblQuickRemTime');
+    if (lblRemTime) lblRemTime.textContent = isEn ? '⏰ TIME' : '⏰ SAAT';
+
+    const lblRemPriority = document.getElementById('lblQuickRemPriority');
+    if (lblRemPriority) lblRemPriority.textContent = isEn ? '⚡ PRIORITY LEVEL' : '⚡ ÖNCELİK SEVİYESİ';
+
+    const remPriority = document.getElementById('quickRemPriority');
+    if (remPriority && remPriority.options.length >= 3) {
+      remPriority.options[0].text = isEn ? 'Normal Priority' : 'Normal Öncelik';
+      remPriority.options[1].text = isEn ? 'Urgent / High Priority' : 'Acil / Yüksek Öncelik';
+      remPriority.options[2].text = isEn ? 'Low Priority' : 'Düşük Öncelik';
+    }
+
+    const lblRemDesc = document.getElementById('lblQuickRemDesc');
+    if (lblRemDesc) lblRemDesc.textContent = isEn ? '📝 ADDITIONAL NOTE (OPTIONAL)' : '📝 EK AÇIKLAMA (İSTEĞE BAĞLI)';
+    const remDesc = document.getElementById('quickRemDesc');
+    if (remDesc) remDesc.placeholder = isEn ? 'Task details and notes...' : 'Görevin detayları ve notlar...';
+
+    const btnSubReminder = document.querySelector('#btnSubmitQuickReminder span');
+    if (btnSubReminder) btnSubReminder.textContent = isEn ? '⏰ Save Reminder' : '⏰ Hatırlatıcıyı Kaydet';
+
+    document.querySelectorAll('#quickScheduleModal .btn-quick-sched-cancel').forEach(btn => {
+      btn.textContent = isEn ? 'Cancel' : 'İptal';
+    });
+  }
+
+  window.openQuickScheduleModal = function(defaultTitle = "", defaultDate = "", defaultTime = "10:00", initialTab = "meeting") {
+    const isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+    const todayIso = new Date().toISOString().split('T')[0];
+    const targetDate = defaultDate || todayIso;
+    const targetTime = defaultTime || "10:00";
+
+    updateQuickScheduleModalI18n();
+
+    // Prefill Meeting Form
+    const meetTitle = document.getElementById('quickMeetTitle');
+    if (meetTitle) meetTitle.value = defaultTitle || "";
+    const meetDate = document.getElementById('quickMeetDate');
+    if (meetDate) meetDate.value = targetDate;
+    const meetTime = document.getElementById('quickMeetTime');
+    if (meetTime) meetTime.value = targetTime;
+    const meetType = document.getElementById('quickMeetType');
+    if (meetType) populateMeetingTypeOptions(meetType, 'Google Meet');
+
+    // Populate Customer Select Options
+    const meetCust = document.getElementById('quickMeetCustomer');
+    if (meetCust) {
+      let custHtml = `<option value="">${isEn ? '-- Select Client / Lead --' : '-- Müşteri / Katılımcı Seçin --'}</option>`;
+      if (Array.isArray(customers) && customers.length > 0) {
+        custHtml += customers.map(c => `
+          <option value="${c.name} (${c.company || ''})">${c.name} ${c.company ? `(${c.company})` : ''} - ${c.title || (isEn ? 'Client' : 'Müşteri')}</option>
+        `).join('');
+      }
+      if (Array.isArray(adminStaffList) && adminStaffList.length > 0) {
+        custHtml += `<optgroup label="${isEn ? 'Team Members' : 'Ekip Üyeleri'}">`;
+        custHtml += adminStaffList.map(s => `
+          <option value="${s.name} (${s.title || (isEn ? 'Staff' : 'Personel')})">👤 ${s.name} - ${s.title || ''}</option>
+        `).join('');
+        custHtml += `</optgroup>`;
+      }
+      meetCust.innerHTML = custHtml;
+    }
+
+    const meetNote = document.getElementById('quickMeetNote');
+    if (meetNote) meetNote.value = "";
+
+    // Prefill Reminder Form
+    const remTitle = document.getElementById('quickRemTitle');
+    if (remTitle) remTitle.value = defaultTitle || "";
+    const remDate = document.getElementById('quickRemDate');
+    if (remDate) remDate.value = targetDate;
+    const remTime = document.getElementById('quickRemTime');
+    if (remTime) remTime.value = targetTime;
+    const remPriority = document.getElementById('quickRemPriority');
+    if (remPriority) remPriority.value = "medium";
+    const remDesc = document.getElementById('quickRemDesc');
+    if (remDesc) remDesc.value = "";
+
+    // Tab Switch
+    switchQuickSchedTab(initialTab);
+
+    const modal = document.getElementById('quickScheduleModal');
+    if (modal) openModal(modal);
+  };
+
+  function switchQuickSchedTab(tabName) {
+    const tabMeeting = document.getElementById('tabQuickMeeting');
+    const tabReminder = document.getElementById('tabQuickReminder');
+    const panelMeeting = document.getElementById('panelQuickMeeting');
+    const panelReminder = document.getElementById('panelQuickReminder');
+
+    if (tabName === 'reminder') {
+      if (tabMeeting) {
+        tabMeeting.classList.remove('active');
+        tabMeeting.style.background = 'transparent';
+        tabMeeting.style.color = '#64748B';
+        tabMeeting.style.boxShadow = 'none';
+      }
+      if (tabReminder) {
+        tabReminder.classList.add('active');
+        tabReminder.style.background = '#FFFFFF';
+        tabReminder.style.color = '#1E293B';
+        tabReminder.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
+      }
+      if (panelMeeting) panelMeeting.classList.add('hidden');
+      if (panelReminder) panelReminder.classList.remove('hidden');
+    } else {
+      if (tabMeeting) {
+        tabMeeting.classList.add('active');
+        tabMeeting.style.background = '#FFFFFF';
+        tabMeeting.style.color = '#1E293B';
+        tabMeeting.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
+      }
+      if (tabReminder) {
+        tabReminder.classList.remove('active');
+        tabReminder.style.background = 'transparent';
+        tabReminder.style.color = '#64748B';
+        tabReminder.style.boxShadow = 'none';
+      }
+      if (panelMeeting) panelMeeting.classList.remove('hidden');
+      if (panelReminder) panelReminder.classList.add('hidden');
+    }
+  }
+
+  // Tab Button Click Events
+  const tabQuickMeetingBtn = document.getElementById('tabQuickMeeting');
+  if (tabQuickMeetingBtn) {
+    tabQuickMeetingBtn.addEventListener('click', () => switchQuickSchedTab('meeting'));
+  }
+
+  const tabQuickReminderBtn = document.getElementById('tabQuickReminder');
+  if (tabQuickReminderBtn) {
+    tabQuickReminderBtn.addEventListener('click', () => switchQuickSchedTab('reminder'));
+  }
+
+  // Submit Meeting Form
+  const formQuickMeeting = document.getElementById('formQuickMeeting');
+  if (formQuickMeeting) {
+    formQuickMeeting.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = document.getElementById('quickMeetTitle')?.value?.trim() || "Toplantı";
+      const date = document.getElementById('quickMeetDate')?.value || new Date().toISOString().split('T')[0];
+      const time = document.getElementById('quickMeetTime')?.value || "10:00";
+      const type = document.getElementById('quickMeetType')?.value || "Google Meet";
+      const customer = document.getElementById('quickMeetCustomer')?.value?.trim() || (currentLang === 'en' ? 'Unspecified' : 'Belirtilmedi');
+      const note = document.getElementById('quickMeetNote')?.value?.trim() || "";
+
+      meetings.unshift({
+        id: "meet-" + Date.now(),
+        title,
+        date,
+        time,
+        type,
+        customer,
+        note,
+        completed: false
+      });
+
+      saveMeetingsToStorage();
+      initWeeklyTimelineWidget();
+      if (typeof renderMeetingsList === 'function') renderMeetingsList();
+      if (typeof renderAdminDashboard === 'function') renderAdminDashboard();
+      if (typeof renderAdminCalendar === 'function') renderAdminCalendar();
+
+      const modal = document.getElementById('quickScheduleModal');
+      if (modal) closeModal(modal);
+      formQuickMeeting.reset();
+
+      const isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+      showToast(isEn ? 'Meeting scheduled successfully! 📅✨' : 'Toplantı başarıyla takvime eklendi! 📅✨');
+    });
+  }
+
+  // Submit Reminder Form
+  const formQuickReminder = document.getElementById('formQuickReminder');
+  if (formQuickReminder) {
+    formQuickReminder.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = document.getElementById('quickRemTitle')?.value?.trim() || "Hatırlatıcı";
+      const date = document.getElementById('quickRemDate')?.value || new Date().toISOString().split('T')[0];
+      const time = document.getElementById('quickRemTime')?.value || "10:00";
+      const priority = document.getElementById('quickRemPriority')?.value || "medium";
+      const desc = document.getElementById('quickRemDesc')?.value?.trim() || "";
+
+      reminders.unshift({
+        id: "rem-" + Date.now(),
+        title,
+        date: `${date} ${time}`,
+        priority,
+        note: desc,
+        completed: false
+      });
+
+      try {
+        localStorage.setItem('monacard_reminders', JSON.stringify(reminders));
+      } catch (err) {}
+
+      if (typeof renderRemindersList === 'function') renderRemindersList();
+
+      const modal = document.getElementById('quickScheduleModal');
+      if (modal) closeModal(modal);
+      formQuickReminder.reset();
+
+      const isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+      showToast(isEn ? 'Reminder added to agenda! ⏰✨' : 'Hatırlatıcı başarıyla ajandaya kaydedildi! ⏰✨');
+    });
+  }
 
   // Toplantı Değişikliklerini Kaydet Butonu (Zamanı Geçti Otomatik Hesaplanır)
   const btnSaveMeetingChanges = document.getElementById('btnSaveMeetingChanges');
@@ -5223,22 +5527,59 @@ document.addEventListener('DOMContentLoaded', () => {
     let daysHtml = '<div class="weekly-time-col-spacer"></div>';
     let colsHtml = '';
 
+    const weekDays = [];
     for (let i = 0; i < 7; i++) {
       const dayDate = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i);
       const isSelected = (dayDate.toDateString() === selectedStr);
+      const isoStr = `${dayDate.getFullYear()}-${String(dayDate.getMonth() + 1).padStart(2, '0')}-${String(dayDate.getDate()).padStart(2, '0')}`;
+      weekDays.push({ index: i, date: dayDate, iso: isoStr });
 
       daysHtml += `
-        <div class="weekly-day-item ${isSelected ? 'active' : ''}" data-day-index="${i}" data-iso="${dayDate.toISOString().split('T')[0]}">
+        <div class="weekly-day-item ${isSelected ? 'active' : ''}" data-day-index="${i}" data-iso="${isoStr}">
           <span class="weekly-day-name">${dNames[i]}</span>
           <span class="weekly-day-num">${dayDate.getDate()}</span>
         </div>
       `;
 
-      colsHtml += `<div class="weekly-grid-col ${isSelected ? 'active' : ''}"></div>`;
+      const hourSlots = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+      let colCells = '';
+      hourSlots.forEach(hStr => {
+        colCells += `
+          <div class="weekly-hour-cell" data-time="${hStr}" data-iso="${isoStr}">
+            <button type="button" class="btn-timeline-add-slot" data-time="${hStr}" data-iso="${isoStr}" title="${isoStr} ${hStr} - ${isEn ? 'Schedule Meeting or Reminder' : 'Toplantı veya Hatırlatıcı Ekle'}">
+              <span class="plus-icon">+</span>
+              <span class="add-text">${isEn ? 'Add' : 'Ekle'}</span>
+            </button>
+          </div>
+        `;
+      });
+
+      colsHtml += `<div class="weekly-grid-col ${isSelected ? 'active' : ''}" data-day-index="${i}" data-iso="${isoStr}">${colCells}</div>`;
     }
 
     daysRow.innerHTML = daysHtml;
-    if (gridColsBg) gridColsBg.innerHTML = colsHtml;
+    if (gridColsBg) {
+      gridColsBg.innerHTML = colsHtml;
+      
+      // Saat hücrelerine tıklama ile modal açma
+      gridColsBg.querySelectorAll('.weekly-hour-cell').forEach(cell => {
+        cell.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const iso = cell.getAttribute('data-iso');
+          const time = cell.getAttribute('data-time');
+          window.openQuickScheduleModal('', iso, time, 'meeting');
+        });
+      });
+    }
+
+    // Sol saat etiketlerine tıklama ile modal açma
+    document.querySelectorAll('.weekly-time-slot-label').forEach(label => {
+      label.onclick = () => {
+        const timeText = label.textContent.trim();
+        const selIso = `${weeklySelectedDate.getFullYear()}-${String(weeklySelectedDate.getMonth() + 1).padStart(2, '0')}-${String(weeklySelectedDate.getDate()).padStart(2, '0')}`;
+        window.openQuickScheduleModal('', selIso, timeText, 'meeting');
+      };
+    });
 
     // Gün kartlarına tıklama olayı
     const dayItems = daysRow.querySelectorAll('.weekly-day-item');
@@ -5277,84 +5618,80 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Etkinlik katmanını dinamik oluştur
     if (eventsLayer) {
-      const activeUserName = (loggedInUser && loggedInUser.name) || (adminSettings.companyProfile && adminSettings.companyProfile.managerName) || 'Hakan Yavuz';
-      const userInitials = activeUserName.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+      const allActiveMeetings = [
+        ...(meetings || []).map((m, idx) => ({ ...m, globalIndex: idx })),
+        ...(adminPersonalMeetings || []).map((m, idx) => ({ ...m, isPersonal: true, globalIndex: idx }))
+      ];
 
-      eventsLayer.innerHTML = `
-        <!-- Interactive Event Card 1: Google Meet Sprint Meeting -->
-        <div class="weekly-event-card purple" style="left: 2%; width: 52%; top: 12px; height: 68px;" onclick="window.openMeetingDetail(0)">
-          <div class="weekly-event-pill-top">
-            <span class="weekly-event-type meet" title="Google Meet">
-              <svg class="weekly-platform-icon meet-icon" width="18" height="18" viewBox="0 0 48 48" fill="none">
-                <path d="M42 14.5L34 20.5V13C34 11.3431 32.6569 10 31 10H7C5.34315 10 4 11.3431 4 13V35C4 36.6569 5.34315 38 7 38H31C32.6569 38 34 36.6569 34 35V27.5L42 33.5C43.1046 34.3284 44 33.8807 44 32.5V15.5C44 14.1193 43.1046 13.6716 42 14.5Z" fill="#00832D"/>
-                <path d="M34 27.5V35C34 36.6569 32.6569 38 31 38H7C5.34315 38 4 36.6569 4 35V30L19 22L34 27.5Z" fill="#0066DA"/>
-                <path d="M4 17L19 25L34 19.5V13C34 11.3431 32.6569 10 31 10H7C5.34315 10 4 11.3431 4 13V17Z" fill="#E53935"/>
-                <path d="M4 17V30L19 23.5L4 17Z" fill="#FBBC04"/>
-                <path d="M34 20.5L42 14.5C43.1046 13.6716 44 14.1193 44 15.5V32.5C44 33.8807 43.1046 34.3284 42 33.5L34 27.5V20.5Z" fill="#00AC47"/>
-              </svg>
-              <span class="weekly-event-type-name">Google Meet</span>
-            </span>
-            <span class="weekly-event-time">09:30 - 10:45</span>
-          </div>
-          <div class="weekly-event-text">
-            <h4 class="weekly-event-title">${isEn ? 'MonaCard SaaS &amp; CRM Sprint Planning' : 'MonaCard SaaS &amp; CRM Sprint Planlaması'}</h4>
-            <p class="weekly-event-desc">👤 ${activeUserName}, Zeynep &amp; ${isEn ? '3 others' : '3 kişi'}</p>
-          </div>
-          <div class="weekly-avatar-stack">
-            <div class="stack-avatar initial" style="background:#5B4FEB;">${userInitials}</div>
-            <div class="stack-avatar initial" style="background:#10B981;">ZA</div>
-            <span class="stack-badge purple">+2</span>
-          </div>
-        </div>
+      // Sadece aktif haftadaki günlerle eşleşen toplantıları filtrele
+      const weekEvents = [];
+      weekDays.forEach(wDay => {
+        const matching = allActiveMeetings.filter(m => {
+          if (!m || !m.date) return false;
+          let mDate = String(m.date).trim();
+          if (mDate.includes('.')) {
+            const parts = mDate.split('.');
+            if (parts.length === 3) {
+              mDate = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+            }
+          }
+          return mDate === wDay.iso;
+        });
 
-        <!-- Interactive Event Card 2: Zoom Müşteri Sunumu -->
-        <div class="weekly-event-card amber" style="left: 44%; width: 54%; top: 105px; height: 68px;" onclick="window.openMeetingDetail(1)">
-          <div class="weekly-event-pill-top">
-            <span class="weekly-event-type zoom" title="Zoom Meet">
-              <svg class="weekly-platform-icon zoom-icon" width="18" height="18" viewBox="0 0 48 48" fill="none">
-                <rect width="48" height="48" rx="12" fill="#2D8CFF"/>
-                <path d="M12 18C12 16.3431 13.3431 15 15 15H26C27.6569 15 29 16.3431 29 18V30C29 31.6569 27.6569 33 26 33H15C13.3431 33 12 31.6569 12 30V18Z" fill="white"/>
-                <path d="M30.5 21.2L36 17.5C36.6 17.1 37.5 17.5 37.5 18.3V29.7C37.5 30.5 36.6 30.9 36 30.5L30.5 26.8V21.2Z" fill="white"/>
-              </svg>
-              <span class="weekly-event-type-name">Zoom Meet</span>
-            </span>
-            <span class="weekly-event-time">11:30 - 12:30</span>
-          </div>
-          <div class="weekly-event-text">
-            <h4 class="weekly-event-title">${isEn ? 'TechPlus Corporate Pitch &amp; Demo' : 'TechPlus Kurumsal Sunum'}</h4>
-            <p class="weekly-event-desc">Ali Rıza &amp; Kemal Yılmaz</p>
-          </div>
-          <div class="weekly-avatar-stack">
-            <div class="stack-avatar initial" style="background:#F59E0B;">AR</div>
-            <div class="stack-avatar initial" style="background:#10B981;">KY</div>
-          </div>
-        </div>
+        matching.forEach(m => {
+          weekEvents.push({
+            meeting: m,
+            dayIndex: wDay.index
+          });
+        });
+      });
 
-        <!-- Interactive Event Card 3: VIP Kurumsal Değerlendirme (Mavi Kart) -->
-        <div class="weekly-event-card blue" style="left: 16%; width: 50%; top: 195px; height: 68px;" onclick="window.openMeetingDetail(2)">
-          <div class="weekly-event-pill-top">
-            <span class="weekly-event-type meet" title="Google Meet">
-              <svg class="weekly-platform-icon meet-icon" width="18" height="18" viewBox="0 0 48 48" fill="none">
-                <path d="M42 14.5L34 20.5V13C34 11.3431 32.6569 10 31 10H7C5.34315 10 4 11.3431 4 13V35C4 36.6569 5.34315 38 7 38H31C32.6569 38 34 36.6569 34 35V27.5L42 33.5C43.1046 34.3284 44 33.8807 44 32.5V15.5C44 14.1193 43.1046 13.6716 42 14.5Z" fill="#00832D"/>
-                <path d="M34 27.5V35C34 36.6569 32.6569 38 31 38H7C5.34315 38 4 36.6569 4 35V30L19 22L34 27.5Z" fill="#0066DA"/>
-                <path d="M4 17L19 25L34 19.5V13C34 11.3431 32.6569 10 31 10H7C5.34315 10 4 11.3431 4 13V17Z" fill="#E53935"/>
-                <path d="M4 17V30L19 23.5L4 17Z" fill="#FBBC04"/>
-                <path d="M34 20.5L42 14.5C43.1046 13.6716 44 14.1193 44 15.5V32.5C44 33.8807 43.1046 34.3284 42 33.5L34 27.5V20.5Z" fill="#00AC47"/>
-              </svg>
-              <span class="weekly-event-type-name">Google Meet</span>
-            </span>
-            <span class="weekly-event-time">14:00 - 15:00</span>
+      if (weekEvents.length === 0) {
+        eventsLayer.innerHTML = '';
+        return;
+      }
+
+      const colorClasses = ['purple', 'amber', 'blue', 'emerald'];
+
+      eventsLayer.innerHTML = weekEvents.map((item, idx) => {
+        const m = item.meeting;
+        const dIdx = item.dayIndex;
+        const pData = getMeetingPlatformData(m.type);
+        const cardColor = colorClasses[idx % colorClasses.length];
+
+        // Saat hesaplaması (08:00 - 18:00 arası için dikey pozisyon)
+        let topPx = 4;
+        if (m.time && m.time.includes(':')) {
+          const [hh, mm] = m.time.split(':').map(Number);
+          const hourOffset = Math.max(0, Math.min(10.5, (hh - 8) + ((mm || 0) / 60)));
+          topPx = 4 + Math.round(hourOffset * 48);
+        }
+
+        const leftPercent = Math.max(1, Math.min(68, (dIdx * 14.28) + 0.5));
+        const widthPercent = Math.min(32, 100 - leftPercent - 1);
+
+        const personName = m.customer || m.participants || (loggedInUser && loggedInUser.name) || (isEn ? 'Participant' : 'Katılımcı');
+        const initials = personName.split(/[\s,&]+/).filter(Boolean).map(n => n[0]).slice(0, 2).join('').toUpperCase() || 'MC';
+
+        return `
+          <div class="weekly-event-card ${cardColor}" style="left: ${leftPercent}%; width: ${widthPercent}%; top: ${topPx}px; height: 68px;" onclick="window.openMeetingDetail(${m.globalIndex !== undefined ? m.globalIndex : 0})" title="${m.title || ''}">
+            <div class="weekly-event-pill-top">
+              <span class="weekly-event-type ${pData.class}">
+                ${pData.svg}
+                <span class="weekly-event-type-name">${pData.label}</span>
+              </span>
+              <span class="weekly-event-time">${m.time || '10:00'}</span>
+            </div>
+            <div class="weekly-event-text">
+              <h4 class="weekly-event-title">${m.title || (isEn ? 'Meeting' : 'Toplantı')}</h4>
+              <p class="weekly-event-desc">${personName}</p>
+            </div>
+            <div class="weekly-avatar-stack">
+              <div class="stack-avatar initial" style="background:var(--primary, #5B4FEB);">${initials}</div>
+            </div>
           </div>
-          <div class="weekly-event-text">
-            <h4 class="weekly-event-title">${isEn ? 'VIP Enterprise Solution &amp; Demo' : 'VIP Kurumsal Çözüm &amp; Demo'}</h4>
-            <p class="weekly-event-desc">TechPlus Bilişim &amp; Demo</p>
-          </div>
-          <div class="weekly-avatar-stack">
-            <div class="stack-avatar initial" style="background:#2563EB;">${userInitials}</div>
-            <span class="stack-badge blue">+1</span>
-          </div>
-        </div>
-      `;
+        `;
+      }).join('');
     }
   }
 

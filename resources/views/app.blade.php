@@ -1223,14 +1223,19 @@
 
               <!-- Timeline Grid Canvas -->
               <div class="weekly-timeline-canvas">
-                <!-- Left Time Labels Column -->
+                <!-- Left Time Labels Column (08:00 - 18:00) -->
                 <div class="weekly-time-labels-col">
+                  <div class="weekly-time-slot-label">08:00</div>
                   <div class="weekly-time-slot-label">09:00</div>
                   <div class="weekly-time-slot-label">10:00</div>
                   <div class="weekly-time-slot-label">11:00</div>
                   <div class="weekly-time-slot-label">12:00</div>
                   <div class="weekly-time-slot-label">13:00</div>
                   <div class="weekly-time-slot-label">14:00</div>
+                  <div class="weekly-time-slot-label">15:00</div>
+                  <div class="weekly-time-slot-label">16:00</div>
+                  <div class="weekly-time-slot-label">17:00</div>
+                  <div class="weekly-time-slot-label">18:00</div>
                 </div>
 
                 <!-- 7-Day Grid Columns & Meeting Blocks -->
@@ -1247,15 +1252,7 @@
                     <div class="weekly-grid-col"></div>
                   </div>
 
-                  <!-- 6 Horizontal Hour Lines -->
-                  <div class="weekly-grid-lines">
-                    <div class="weekly-grid-line"></div>
-                    <div class="weekly-grid-line"></div>
-                    <div class="weekly-grid-line"></div>
-                    <div class="weekly-grid-line"></div>
-                    <div class="weekly-grid-line"></div>
-                    <div class="weekly-grid-line"></div>
-                  </div>
+
 
                   <!-- Dynamic Event Cards Layer -->
                   <div class="weekly-events-layer" id="weeklyEventsLayer">
@@ -4340,6 +4337,124 @@
         <div class="modal-btn-row">
           <button class="btn-outline" data-close="reviewModal">Vazgeç</button>
           <button class="btn-primary" id="btnSubmitReview">Yorumu Yayınla</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hızlı Planlama & Hatırlatıcı Modalı (Tab Menülü) -->
+  <div class="modal-overlay" id="quickScheduleModal" role="dialog" aria-modal="true" aria-labelledby="quickSchedModalTitle">
+    <div class="modal-container" style="max-width: 480px; max-height: 92vh; overflow-y: auto;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="quickSchedModalTitle">📅 Yeni Planlama Ekle</h3>
+          <p class="modal-subtitle" id="quickSchedModalSubtitle">Seçilen gün ve saat dilimi için etkinlik oluşturun</p>
+        </div>
+        <button class="modal-close-btn" data-close="quickScheduleModal">&times;</button>
+      </div>
+
+      <!-- Üst Tab Menüsü: Toplantı vs Hatırlatıcı -->
+      <div class="quick-sched-tab-nav" style="display: flex; gap: 6px; margin: 12px 0 20px; background: #F1F5F9; padding: 4px; border-radius: 12px;">
+        <button type="button" class="quick-sched-tab-btn active" id="tabQuickMeeting" style="flex: 1; padding: 10px 12px; font-size: 13px; font-weight: 700; border-radius: 9px; border: none; background: #FFFFFF; color: #1E293B; box-shadow: 0 2px 8px rgba(0,0,0,0.06); cursor: pointer; transition: all 0.2s ease;">
+          📅 Toplantı Planla
+        </button>
+        <button type="button" class="quick-sched-tab-btn" id="tabQuickReminder" style="flex: 1; padding: 10px 12px; font-size: 13px; font-weight: 700; border-radius: 9px; border: none; background: transparent; color: #64748B; cursor: pointer; transition: all 0.2s ease;">
+          ⏰ Hatırlatıcı Ekle
+        </button>
+      </div>
+
+      <div class="modal-body" style="padding: 0;">
+        <!-- TAB 1: TOPLANTI PANELİ -->
+        <div class="quick-sched-panel" id="panelQuickMeeting">
+          <form id="formQuickMeeting">
+            <div class="form-group mb-4">
+              <label class="modal-edit-label" id="lblQuickMeetTitle">📝 Toplantı Başlığı / Konusu</label>
+              <input type="text" id="quickMeetTitle" class="modal-input-field" placeholder="Örn: Sprint Planlaması, Müşteri Demo Sunumu" required>
+            </div>
+
+            <div class="form-row" style="display: flex; gap: 14px; margin-bottom: 16px;">
+              <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                <label class="modal-edit-label" id="lblQuickMeetDate">📅 Tarih</label>
+                <input type="date" id="quickMeetDate" class="modal-input-field" required>
+              </div>
+              <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                <label class="modal-edit-label" id="lblQuickMeetTime">⏰ Saat</label>
+                <input type="time" id="quickMeetTime" class="modal-input-field" required>
+              </div>
+            </div>
+
+            <div class="form-group mb-4">
+              <label class="modal-edit-label" id="lblQuickMeetType">🌐 Toplantı Ortamı</label>
+              <select id="quickMeetType" class="modal-select-field">
+                <option value="Google Meet">Google Meet (Online)</option>
+                <option value="Zoom Meet">Zoom Meet (Online)</option>
+                <option value="Microsoft Teams">Microsoft Teams (Online)</option>
+                <option value="Bizim Ofis">Bizim Ofis</option>
+                <option value="Müşteri Ofisi">Müşteri Ofisi</option>
+              </select>
+            </div>
+
+            <div class="form-group mb-4">
+              <label class="modal-edit-label" id="lblQuickMeetCust">👥 Katılımcı / Müşteri</label>
+              <select id="quickMeetCustomer" class="modal-select-field">
+                <option value="">-- Müşteri / Katılımcı Seçin --</option>
+              </select>
+            </div>
+
+            <div class="form-group mb-4">
+              <label class="modal-edit-label" id="lblQuickMeetNote">💬 Toplantı Notu (İsteğe Bağlı)</label>
+              <textarea id="quickMeetNote" class="modal-input-field" rows="2" placeholder="Gündem maddeleri ve notlar..."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 14px; border-top: 1px solid #F1F5F9;">
+              <button type="button" class="btn-outline btn-sm btn-quick-sched-cancel" data-close="quickScheduleModal">İptal</button>
+              <button type="submit" class="btn-primary btn-sm" id="btnSubmitQuickMeeting" style="padding: 10px 18px; font-weight: 700;">
+                <span>📅 Toplantıyı Takvime Ekle</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- TAB 2: HATIRLATICI PANELİ -->
+        <div class="quick-sched-panel hidden" id="panelQuickReminder">
+          <form id="formQuickReminder">
+            <div class="form-group mb-4">
+              <label class="modal-edit-label" id="lblQuickRemTitle">⏰ Hatırlatıcı / Görev Başlığı</label>
+              <input type="text" id="quickRemTitle" class="modal-input-field" placeholder="Örn: Teklif sözleşmesini kontrol et, Müşteriyi ara" required>
+            </div>
+
+            <div class="form-row" style="display: flex; gap: 14px; margin-bottom: 16px;">
+              <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                <label class="modal-edit-label" id="lblQuickRemDate">📅 Tarih</label>
+                <input type="date" id="quickRemDate" class="modal-input-field" required>
+              </div>
+              <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                <label class="modal-edit-label" id="lblQuickRemTime">⏰ Saat</label>
+                <input type="time" id="quickRemTime" class="modal-input-field" value="10:00">
+              </div>
+            </div>
+
+            <div class="form-group mb-4">
+              <label class="modal-edit-label" id="lblQuickRemPriority">⚡ Öncelik Seviyesi</label>
+              <select id="quickRemPriority" class="modal-select-field">
+                <option value="medium">Normal Öncelik</option>
+                <option value="high">Acil / Yüksek Öncelik</option>
+                <option value="low">Düşük Öncelik</option>
+              </select>
+            </div>
+
+            <div class="form-group mb-4">
+              <label class="modal-edit-label" id="lblQuickRemDesc">📝 Ek Açıklama (İsteğe Bağlı)</label>
+              <textarea id="quickRemDesc" class="modal-input-field" rows="2" placeholder="Görevin detayları ve notlar..."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 14px; border-top: 1px solid #F1F5F9;">
+              <button type="button" class="btn-outline btn-sm btn-quick-sched-cancel" data-close="quickScheduleModal">İptal</button>
+              <button type="submit" class="btn-primary btn-sm" id="btnSubmitQuickReminder" style="padding: 10px 18px; font-weight: 700; background: #3B82F6;">
+                <span>⏰ Hatırlatıcıyı Kaydet</span>
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

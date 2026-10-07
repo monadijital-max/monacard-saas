@@ -7369,35 +7369,42 @@ body.role-admin.theme-dark .profile-large-avatar {
   color: #FFFFFF !important;
 }
 
-/* Timeline Canvas Grid */
+/* Timeline Canvas Grid (08:00 - 18:00) */
 .weekly-timeline-canvas {
   display: flex;
   position: relative;
-  min-height: 290px;
+  min-height: 528px;
 }
 
 .weekly-time-labels-col {
-  width: 80px;
+  width: 65px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 6px 0;
+  padding: 0;
 }
 
 .weekly-time-slot-label {
-  font-size: 12.5px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   color: var(--admin-text-sub, #94A3B8);
   height: 48px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.weekly-time-slot-label:hover {
+  color: var(--primary, #5B4FEB);
 }
 
 .weekly-grid-body {
   flex: 1;
   position: relative;
-  min-height: 290px;
+  min-height: 528px;
 }
 
 /* 7 Day Vertical Background Columns */
@@ -7406,13 +7413,16 @@ body.role-admin.theme-dark .profile-large-avatar {
   inset: 0;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
-  pointer-events: none;
+  gap: 0;
+  pointer-events: auto;
+  z-index: 1;
 }
 
 .weekly-grid-col {
   border-right: 1px dashed rgba(226, 232, 240, 0.8);
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .weekly-grid-col:last-child {
@@ -7421,23 +7431,92 @@ body.role-admin.theme-dark .profile-large-avatar {
 
 .weekly-grid-col.active {
   background: rgba(91, 79, 235, 0.02);
-  border-radius: 8px;
 }
 
-/* Horizontal Time Lines */
-.weekly-grid-lines {
-  position: absolute;
-  inset: 0;
+.weekly-hour-cell {
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(241, 245, 249, 0.95);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  pointer-events: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
-.weekly-grid-line {
-  width: 100%;
-  height: 1px;
-  border-top: 1px solid rgba(241, 245, 249, 0.8);
+.weekly-hour-cell:last-child {
+  border-bottom: none;
+}
+
+.weekly-hour-cell:hover {
+  background: rgba(0, 168, 107, 0.06);
+}
+
+.btn-timeline-add-slot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 7px;
+  border: 1.5px solid #00A86B;
+  background: #FFFFFF;
+  color: #00A86B;
+  box-shadow: 0 2px 8px rgba(0, 168, 107, 0.16);
+  cursor: pointer;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  white-space: nowrap;
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+  z-index: 2;
+}
+
+.weekly-hour-cell:hover .btn-timeline-add-slot {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+  box-shadow: 0 4px 12px rgba(0, 168, 107, 0.25);
+}
+
+body.theme-dark .weekly-grid-col {
+  border-right-color: rgba(51, 65, 85, 0.5);
+}
+
+body.theme-dark .weekly-hour-cell {
+  border-bottom-color: rgba(51, 65, 85, 0.4);
+}
+
+body.theme-dark .weekly-hour-cell:hover {
+  background: rgba(16, 185, 129, 0.08);
+}
+
+body.theme-dark .btn-timeline-add-slot {
+  background: #1E293B;
+  color: #10B981;
+  border-color: #10B981;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+body.theme-dark .weekly-hour-cell:hover .btn-timeline-add-slot {
+  background: #0F172A;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+}
+
+/* Horizontal Time Lines (replaced by cell borders) */
+.weekly-grid-lines {
+  display: none !important;
 }
 
 /* Events Layer */
@@ -7445,6 +7524,84 @@ body.role-admin.theme-dark .profile-large-avatar {
   position: absolute;
   inset: 0;
   z-index: 2;
+  pointer-events: none;
+}
+
+/* Quick Schedule Modal Spacing & Form Controls */
+.quick-sched-panel .form-group {
+  margin-bottom: 20px !important;
+}
+
+.quick-sched-panel .form-row {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 14px !important;
+  margin-bottom: 20px !important;
+}
+
+.quick-sched-panel .form-row > .form-group {
+  flex: 1 !important;
+  margin-bottom: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+}
+
+.quick-sched-panel .modal-edit-label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  height: 20px !important;
+  min-height: 20px !important;
+  max-height: 20px !important;
+  margin-top: 6px !important;
+  margin-bottom: 8px !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.4px !important;
+  line-height: 20px !important;
+  color: #475569 !important;
+}
+
+.quick-sched-panel .form-group:first-child .modal-edit-label,
+.quick-sched-panel form > .form-group:first-child .modal-edit-label {
+  margin-top: 0 !important;
+}
+
+.quick-sched-panel input[type="date"],
+.quick-sched-panel input[type="time"] {
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  line-height: 40px !important;
+  padding: 0 12px !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  vertical-align: middle !important;
+}
+
+.quick-sched-panel input[type="date"]::-webkit-datetime-edit,
+.quick-sched-panel input[type="time"]::-webkit-datetime-edit {
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 100% !important;
+  line-height: 40px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.quick-sched-panel input[type="date"]::-webkit-calendar-picker-indicator,
+.quick-sched-panel input[type="time"]::-webkit-calendar-picker-indicator {
+  cursor: pointer !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  vertical-align: middle !important;
+}
+
+body.theme-dark .quick-sched-panel .modal-edit-label {
+  color: #94A3B8 !important;
 }
 
 /* Meeting Event Card */
@@ -7477,6 +7634,12 @@ body.role-admin.theme-dark .profile-large-avatar {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+}
+
+.weekly-event-type svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }
 
 .weekly-platform-icon {
