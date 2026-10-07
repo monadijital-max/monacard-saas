@@ -4372,12 +4372,12 @@
               <input type="text" id="quickMeetTitle" class="modal-input-field" placeholder="Örn: Sprint Planlaması, Müşteri Demo Sunumu" required>
             </div>
 
-            <div class="form-row" style="display: flex; gap: 14px; margin-bottom: 16px;">
-              <div class="form-group" style="flex: 1; margin-bottom: 0;">
+            <div class="form-row">
+              <div class="form-group">
                 <label class="modal-edit-label" id="lblQuickMeetDate">📅 Tarih</label>
                 <input type="date" id="quickMeetDate" class="modal-input-field" required>
               </div>
-              <div class="form-group" style="flex: 1; margin-bottom: 0;">
+              <div class="form-group">
                 <label class="modal-edit-label" id="lblQuickMeetTime">⏰ Saat</label>
                 <input type="time" id="quickMeetTime" class="modal-input-field" required>
               </div>
@@ -4423,12 +4423,12 @@
               <input type="text" id="quickRemTitle" class="modal-input-field" placeholder="Örn: Teklif sözleşmesini kontrol et, Müşteriyi ara" required>
             </div>
 
-            <div class="form-row" style="display: flex; gap: 14px; margin-bottom: 16px;">
-              <div class="form-group" style="flex: 1; margin-bottom: 0;">
+            <div class="form-row">
+              <div class="form-group">
                 <label class="modal-edit-label" id="lblQuickRemDate">📅 Tarih</label>
                 <input type="date" id="quickRemDate" class="modal-input-field" required>
               </div>
-              <div class="form-group" style="flex: 1; margin-bottom: 0;">
+              <div class="form-group">
                 <label class="modal-edit-label" id="lblQuickRemTime">⏰ Saat</label>
                 <input type="time" id="quickRemTime" class="modal-input-field" value="10:00">
               </div>

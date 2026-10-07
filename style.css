@@ -7554,18 +7554,13 @@ body.theme-dark .weekly-hour-cell:hover .btn-timeline-add-slot {
   height: 20px !important;
   min-height: 20px !important;
   max-height: 20px !important;
-  margin-top: 6px !important;
-  margin-bottom: 8px !important;
+  margin: 0 0 8px 0 !important;
+  padding: 0 !important;
   font-size: 11.5px !important;
   font-weight: 700 !important;
   letter-spacing: 0.4px !important;
   line-height: 20px !important;
   color: #475569 !important;
-}
-
-.quick-sched-panel .form-group:first-child .modal-edit-label,
-.quick-sched-panel form > .form-group:first-child .modal-edit-label {
-  margin-top: 0 !important;
 }
 
 .quick-sched-panel input[type="date"],
