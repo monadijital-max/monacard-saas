@@ -2219,15 +2219,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const initialAdminStaff = [
     {
       id: "staff-1",
-      name: "Muhiddin Öktem",
-      title: "Senior Product Designer & Tech Lead",
-      email: "muhiddinoktem@vedubox.com",
-      phone: "+90 536 255 64 24",
-      avatar: "avatar_clean.png",
+      name: "Ali Rıza Çelik",
+      title: "B2B Pazarlama Direktörü",
+      email: "aliriza@monacard.com",
+      phone: "+90 532 987 65 43",
+      avatar: "",
       status: "active",
       isLeader: true,
       leaderId: "",
-      monthlyTarget: 15,
+      monthlyTarget: 25,
       newLeads: 24,
       existingLeads: 10,
       totalContacts: 34,
@@ -2235,163 +2235,427 @@ document.addEventListener('DOMContentLoaded', () => {
       warmCount: 10,
       coldCount: 6,
       convertedCount: 12,
-      revenue: 148500,
+      revenue: 215000,
       satisfactionRate: 4.9,
       score: 96
     },
     {
       id: "staff-2",
-      name: "Ali Rıza Çelik",
-      title: "Kurumsal Müşteri Direktörü",
-      email: "aliriza@vedubox.com",
-      phone: "+90 532 987 65 43",
+      name: "Zeynep Arslan",
+      title: "Kıdemli Performans Pazarlama Lideri",
+      email: "zeynep.arslan@monacard.com",
+      phone: "+90 533 876 54 32",
       avatar: "",
       status: "active",
       isLeader: true,
       leaderId: "",
-      monthlyTarget: 15,
+      monthlyTarget: 20,
       newLeads: 20,
       existingLeads: 8,
       totalContacts: 28,
-      hotCount: 14,
+      hotCount: 15,
       warmCount: 8,
-      coldCount: 6,
-      convertedCount: 9,
-      revenue: 215000,
-      satisfactionRate: 4.8,
+      coldCount: 5,
+      convertedCount: 10,
+      revenue: 185000,
+      satisfactionRate: 4.9,
       score: 92
     },
     {
       id: "staff-3",
-      name: "Ayşe Kaya",
-      title: "B2B Portföy Yöneticisi",
-      email: "ayse@vedubox.com",
-      phone: "+90 533 123 45 67",
+      name: "Burak Korkmaz",
+      title: "Büyüme & Growth Marketing Lideri",
+      email: "burak.korkmaz@monacard.com",
+      phone: "+90 535 765 43 21",
+      avatar: "",
+      status: "active",
+      isLeader: true,
+      leaderId: "",
+      monthlyTarget: 22,
+      newLeads: 18,
+      existingLeads: 8,
+      totalContacts: 26,
+      hotCount: 14,
+      warmCount: 7,
+      coldCount: 5,
+      convertedCount: 8,
+      revenue: 165000,
+      satisfactionRate: 4.8,
+      score: 89
+    },
+    {
+      id: "staff-4",
+      name: "Merve Yıldırım",
+      title: "Kurumsal Saha Satış Yöneticisi",
+      email: "merve.yildirim@monacard.com",
+      phone: "+90 530 654 32 10",
+      avatar: "",
+      status: "active",
+      isLeader: false,
+      leaderId: "staff-1",
+      monthlyTarget: 18,
+      newLeads: 16,
+      existingLeads: 6,
+      totalContacts: 22,
+      hotCount: 12,
+      warmCount: 6,
+      coldCount: 4,
+      convertedCount: 7,
+      revenue: 142000,
+      satisfactionRate: 4.8,
+      score: 87
+    },
+    {
+      id: "staff-5",
+      name: "Emre Şen",
+      title: "Dijital Pazarlama & SEO Stratejisti",
+      email: "emre.sen@monacard.com",
+      phone: "+90 534 543 21 09",
+      avatar: "",
+      status: "active",
+      isLeader: false,
+      leaderId: "staff-2",
+      monthlyTarget: 15,
+      newLeads: 14,
+      existingLeads: 5,
+      totalContacts: 19,
+      hotCount: 10,
+      warmCount: 6,
+      coldCount: 3,
+      convertedCount: 6,
+      revenue: 128000,
+      satisfactionRate: 4.7,
+      score: 85
+    },
+    {
+      id: "staff-6",
+      name: "Deniz Yılmaz",
+      title: "İçerik & Sosyal Medya Müdürü",
+      email: "deniz.yilmaz@monacard.com",
+      phone: "+90 536 432 10 98",
+      avatar: "",
+      status: "active",
+      isLeader: false,
+      leaderId: "staff-2",
+      monthlyTarget: 14,
+      newLeads: 12,
+      existingLeads: 5,
+      totalContacts: 17,
+      hotCount: 9,
+      warmCount: 5,
+      coldCount: 3,
+      convertedCount: 5,
+      revenue: 110000,
+      satisfactionRate: 4.8,
+      score: 83
+    },
+    {
+      id: "staff-7",
+      name: "Pelin Aksoy",
+      title: "Lead Generation & Talep Yaratma Uzmanı",
+      email: "pelin.aksoy@monacard.com",
+      phone: "+90 537 321 09 87",
+      avatar: "",
+      status: "active",
+      isLeader: false,
+      leaderId: "staff-3",
+      monthlyTarget: 20,
+      newLeads: 18,
+      existingLeads: 4,
+      totalContacts: 22,
+      hotCount: 11,
+      warmCount: 7,
+      coldCount: 4,
+      convertedCount: 7,
+      revenue: 135000,
+      satisfactionRate: 4.7,
+      score: 86
+    },
+    {
+      id: "staff-8",
+      name: "Caner Erkin",
+      title: "İş Geliştirme & Partnerlikler (BDR)",
+      email: "caner.erkin@monacard.com",
+      phone: "+90 538 210 98 76",
+      avatar: "",
+      status: "active",
+      isLeader: false,
+      leaderId: "staff-1",
+      monthlyTarget: 16,
+      newLeads: 13,
+      existingLeads: 5,
+      totalContacts: 18,
+      hotCount: 9,
+      warmCount: 5,
+      coldCount: 4,
+      convertedCount: 5,
+      revenue: 115000,
+      satisfactionRate: 4.8,
+      score: 82
+    },
+    {
+      id: "staff-9",
+      name: "Elif Şahin",
+      title: "Müşteri Başarı & Dönüşüm Uzmanı (CSM)",
+      email: "elif.sahin@monacard.com",
+      phone: "+90 539 109 87 65",
+      avatar: "",
+      status: "active",
+      isLeader: false,
+      leaderId: "staff-1",
+      monthlyTarget: 18,
+      newLeads: 14,
+      existingLeads: 6,
+      totalContacts: 20,
+      hotCount: 10,
+      warmCount: 6,
+      coldCount: 4,
+      convertedCount: 6,
+      revenue: 125000,
+      satisfactionRate: 4.9,
+      score: 84
+    },
+    {
+      id: "staff-10",
+      name: "Tolga Aydın",
+      title: "Kurumsal Çözüm & Satış Danışmanı",
+      email: "tolga.aydin@monacard.com",
+      phone: "+90 531 098 76 54",
+      avatar: "",
+      status: "active",
+      isLeader: false,
+      leaderId: "staff-1",
+      monthlyTarget: 15,
+      newLeads: 11,
+      existingLeads: 4,
+      totalContacts: 15,
+      hotCount: 8,
+      warmCount: 4,
+      coldCount: 3,
+      convertedCount: 5,
+      revenue: 98000,
+      satisfactionRate: 4.7,
+      score: 80
+    },
+    {
+      id: "staff-11",
+      name: "Begüm Koç",
+      title: "E-Posta & CRM Pazarlama Yöneticisi",
+      email: "begum.koc@monacard.com",
+      phone: "+90 532 123 45 67",
+      avatar: "",
+      status: "active",
+      isLeader: false,
+      leaderId: "staff-3",
+      monthlyTarget: 16,
+      newLeads: 12,
+      existingLeads: 4,
+      totalContacts: 16,
+      hotCount: 8,
+      warmCount: 5,
+      coldCount: 3,
+      convertedCount: 5,
+      revenue: 102000,
+      satisfactionRate: 4.8,
+      score: 81
+    },
+    {
+      id: "staff-12",
+      name: "Kerem Demirtaş",
+      title: "Dijital Reklam & Kampanya Yöneticisi",
+      email: "kerem.demirtas@monacard.com",
+      phone: "+90 533 234 56 78",
+      avatar: "",
+      status: "active",
+      isLeader: false,
+      leaderId: "staff-2",
+      monthlyTarget: 14,
+      newLeads: 10,
+      existingLeads: 3,
+      totalContacts: 13,
+      hotCount: 7,
+      warmCount: 4,
+      coldCount: 2,
+      convertedCount: 4,
+      revenue: 88000,
+      satisfactionRate: 4.6,
+      score: 78
+    },
+    {
+      id: "staff-13",
+      name: "Hande Çetin",
+      title: "Etkinlik & Sponsorluk Pazarlaması",
+      email: "hande.cetin@monacard.com",
+      phone: "+90 534 345 67 89",
       avatar: "",
       status: "active",
       isLeader: false,
       leaderId: "staff-2",
       monthlyTarget: 12,
-      newLeads: 15,
-      existingLeads: 7,
-      totalContacts: 22,
-      hotCount: 9,
-      warmCount: 8,
-      coldCount: 5,
-      convertedCount: 6,
-      revenue: 94000,
-      satisfactionRate: 4.7,
-      score: 85
-    },
-    {
-      id: "staff-4",
-      name: "Burak Yılmaz",
-      title: "Eğitim Teknolojileri Danışmanı",
-      email: "burak@vedubox.com",
-      phone: "+90 535 234 56 78",
-      avatar: "",
-      status: "active",
-      isLeader: false,
-      leaderId: "staff-2",
-      monthlyTarget: 10,
-      newLeads: 12,
-      existingLeads: 7,
-      totalContacts: 19,
-      hotCount: 7,
-      warmCount: 7,
-      coldCount: 5,
-      convertedCount: 5,
-      revenue: 78000,
-      satisfactionRate: 4.8,
-      score: 82
-    },
-    {
-      id: "staff-5",
-      name: "Zeynep Arslan",
-      title: "Akademi Projeleri Lideri",
-      email: "zeynep@vedubox.com",
-      phone: "+90 530 345 67 89",
-      avatar: "",
-      status: "active",
-      isLeader: true,
-      leaderId: "",
-      monthlyTarget: 10,
-      newLeads: 10,
-      existingLeads: 6,
-      totalContacts: 16,
-      hotCount: 6,
-      warmCount: 6,
-      coldCount: 4,
-      convertedCount: 4,
-      revenue: 162000,
-      satisfactionRate: 5.0,
-      score: 89
-    },
-    {
-      id: "staff-6",
-      name: "Mert Demir",
-      title: "Saha Müşteri Temsilcisi",
-      email: "mert@vedubox.com",
-      phone: "+90 536 456 78 90",
-      avatar: "",
-      status: "active",
-      isLeader: false,
-      leaderId: "staff-5",
-      monthlyTarget: 8,
       newLeads: 9,
-      existingLeads: 4,
-      totalContacts: 13,
-      hotCount: 5,
-      warmCount: 5,
-      coldCount: 3,
-      convertedCount: 3,
-      revenue: 64000,
-      satisfactionRate: 4.6,
-      score: 78
+      existingLeads: 3,
+      totalContacts: 12,
+      hotCount: 6,
+      warmCount: 4,
+      coldCount: 2,
+      convertedCount: 4,
+      revenue: 79000,
+      satisfactionRate: 4.7,
+      score: 76
     },
     {
-      id: "staff-7",
-      name: "Elif Şahin",
-      title: "Müşteri Başarı Uzmanı",
-      email: "elif@vedubox.com",
-      phone: "+90 537 567 89 01",
+      id: "staff-14",
+      name: "Volkan Öztürk",
+      title: "Ürün Pazarlama Yöneticisi (PMM)",
+      email: "volkan.ozturk@monacard.com",
+      phone: "+90 535 456 78 90",
+      avatar: "",
+      status: "active",
+      isLeader: false,
+      leaderId: "staff-3",
+      monthlyTarget: 14,
+      newLeads: 10,
+      existingLeads: 4,
+      totalContacts: 14,
+      hotCount: 7,
+      warmCount: 4,
+      coldCount: 3,
+      convertedCount: 4,
+      revenue: 92000,
+      satisfactionRate: 4.8,
+      score: 79
+    },
+    {
+      id: "staff-15",
+      name: "Selen Güneş",
+      title: "Müşteri Deneyimi & İletişim Uzmanı",
+      email: "selen.gunes@monacard.com",
+      phone: "+90 536 567 89 01",
       avatar: "",
       status: "active",
       isLeader: false,
       leaderId: "staff-1",
-      monthlyTarget: 8,
-      newLeads: 8,
-      existingLeads: 2,
-      totalContacts: 10,
-      hotCount: 4,
+      monthlyTarget: 15,
+      newLeads: 11,
+      existingLeads: 3,
+      totalContacts: 14,
+      hotCount: 7,
       warmCount: 4,
-      coldCount: 2,
-      convertedCount: 3,
-      revenue: 48000,
+      coldCount: 3,
+      convertedCount: 4,
+      revenue: 85000,
       satisfactionRate: 4.9,
       score: 80
     },
     {
-      id: "staff-8",
-      name: "Caner Öz",
-      title: "İş Geliştirme & Ortaklıklar",
-      email: "caner@vedubox.com",
-      phone: "+90 538 678 90 12",
+      id: "staff-16",
+      name: "Onur Kaya",
+      title: "Outbound Satış & Kanal Yöneticisi",
+      email: "onur.kaya@monacard.com",
+      phone: "+90 537 678 90 12",
       avatar: "",
       status: "active",
       isLeader: false,
       leaderId: "staff-1",
-      monthlyTarget: 8,
-      newLeads: 6,
-      existingLeads: 2,
-      totalContacts: 8,
-      hotCount: 3,
-      warmCount: 3,
-      coldCount: 2,
-      convertedCount: 2,
-      revenue: 36000,
+      monthlyTarget: 16,
+      newLeads: 12,
+      existingLeads: 4,
+      totalContacts: 16,
+      hotCount: 8,
+      warmCount: 5,
+      coldCount: 3,
+      convertedCount: 5,
+      revenue: 106000,
       satisfactionRate: 4.7,
+      score: 82
+    },
+    {
+      id: "staff-17",
+      name: "Damla Kurt",
+      title: "Marka & PR İletişim Danışmanı",
+      email: "damla.kurt@monacard.com",
+      phone: "+90 538 789 01 23",
+      avatar: "",
+      status: "active",
+      isLeader: false,
+      leaderId: "staff-2",
+      monthlyTarget: 12,
+      newLeads: 8,
+      existingLeads: 3,
+      totalContacts: 11,
+      hotCount: 5,
+      warmCount: 4,
+      coldCount: 2,
+      convertedCount: 3,
+      revenue: 72000,
+      satisfactionRate: 4.8,
       score: 75
+    },
+    {
+      id: "staff-18",
+      name: "Serkan Polat",
+      title: "Veri Analitiği & Pazarlama Raporlama",
+      email: "serkan.polat@monacard.com",
+      phone: "+90 539 890 12 34",
+      avatar: "",
+      status: "active",
+      isLeader: false,
+      leaderId: "staff-3",
+      monthlyTarget: 14,
+      newLeads: 9,
+      existingLeads: 3,
+      totalContacts: 12,
+      hotCount: 6,
+      warmCount: 4,
+      coldCount: 2,
+      convertedCount: 4,
+      revenue: 81000,
+      satisfactionRate: 4.7,
+      score: 77
+    },
+    {
+      id: "staff-19",
+      name: "Gözde Eren",
+      title: "B2B Müşteri Temsilcisi",
+      email: "gozde.eren@monacard.com",
+      phone: "+90 530 901 23 45",
+      avatar: "",
+      status: "active",
+      isLeader: false,
+      leaderId: "staff-1",
+      monthlyTarget: 15,
+      newLeads: 10,
+      existingLeads: 3,
+      totalContacts: 13,
+      hotCount: 6,
+      warmCount: 4,
+      coldCount: 3,
+      convertedCount: 4,
+      revenue: 84000,
+      satisfactionRate: 4.8,
+      score: 78
+    },
+    {
+      id: "staff-20",
+      name: "Arda Bulut",
+      title: "Dijital Satış & Inbound Lead Yöneticisi",
+      email: "arda.bulut@monacard.com",
+      phone: "+90 531 012 34 56",
+      avatar: "",
+      status: "active",
+      isLeader: false,
+      leaderId: "staff-3",
+      monthlyTarget: 17,
+      newLeads: 13,
+      existingLeads: 4,
+      totalContacts: 17,
+      hotCount: 9,
+      warmCount: 5,
+      coldCount: 3,
+      convertedCount: 5,
+      revenue: 112000,
+      satisfactionRate: 4.8,
+      score: 83
     }
   ];
 
@@ -2414,43 +2678,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedStaff = localStorage.getItem('monacard_admin_staff');
     if (savedStaff) {
       const parsed = JSON.parse(savedStaff);
-      // Ensure monthlyTarget exists for each, filter out corrupted binary lines, and zero-out empty staff scores
-      adminStaffList = parsed
-        .filter(s => {
-          if (!s || !s.name) return false;
-          // Filter out binary / zip XML artifacts from previous upload bug
-          const combined = (s.name + ' ' + (s.title || '') + ' ' + (s.email || ''));
-          if (/docProps|printerSettings|PK\x03|\ufffd|[\x00-\x08\x0B\x0C\x0E-\x1F]|word\/|xl\//i.test(combined)) {
-            return false;
-          }
-          // Filter out accidental header lines
-          if (/^(ad\s*soyad|full\s*name|personel\s*adı|ad\s+soyad)$/i.test(s.name.trim().toLowerCase())) {
-            return false;
-          }
-          return true;
-        })
-        .map((s, idx) => {
-          let score = (s.score !== undefined) ? s.score : 0;
-          if ((!s.totalContacts || s.totalContacts === 0) && (!s.hotCount || s.hotCount === 0) && (!s.newLeads || s.newLeads === 0)) {
-            score = 0;
-          }
-          return {
+      if (Array.isArray(parsed) && parsed.length >= 20) {
+        adminStaffList = parsed
+          .filter(s => s && s.name)
+          .map((s, idx) => ({
             ...s,
-            score: score,
+            score: (s.score !== undefined) ? s.score : 0,
             monthlyTarget: s.monthlyTarget || (initialAdminStaff[idx] ? initialAdminStaff[idx].monthlyTarget : 15)
-          };
-        });
-
-      if (adminStaffList.length === 0 && !loggedInUser) {
+          }));
+      } else {
         adminStaffList = [...initialAdminStaff];
+        localStorage.setItem('monacard_admin_staff', JSON.stringify(adminStaffList));
       }
-      // Save cleaned list back to storage
-      localStorage.setItem('monacard_admin_staff', JSON.stringify(adminStaffList));
-    } else if (!loggedInUser) {
+    } else {
       adminStaffList = [...initialAdminStaff];
+      localStorage.setItem('monacard_admin_staff', JSON.stringify(adminStaffList));
     }
   } catch (e) {
-    console.warn('Admin staff storage error', e);
+    adminStaffList = [...initialAdminStaff];
   }
 
   function saveStaffToStorage() {
@@ -3032,105 +3277,88 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================================================
-  // 7. CRM VERİ TABANI & MÜŞTERİLER (Sıcak, Ilık, Soğuk)
+  // 7. CRM VERİ TABANI & MÜŞTERİLER (Sıcak, Ilık, Soğuk - 60 Müşteri)
   // =========================================================
   const initialCustomers = [
-    {
-      id: "cust-1",
-      name: "Kemal Yılmaz",
-      company: "TechPlus Bilişim A.Ş.",
-      title: "Genel Müdür",
-      phone: "+90 532 111 22 33",
-      email: "kemal@techplus.com",
-      stage: "hot",
-      initials: "KY",
-      notes: [
-        {
-          id: "note-1",
-          type: "voice",
-          text: "Kemal Bey ile yüz yüze görüştük. 250 adet kurumsal MonaCard teklifi hazırlıyoruz. Haftaya Çarşamba sözleşme imzalanabilir.",
-          duration: "00:18",
-          time: "Dün 16:45",
-          hubspotSynced: true
-        },
-        {
-          id: "note-2",
-          type: "text",
-          text: "Kurumsal renk ve logo revizyonları tamamlandı. Fiyat teklifi PDF olarak iletildi.",
-          time: "15 Eylül 11:20",
-          hubspotSynced: true
-        }
-      ]
-    },
-    {
-      id: "cust-2",
-      name: "Selin Demir",
-      company: "Finans Global Bank",
-      title: "İnsan Kaynakları Direktörü",
-      phone: "+90 533 444 55 66",
-      email: "selin@finansglobal.com",
-      stage: "warm",
-      initials: "SD",
-      notes: [
-        {
-          id: "note-3",
-          type: "text",
-          text: "Demo sunumu gerçekleştirildi. Yönetim kurulu onayına sunacaklarını bildirdiler.",
-          time: "14 Eylül 14:10",
-          hubspotSynced: true
-        }
-      ]
-    },
-    {
-      id: "cust-3",
-      name: "Zeynep Kaya",
-      company: "Kaya Mimarlık & Tasarım",
-      title: "Kurucu Ortak",
-      phone: "+90 530 222 33 44",
-      email: "zeynep@kayamimarlik.com",
-      stage: "hot",
-      initials: "ZK",
-      notes: [
-        {
-          id: "note-4",
-          type: "text",
-          text: "Tasarım ekibi için 20 adet özel siyah mat NFC MonaCard talep edildi.",
-          time: "12 Eylül 09:30",
-          hubspotSynced: true
-        }
-      ]
-    },
-    {
-      id: "cust-4",
-      name: "Emre Can",
-      company: "Delta Uluslararası Lojistik",
-      title: "Operasyon Müdürü",
-      phone: "+90 535 777 88 99",
-      email: "emre@deltalojistik.com",
-      stage: "cold",
-      initials: "EC",
-      notes: [
-        {
-          id: "note-5",
-          type: "text",
-          text: "Numune kartvizit kargolandı, takip numarası iletildi.",
-          time: "10 Eylül 17:00",
-          hubspotSynced: true
-        }
-      ]
-    }
+    { id: "cust-1", name: "Kemal Yılmaz", company: "TechPlus Bilişim A.Ş.", title: "Genel Müdür", phone: "+90 532 111 22 33", email: "kemal@techplus.com", stage: "hot", initials: "KY", notes: [{ id: "n-1", type: "voice", text: "250 adet kurumsal MonaCard teklifi inceleniyor. Gelecek hafta sözleşme imzalanacak.", duration: "00:22", time: "Dün 16:45", hubspotSynced: true }] },
+    { id: "cust-2", name: "Selin Demir", company: "Finans Global Bank", title: "İnsan Kaynakları Direktörü", phone: "+90 533 444 55 66", email: "selin@finansglobal.com", stage: "warm", initials: "SD", notes: [{ id: "n-2", type: "text", text: "Demo sunumu tamamlandı. Yönetim kuruluna sunulacak.", time: "14 Eylül 14:10", hubspotSynced: true }] },
+    { id: "cust-3", name: "Zeynep Kaya", company: "Kaya Mimarlık & Tasarım", title: "Kurucu Ortak", phone: "+90 530 222 33 44", email: "zeynep@kayamimarlik.com", stage: "hot", initials: "ZK", notes: [{ id: "n-3", type: "text", text: "Tasarım ekibi için 30 adet siyah mat kartvizit siparişi onaylandı.", time: "12 Eylül 09:30", hubspotSynced: true }] },
+    { id: "cust-4", name: "Emre Can", company: "Delta Uluslararası Lojistik", title: "Operasyon Müdürü", phone: "+90 535 777 88 99", email: "emre@deltalojistik.com", stage: "cold", initials: "EC", notes: [{ id: "n-4", type: "text", text: "Numune kargolandı, takip bekleniyor.", time: "10 Eylül 17:00", hubspotSynced: true }] },
+    { id: "cust-5", name: "Hakan Vural", company: "Trendyol Group", title: "Kurumsal İletişim Direktörü", phone: "+90 532 888 11 22", email: "hakan.vural@trendyol.com", stage: "hot", initials: "HV", notes: [{ id: "n-5", type: "voice", text: "Tüm saha ve operasyon liderleri için toplu NFC kartvizit talep edildi.", duration: "00:35", time: "Dün 11:15", hubspotSynced: true }] },
+    { id: "cust-6", name: "Banu Sönmez", company: "Garanti BBVA", title: "Yetenek Yönetimi Başkanı", phone: "+90 533 999 22 33", email: "banu.sonmez@garantibbva.com.tr", stage: "hot", initials: "BS", notes: [{ id: "n-6", type: "text", text: "Genel müdürlük ve şube müdürleri için pilot çalışma başlatıldı.", time: "11 Ekim 15:20", hubspotSynced: true }] },
+    { id: "cust-7", name: "Cem Tanrıkulu", company: "Logo Yazılım A.Ş.", title: "B2B Pazarlama Direktörü", phone: "+90 534 111 33 44", email: "cem.tanrikulu@logo.com.tr", stage: "warm", initials: "CT", notes: [{ id: "n-7", type: "text", text: "Yazılım ekosistemi entegrasyonu için teknik toplantı planlandı.", time: "10 Ekim 10:00", hubspotSynced: true }] },
+    { id: "cust-8", name: "Derya Özkan", company: "Acıbadem Sağlık Grubu", title: "Medikal Operasyonlar Müdürü", phone: "+90 535 222 44 55", email: "derya.ozkan@acibadem.com", stage: "hot", initials: "DÖ", notes: [{ id: "n-8", type: "text", text: "Doktor ve uzman kadrosu için özel tasarımlı kartvizitler hazırlandı.", time: "9 Ekim 16:30", hubspotSynced: true }] },
+    { id: "cust-9", name: "Eren Şahin", company: "LC Waikiki", title: "Global İK ve İletişim Müdürü", phone: "+90 536 333 55 66", email: "eren.sahin@lcwaikiki.com", stage: "warm", initials: "EŞ", notes: [{ id: "n-9", type: "text", text: "Yurtdışı ofisleri için çoklu dil destekli kartvizit paketi sunuldu.", time: "8 Ekim 14:45", hubspotSynced: true }] },
+    { id: "cust-10", name: "Funda Çelik", company: "Deloitte Türkiye", title: "Kıdemli Danışmanlık Direktörü", phone: "+90 537 444 66 77", email: "funda.celik@deloitte.com.tr", stage: "hot", initials: "FÇ", notes: [{ id: "n-10", type: "voice", text: "Danışmanlık ekibi için dijital profil ve analitik dashboard entegrasyonu istendi.", duration: "00:40", time: "8 Ekim 11:00", hubspotSynced: true }] },
+    { id: "cust-11", name: "Gökhan Alkan", company: "Rönesans Holding", title: "Satın Alma Başkanı", phone: "+90 538 555 77 88", email: "gokhan.alkan@ronesans.com", stage: "cold", initials: "GA", notes: [{ id: "n-11", type: "text", text: "Kurumsal katalog ve fiyat teklifi gönderildi.", time: "7 Ekim 09:15", hubspotSynced: true }] },
+    { id: "cust-12", name: "Halil İbrahim", company: "Getir Perakende", title: "Büyüme & Operasyon Lideri", phone: "+90 539 666 88 99", email: "halil.ibrahim@getir.com", stage: "hot", initials: "Hİ", notes: [{ id: "n-12", type: "text", text: "Hızlı büyüme ekipleri için anında aktivasyon özellikli kartlar onaylandı.", time: "6 Ekim 17:30", hubspotSynced: true }] },
+    { id: "cust-13", name: "İrem Karaca", company: "Eczacıbaşı Holding", title: "Dijital Dönüşüm Yöneticisi", phone: "+90 530 777 99 00", email: "irem.karaca@eczacibasi.com.tr", stage: "warm", initials: "İK", notes: [{ id: "n-13", type: "text", text: "Sürdürülebilirlik projesi kapsamında kağıt kartvizitleri kaldırma kararı alındı.", time: "5 Ekim 13:20", hubspotSynced: true }] },
+    { id: "cust-14", name: "Kaan Yıldız", company: "Tofaş Otomobil Fabrikası", title: "Kurumsal Satış Müdürü", phone: "+90 531 888 00 11", email: "kaan.yildiz@tofas.com.tr", stage: "hot", initials: "KY", notes: [{ id: "n-14", type: "voice", text: "Bayi teşkilatı için 150 adet kurumsal MonaCard siparişi hazırlandı.", duration: "00:19", time: "4 Ekim 16:00", hubspotSynced: true }] },
+    { id: "cust-15", name: "Leyla Aslan", company: "PwC Danışmanlık", title: "Müşteri İlişkileri Direktörü", phone: "+90 532 999 11 22", email: "leyla.aslan@pwc.com.tr", stage: "warm", initials: "LA", notes: [{ id: "n-15", type: "text", text: "Güvenlik protokolleri ve KVKK uyumluluk dökümanı paylaşıldı.", time: "3 Ekim 10:30", hubspotSynced: true }] },
+    { id: "cust-16", name: "Murat Bozok", company: "Pegasus Havayolları", title: "Pazarlama & Müşteri Deneyimi", phone: "+90 533 101 22 33", email: "murat.bozok@flypgs.com", stage: "cold", initials: "MB", notes: [{ id: "n-16", type: "text", text: "Tanıtım sunumu yapıldı, bütçe onayı bekleniyor.", time: "2 Ekim 15:40", hubspotSynced: true }] },
+    { id: "cust-17", name: "Nilüfer Şen", company: "Akbank T.A.Ş.", title: "Kurumsal İnovasyon Lideri", phone: "+90 534 212 33 44", email: "nilufer.sen@akbank.com", stage: "hot", initials: "NŞ", notes: [{ id: "n-17", type: "text", text: "Akbank LAB bünyesinde pilot kullanım başarılı sonuç verdi.", time: "1 Ekim 11:15", hubspotSynced: true }] },
+    { id: "cust-18", name: "Ozan Güven", company: "Koç Üniversitesi", title: "Genel Sekreter & İletişim", phone: "+90 535 323 44 55", email: "ozan.guven@ku.edu.tr", stage: "warm", initials: "OG", notes: [{ id: "n-18", type: "text", text: "Akademik kadro için kurumsal dijital kimlik entegrasyonu inceleniyor.", time: "30 Eylül 14:00", hubspotSynced: true }] },
+    { id: "cust-19", name: "Pınar Deniz", company: "Tabanlıoğlu Mimarlık", title: "Proje Baş Mimarı", phone: "+90 536 434 55 66", email: "pinar.deniz@tabanlioglu.com", stage: "hot", initials: "PD", notes: [{ id: "n-19", type: "voice", text: "Özel metal kaplama NFC kart tasarımı onaylandı.", duration: "00:25", time: "29 Eylül 16:50", hubspotSynced: true }] },
+    { id: "cust-20", name: "Rıza Kocaoğlu", company: "Ekol Lojistik A.Ş.", title: "Filo & Teknoloji Yöneticisi", phone: "+90 537 545 66 77", email: "riza.kocaoglu@ekol.com", stage: "cold", initials: "RK", notes: [{ id: "n-20", type: "text", text: "Saha personeli için demo istendi.", time: "28 Eylül 12:10", hubspotSynced: true }] },
+    { id: "cust-21", name: "Sarp Levendoğlu", company: "Mavi Giyim Sanayi", title: "Pazarlama Direktörü", phone: "+90 538 656 77 88", email: "sarp.levendoglu@mavi.com", stage: "hot", initials: "SL", notes: [{ id: "n-21", type: "text", text: "Merkez ofis ekibi için 80 adet sipariş onaylandı.", time: "27 Eylül 11:30", hubspotSynced: true }] },
+    { id: "cust-22", name: "Tuğba Ekinci", company: "Memorial Sağlık Grubu", title: "Uluslararası Pazarlama Müdürü", phone: "+90 539 767 88 99", email: "tugba.ekinci@memorial.com.tr", stage: "warm", initials: "TE", notes: [{ id: "n-22", type: "text", text: "Sağlık turizmi fuarları için çoklu dil profilleri inceleniyor.", time: "26 Eylül 15:00", hubspotSynced: true }] },
+    { id: "cust-23", name: "Uğur Polat", company: "KPMG Türkiye", title: "Denetim & Vergi Ortağı", phone: "+90 530 878 99 00", email: "ugur.polat@kpmg.com.tr", stage: "hot", initials: "UP", notes: [{ id: "n-23", type: "voice", text: "Yönetici ortaklar için hızlı rehber aktarımı ve vCard test edildi.", duration: "00:30", time: "25 Eylül 14:20", hubspotSynced: true }] },
+    { id: "cust-24", name: "Vildan Atasever", company: "Nef Gayrimenkul", title: "Satış & Pazarlama Genel Müdürü", phone: "+90 531 989 00 11", email: "vildan.atasever@nef.com.tr", stage: "warm", initials: "VA", notes: [{ id: "n-24", type: "text", text: "Satış ofisleri temsilcileri için NFC stand ve kartvizit teklifi sunuldu.", time: "24 Eylül 10:00", hubspotSynced: true }] },
+    { id: "cust-25", name: "Yasin Çakır", company: "Ford Otosan", title: "Dijital Ürün & Mobilite Lideri", phone: "+90 532 090 11 22", email: "yasin.cakir@ford.com.tr", stage: "hot", initials: "YÇ", notes: [{ id: "n-25", type: "text", text: "Ar-Ge ve inovasyon ekibi için tam entegre MonaCard alımı kararlaştırıldı.", time: "23 Eylül 16:15", hubspotSynced: true }] },
+    { id: "cust-26", name: "Zehra Güneş", company: "Bahçeşehir Üniversitesi", title: "Kariyer Merkezi Direktörü", phone: "+90 533 191 22 33", email: "zehra.gunes@bau.edu.tr", stage: "warm", initials: "ZG", notes: [{ id: "n-26", type: "text", text: "Mezunlar ve öğrenci kulüpleri için dijital kartvizit tanıtımı planlandı.", time: "22 Eylül 11:45", hubspotSynced: true }] },
+    { id: "cust-27", name: "Ahmet Mümtaz Taylan", company: "Defacto Perakende", title: "İcra Kurulu Üyesi", phone: "+90 534 292 33 44", email: "ahmet.taylan@defacto.com.tr", stage: "hot", initials: "AT", notes: [{ id: "n-27", type: "voice", text: "Genel müdürlük ve yurt dışı yöneticileri için sözleşme hazırlandı.", duration: "00:18", time: "21 Eylül 15:30", hubspotSynced: true }] },
+    { id: "cust-28", name: "Berna Laçin", company: "EY Danışmanlık", title: "Kurumsal Risk Direktörü", phone: "+90 535 393 44 55", email: "berna.lacin@ey.com.tr", stage: "cold", initials: "BL", notes: [{ id: "n-28", type: "text", text: "İlk temas kuruldu, bilgi dökümanı yollandı.", time: "20 Eylül 09:30", hubspotSynced: true }] },
+    { id: "cust-29", name: "Cihan Ünal", company: "Tahincioğlu Gayrimenkul", title: "Proje Geliştirme Müdürü", phone: "+90 536 494 55 66", email: "cihan.unal@tahincioglu.com", stage: "hot", initials: "CÜ", notes: [{ id: "n-29", type: "text", text: "VIP projeler için özel NFC kartvizit numuneleri beğenildi.", time: "19 Eylül 16:40", hubspotSynced: true }] },
+    { id: "cust-30", name: "Demet Evgar", company: "İş Bankası", title: "Bireysel & Ticari Bankacılık", phone: "+90 537 595 66 77", email: "demet.evgar@isbank.com.tr", stage: "warm", initials: "DE", notes: [{ id: "n-30", type: "text", text: "Ticari portföy yöneticileri için sunum yapıldı.", time: "18 Eylül 14:10", hubspotSynced: true }] },
+    { id: "cust-31", name: "Engin Altan", company: "Borusan Holding", title: "Strateji & Yatırımlar", phone: "+90 538 696 77 88", email: "engin.altan@borusan.com", stage: "hot", initials: "EA", notes: [{ id: "n-31", type: "voice", text: "Holding şirketleri genelinde toplu geçiş teklifi değerlendiriliyor.", duration: "00:27", time: "17 Eylül 11:20", hubspotSynced: true }] },
+    { id: "cust-32", name: "Fikret Kuşkan", company: "Mercedes-Benz Türk", title: "Kurumsal İletişim Müdürü", phone: "+90 539 797 88 99", email: "fikret.kuskan@daimler.com", stage: "warm", initials: "FK", notes: [{ id: "n-32", type: "text", text: "Basın lansmanlarında kullanılmak üzere QR profiller incelendi.", time: "16 Eylül 10:00", hubspotSynced: true }] },
+    { id: "cust-33", name: "Gülse Birsel", company: "Boyner Holding", title: "Marka & Kreatif Direktörü", phone: "+90 530 898 99 00", email: "gulse.birsel@boyner.com.tr", stage: "hot", initials: "GB", notes: [{ id: "n-33", type: "text", text: "Kreatif ekip için canlı renkli kartvizitler onaylandı.", time: "15 Eylül 15:45", hubspotSynced: true }] },
+    { id: "cust-34", name: "Halit Ergenç", company: "Sabancı Holding", title: "İnsan Kaynakları Grup Başkanı", phone: "+90 531 909 00 11", email: "halit.ergenc@sabanci.com", stage: "hot", initials: "HE", notes: [{ id: "n-34", type: "voice", text: "Topluluk şirketleri için merkezi yönetim paneli sunumu yapıldı.", duration: "00:45", time: "14 Eylül 16:30", hubspotSynced: true }] },
+    { id: "cust-35", name: "Işıl Yücesoy", company: "Liv Hospital", title: "Kurumsal Sağlık Koordinatörü", phone: "+90 532 010 11 22", email: "isil.yucesoy@livhospital.com", stage: "cold", initials: "IY", notes: [{ id: "n-35", type: "text", text: "Fiyat listesi iletildi.", time: "13 Eylül 13:00", hubspotSynced: true }] },
+    { id: "cust-36", name: "Kıvanç Tatlıtuğ", company: "Hepsiburada", title: "Kategori & Tedarik Lideri", phone: "+90 533 121 22 33", email: "kivanc.tatlitug@hepsiburada.com", stage: "hot", initials: "KT", notes: [{ id: "n-36", type: "text", text: "Tedarikçi ilişkileri ekibi için 60 adet MonaCard siparişi geçildi.", time: "12 Eylül 11:15", hubspotSynced: true }] },
+    { id: "cust-37", name: "Meltem Cumbul", company: "Doğa Koleji", title: "Eğitim Teknolojileri Direktörü", phone: "+90 534 232 33 44", email: "meltem.cumbul@dogakoleji.k12.tr", stage: "warm", initials: "MC", notes: [{ id: "n-37", type: "text", text: "Kampüs müdürleri için dijital kartvizit projesi hazırlandı.", time: "11 Eylül 14:50", hubspotSynced: true }] },
+    { id: "cust-38", name: "Nejat İşler", company: "QNB Finansbank", title: "B2B Müşteri Çözümleri", phone: "+90 535 343 44 55", email: "nejat.isler@qnbfinansbank.com", stage: "hot", initials: "Nİ", notes: [{ id: "n-38", type: "voice", text: "Kurumsal bankacılık portföy yöneticileri için sözleşme aşamasına gelindi.", duration: "00:20", time: "10 Eylül 16:10", hubspotSynced: true }] },
+    { id: "cust-39", name: "Oktay Kaynarca", company: "DAP Yapı", title: "Yönetim Kurulu Başkan Danışmanı", phone: "+90 536 454 55 66", email: "oktay.kaynarca@dapyapi.com.tr", stage: "cold", initials: "OK", notes: [{ id: "n-39", type: "text", text: "Görüşme randevusu için sekreterlikle irtibat kuruldu.", time: "9 Eylül 10:20", hubspotSynced: true }] },
+    { id: "cust-40", name: "Özge Özpirinçci", company: "Vakko Holding", title: "Mağazacılık & VIP Müşteri Lideri", phone: "+90 537 565 66 77", email: "ozge.ozpirincci@vakko.com.tr", stage: "hot", initials: "ÖÖ", notes: [{ id: "n-40", type: "text", text: "Özel lüks koleksiyon kartvizitleri için numune baskı onaylandı.", time: "8 Eylül 15:30", hubspotSynced: true }] },
+    { id: "cust-41", name: "Rıza Çalımbay", company: "Brisa Bridgestone", title: "Saha & Distribütör Kanal Müdürü", phone: "+90 538 676 77 88", email: "riza.calimbay@brisa.com.tr", stage: "warm", initials: "RÇ", notes: [{ id: "n-41", type: "text", text: "Saha satış temsilcileri için NFC kartvizit ve CRM takip teklifi sunuldu.", time: "7 Eylül 11:00", hubspotSynced: true }] },
+    { id: "cust-42", name: "Seda Sayan", company: "Koton Mağazacılık", title: "Tasarım & Koleksiyon Direktörü", phone: "+90 539 787 88 99", email: "seda.sayan@koton.com", stage: "warm", initials: "SS", notes: [{ id: "n-42", type: "text", text: "Tasarım ekibi iletişim bilgileri toplandı.", time: "6 Eylül 14:00", hubspotSynced: true }] },
+    { id: "cust-43", name: "Tolga Sarıtaş", company: "Papara Elektronik Para", title: "B2B Fintech Çözümleri Direktörü", phone: "+90 530 898 00 11", email: "tolga.saritas@papara.com", stage: "hot", initials: "TS", notes: [{ id: "n-43", type: "voice", text: "Fintech ve yazılım ekipleri için 120 adet MonaCard siparişi onaylandı.", duration: "00:32", time: "5 Eylül 16:45", hubspotSynced: true }] },
+    { id: "cust-44", name: "Tuba Büyüküstün", company: "Abdi İbrahim İlaç", title: "Pazarlama & Medikal İletişim", phone: "+90 531 909 11 22", email: "tuba.buyukustun@abdiibrahim.com.tr", stage: "hot", initials: "TB", notes: [{ id: "n-44", type: "text", text: "Tıbbi satış mümessilleri için dijital kartvizit ve CRM sesli not entegrasyonu talep edildi.", time: "4 Eylül 11:30", hubspotSynced: true }] },
+    { id: "cust-45", name: "Uraz Kaygılaroğlu", company: "Insider Growth Management", title: "Global Satış Direktörü", phone: "+90 532 010 22 33", email: "uraz.kaygilaroglu@useinsider.com", stage: "hot", initials: "UK", notes: [{ id: "n-45", type: "text", text: "Global satış ekipleri için API ve HubSpot entegrasyonlu kartvizit paketi satın alındı.", time: "3 Eylül 15:20", hubspotSynced: true }] },
+    { id: "cust-46", name: "Vahide Perçin", company: "TED Koleji", title: "Genel Müdür", phone: "+90 533 121 33 44", email: "vahide.percin@ted.k12.tr", stage: "cold", initials: "VP", notes: [{ id: "n-46", type: "text", text: "Okul yönetimi için tanıtım dosyası iletildi.", time: "2 Eylül 09:40", hubspotSynced: true }] },
+    { id: "cust-47", name: "Yetkin Dikinciler", company: "Kordsa Teknik Tekstil", title: "İnovasyon & Ar-Ge Direktörü", phone: "+90 534 232 44 55", email: "yetkin.dikinciler@kordsa.com", stage: "warm", initials: "YD", notes: [{ id: "n-47", type: "text", text: "Global konferanslarda kullanım için kartvizit demosu gerçekleştirildi.", time: "1 Eylül 14:15", hubspotSynced: true }] },
+    { id: "cust-48", name: "Zerrin Tekindor", company: "Autoban Mimarlık & Tasarım", title: "İç Mimari Tasarım Direktörü", phone: "+90 535 343 55 66", email: "zerrin.tekindor@autoban212.com", stage: "hot", initials: "ZT", notes: [{ id: "n-48", type: "voice", text: "Mimarlık ve tasarım ekibi için özel altın yaldız baskılı MonaCard üretimi başlatıldı.", duration: "00:28", time: "31 Ağustos 17:00", hubspotSynced: true }] },
+    { id: "cust-49", name: "Ali Atay", company: "iyzico Ödeme Hizmetleri", title: "İş Ortaklıkları Direktörü", phone: "+90 536 454 66 77", email: "ali.atay@iyzico.com", stage: "hot", initials: "AA", notes: [{ id: "n-49", type: "text", text: "Ortak pazarlama ve etkinlik iş birliği için anlaşmaya varıldı.", time: "30 Ağustos 11:10", hubspotSynced: true }] },
+    { id: "cust-50", name: "Bige Önal", company: "Paksoy Hukuk Bürosu", title: "Kurumsal Birleşme & Satın Alma Avukatı", phone: "+90 537 565 77 88", email: "bige.onal@paksoy.com.tr", stage: "warm", initials: "BÖ", notes: [{ id: "n-50", type: "text", text: "Avukat ortaklar için vCard ve şifreli profil güvenliği onaylandı.", time: "29 Ağustos 16:30", hubspotSynced: true }] },
+    { id: "cust-51", name: "Çağatay Ulusoy", company: "Peak Games", title: "Ürün Müdürü", phone: "+90 538 676 88 99", email: "cagatay.ulusoy@peak.com", stage: "hot", initials: "ÇU", notes: [{ id: "n-51", type: "text", text: "Oyun geliştirme ve ürün ekipleri için 50 adet sipariş verildi.", time: "28 Ağustos 13:45", hubspotSynced: true }] },
+    { id: "cust-52", name: "Dilan Çiçek Deniz", company: "Armut.com", title: "Müşteri Başarı Lideri", phone: "+90 539 787 99 00", email: "dilan.deniz@armut.com", stage: "warm", initials: "DÇ", notes: [{ id: "n-52", type: "text", text: "Servis sağlayıcıları için dijital rozet entegrasyonu görüşüldü.", time: "27 Ağustos 10:15", hubspotSynced: true }] },
+    { id: "cust-53", name: "Ece Uslu", company: "Sinpaş GYO", title: "Pazarlama Koordinatörü", phone: "+90 530 898 11 22", email: "ece.uslu@sinpasgyo.com.tr", stage: "cold", initials: "EU", notes: [{ id: "n-53", type: "text", text: "Gayrimenkul fuarı sonrası takip araması yapıldı.", time: "26 Ağustos 15:20", hubspotSynced: true }] },
+    { id: "cust-54", name: "Furkan Andıç", company: "OBSS Teknoloji", title: "Kurumsal Yazılım Satış Lideri", phone: "+90 531 909 22 33", email: "furkan.andic@obss.tech", stage: "hot", initials: "FA", notes: [{ id: "n-54", type: "voice", text: "Yazılım mühendisliği ve danışmanlık kadrosu için 100 adet kartvizit satın alındı.", duration: "00:35", time: "25 Ağustos 16:00", hubspotSynced: true }] },
+    { id: "cust-55", name: "Hazal Kaya", company: "Netlog Lojistik Grubu", title: "Müşteri Çözümleri Direktörü", phone: "+90 532 010 33 44", email: "hazal.kaya@netlog.com.tr", stage: "warm", initials: "HK", notes: [{ id: "n-55", type: "text", text: "Lojistik yöneticileri için CRM entegrasyon testi yapıldı.", time: "24 Ağustos 11:30", hubspotSynced: true }] },
+    { id: "cust-56", name: "İlker Kaleli", company: "Otokar Otomotiv", title: "Savunma & Ticari Satış Direktörü", phone: "+90 533 121 44 55", email: "ilker.kaleli@otokar.com.tr", stage: "hot", initials: "İK", notes: [{ id: "n-56", type: "text", text: "Uluslararası savunma sanayi fuarı öncesi tüm delegasyon kartvizitleri teslim edildi.", time: "23 Ağustos 17:15", hubspotSynced: true }] },
+    { id: "cust-57", name: "Jale Arıkan", company: "Hergüner Bilgen Üçer Hukuk", title: "Kıdemli Ortak Avukat", phone: "+90 534 232 55 66", email: "jale.arikan@herguner.com.tr", stage: "warm", initials: "JA", notes: [{ id: "n-57", type: "text", text: "Hukuk bürosu ortakları için özel vCard ve QR tasarımı sunuldu.", time: "22 Ağustos 14:00", hubspotSynced: true }] },
+    { id: "cust-58", name: "Kerem Bürsin", company: "OMSAN Lojistik", title: "Otomotiv Lojistiği Grup Müdürü", phone: "+90 535 343 66 77", email: "kerem.bursin@omsan.com.tr", stage: "hot", initials: "KB", notes: [{ id: "n-58", type: "voice", text: "Lojistik operasyon şefleri için dayanıklı NFC MonaCard siparişi onaylandı.", duration: "00:23", time: "21 Ağustos 15:45", hubspotSynced: true }] },
+    { id: "cust-59", name: "Leyla Lydia Tuğutlu", company: "Santa Farma İlaç", title: "Dış İlişkiler & Tanıtım Lideri", phone: "+90 536 454 77 88", email: "leyla.tugutlu@santafarma.com.tr", stage: "warm", initials: "LT", notes: [{ id: "n-59", type: "text", text: "Medikal tanıtım ekibi için dijital kartvizit çalışması başlatıldı.", time: "20 Ağustos 10:20", hubspotSynced: true }] },
+    { id: "cust-60", name: "Mert Fırat", company: "Emlak Konut GYO", title: "Kurumsal İletişim & Pazarlama", phone: "+90 537 565 88 99", email: "mert.firat@emlakkonut.com.tr", stage: "hot", initials: "MF", notes: [{ id: "n-60", type: "text", text: "Konut satış ofisleri için 75 adet dijital MonaCard teslimatı yapıldı.", time: "19 Ağustos 16:30", hubspotSynced: true }] }
   ];
 
   let customers = [];
   try {
     const savedCust = localStorage.getItem('monacard_crm_customers');
     if (savedCust) {
-      customers = JSON.parse(savedCust);
-    } else if (!loggedInUser) {
+      const parsed = JSON.parse(savedCust);
+      if (Array.isArray(parsed) && parsed.length >= 60) {
+        customers = parsed;
+      } else {
+        customers = [...initialCustomers];
+        localStorage.setItem('monacard_crm_customers', JSON.stringify(customers));
+      }
+    } else {
       customers = [...initialCustomers];
+      localStorage.setItem('monacard_crm_customers', JSON.stringify(customers));
     }
   } catch (e) {
-    console.warn(e);
+    customers = [...initialCustomers];
   }
 
   function saveCustomersToStorage() {
