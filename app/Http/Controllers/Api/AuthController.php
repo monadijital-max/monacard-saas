@@ -126,6 +126,9 @@ class AuthController extends Controller
             'is_active' => true,
         ]);
 
+        // Authenticate Web Session as well
+        \Illuminate\Support\Facades\Auth::login($user, true);
+
         $token = $user->createToken('monacard_api_token')->plainTextToken;
 
         return response()->json([
@@ -133,6 +136,7 @@ class AuthController extends Controller
             'message' => 'Kayıt başarıyla tamamlandı.',
             'data' => [
                 'token' => $token,
+                'redirect' => '/?role=admin',
                 'user' => [
                     'id' => $user->id,
                     'name' => $user->name,

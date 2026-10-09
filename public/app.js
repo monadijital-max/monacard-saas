@@ -10852,29 +10852,16 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (res && res.status === 'success' && res.data) {
-        const { token, user } = res.data;
+        const { token, user, redirect } = res.data;
         try {
           localStorage.setItem('monacard_token', token);
           localStorage.setItem('monacard_user', JSON.stringify(user));
+          localStorage.setItem('monacard_role', user.role === 'superadmin' ? 'superadmin' : (user.role === 'company_admin' ? 'admin' : 'staff'));
         } catch (err) {}
 
-        updateAuthButtonState();
-        if (modalAuth) {
-          modalAuth.classList.remove('active');
-          document.body.style.overflow = '';
-        }
-
-        // Switch role based on user role
-        if (user.role === 'superadmin') {
-          setRole('superadmin');
-          showToast(`Hoş geldiniz, ${user.name}! 👑 SaaS Süper Admin paneli açıldı.`);
-        } else if (user.role === 'company_admin') {
-          setRole('admin');
-          showToast(`Hoş geldiniz, ${user.name}! 🏢 ${user.company?.name || 'Firma'} Yönetici paneli açıldı.`);
-        } else {
-          setRole('staff');
-          showToast(`Hoş geldiniz, ${user.name}! 💼 Personel portalı açıldı.`);
-        }
+        const redirectUrl = redirect || ('/?role=' + (user.role === 'superadmin' ? 'superadmin' : (user.role === 'company_admin' ? 'admin' : 'staff')));
+        window.location.href = redirectUrl;
+        return;
       } else {
         // Fallback for offline demo credentials matching
         if (email === 'superadmin@monacard.com') {
@@ -10935,27 +10922,16 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (res && res.status === 'success' && res.data) {
-        const { token, user } = res.data;
+        const { token, user, redirect } = res.data;
         try {
           localStorage.setItem('monacard_token', token);
           localStorage.setItem('monacard_user', JSON.stringify(user));
+          localStorage.setItem('monacard_role', 'admin');
         } catch (err) {}
 
-        updateAuthButtonState();
-        if (modalAuth) {
-          modalAuth.classList.remove('active');
-          document.body.style.overflow = '';
-        }
-
-        // Apply new company settings
-        adminSettings.companyProfile.name = user.company?.name || compName;
-        adminSettings.companyProfile.managerName = user.name;
-        adminSettings.companyProfile.sector = user.company?.sector || sector;
-        adminSettings.companyProfile.email = user.email;
-        saveAdminSettingsToStorage();
-
-        setRole('admin');
-        showToast(`🎉 Tebrikler! ${compName} firması başarıyla kuruldu ve Yönetici Paneli açıldı!`);
+        const redirectUrl = redirect || '/?role=admin';
+        window.location.href = redirectUrl;
+        return;
       } else {
         showToast(res?.message || 'Firma kaydı sırasında bir hata oluştu.');
       }
