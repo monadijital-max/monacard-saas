@@ -38,6 +38,9 @@ class AuthController extends Controller
             ], 403);
         }
 
+        // Authenticate Web Session as well
+        \Illuminate\Support\Facades\Auth::login($user, true);
+
         // Create Sanctum Token
         $token = $user->createToken('monacard_api_token')->plainTextToken;
 
@@ -151,11 +154,18 @@ class AuthController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
+        if ($request->user()) {
+            $request->user()->currentAccessToken()?->delete();
+        }
+
+        \Illuminate\Support\Facades\Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return response()->json([
             'status' => 'success',
             'message' => 'Oturum kapatıldı.',
+            'redirect' => '/login',
         ]);
     }
 

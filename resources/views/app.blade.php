@@ -6,6 +6,7 @@
   <title>Muhiddin Öktem | MonaCard Dijital Kartvizit</title>
   <meta name="description" content="Muhiddin Öktem - Senior Product Designer & Creative Technologist. MonaCard Akıllı Dijital Kartvizit Profili.">
   <meta name="theme-color" content="#00A86B">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   
@@ -52,16 +53,23 @@
       </button>
     </div>
 
-    <!-- Auth Action Buttons (Standalone Pages) -->
+    <!-- Auth Action Buttons (Standalone Pages / Logout) -->
     <div class="role-auth-actions">
-      <a href="login.html" class="role-auth-btn" id="btnGoLogin" title="Giriş Sayfası">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-        <span id="authBtnLabel">🔑 Giriş Yap</span>
-      </a>
-      <a href="register.html" class="role-auth-btn role-reg-btn" id="btnGoRegister" title="Yeni Firma Kayıt Sayfası">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-        <span>✨ Firma Kaydı</span>
-      </a>
+      @auth
+        <button type="button" class="role-auth-btn admin-logout-btn" id="btnTopLogout" onclick="logoutUser()" title="Oturumu Kapat / Çıkış Yap" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.4); color: #FCA5A5;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span id="authBtnLabel">🚪 Çıkış Yap ({{ Auth::user()->name }})</span>
+        </button>
+      @else
+        <a href="/login" class="role-auth-btn" id="btnGoLogin" title="Giriş Sayfası">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          <span id="authBtnLabel">🔑 Giriş Yap</span>
+        </a>
+        <a href="/register" class="role-auth-btn role-reg-btn" id="btnGoRegister" title="Yeni Firma Kayıt Sayfası">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+          <span>✨ Firma Kaydı</span>
+        </a>
+      @endauth
     </div>
   </aside>
 
@@ -958,9 +966,11 @@
           <button class="mobile-menu-btn" id="btnToggleMobileAdminSidebar" aria-label="Menüyü Aç" title="Menü">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
           </button>
-          <div class="admin-search-wrap">
+          <div class="admin-search-wrap" id="adminSearchWrap">
             <svg class="admin-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" class="admin-search-input" id="adminGlobalSearch" placeholder="Personel, müşteri veya rapor ara...">
+            <input type="text" class="admin-search-input" id="adminGlobalSearch" placeholder="Personel, müşteri veya rapor ara..." autocomplete="off">
+            <button type="button" class="admin-search-clear-btn hidden" id="adminSearchClearBtn" title="Temizle">&times;</button>
+            <div class="global-search-results-dropdown hidden" id="adminSearchResultsDropdown"></div>
           </div>
         </div>
 
@@ -2788,9 +2798,11 @@
           <button class="mobile-menu-btn" id="btnToggleMobileSuperSidebar" aria-label="Menüyü Aç" title="Menü">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
           </button>
-          <div class="super-search-wrap">
+          <div class="super-search-wrap" id="superSearchWrap">
             <svg class="super-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" class="super-search-input" id="superGlobalSearch" placeholder="Firma adı, yetkili, demo talebi veya paket ara...">
+            <input type="text" class="super-search-input" id="superGlobalSearch" placeholder="Firma adı, yetkili, demo talebi veya paket ara..." autocomplete="off">
+            <button type="button" class="super-search-clear-btn hidden" id="superSearchClearBtn" title="Temizle">&times;</button>
+            <div class="global-search-results-dropdown hidden" id="superSearchResultsDropdown"></div>
           </div>
         </div>
 
@@ -4033,26 +4045,26 @@
           </div>
         </div>
 
-        <!-- Search Box -->
-        <div class="form-group mt-3 mb-3">
-          <label for="transferStaffSearchInput" style="font-weight: 700; font-size: 12.5px; color: var(--admin-text-main);">Hedef Personel Ara</label>
-          <div class="admin-search-input-wrap" style="width: 100%;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" id="transferStaffSearchInput" class="admin-search-field" placeholder="İsim, ünvan veya e-posta ile arayın...">
+        <!-- Search Box (Icon Inside & Clean Spacing) -->
+        <div class="form-group transfer-search-group" style="margin-top: 18px; margin-bottom: 22px;">
+          <label for="transferStaffSearchInput" style="font-weight: 700; font-size: 13px; color: var(--admin-text-main); margin-bottom: 8px; display: block;">Hedef Personel Ara</label>
+          <div class="transfer-search-input-wrap">
+            <svg class="transfer-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="transferStaffSearchInput" class="transfer-search-input" placeholder="İsim veya departman yazın..." autocomplete="off">
           </div>
         </div>
 
         <!-- Target Staff Selection List -->
-        <label style="font-weight: 700; font-size: 11.5px; color: var(--admin-text-sub); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 6px; display: block;">Aktarılacak Hedef Personeli Seçin</label>
+        <label style="font-weight: 700; font-size: 12px; color: var(--admin-text-sub); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 10px; display: block;">Aktarılacak Hedef Personeli Seçin</label>
         <div class="transfer-staff-list" id="transferStaffListContainer">
           <!-- Dinamik Hedef Personel Kartları -->
         </div>
 
-        <div class="modal-btn-row mt-4">
-          <button type="button" class="btn-outline" data-close="transferCustomersModal">Vazgeç</button>
-          <button type="button" class="btn-primary" id="btnConfirmTransfer" disabled style="background:#4F46E5;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            <span>Tüm Verileri Aktar</span>
+        <div class="modal-btn-row mt-4" style="display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+          <button type="button" class="btn-outline" data-close="transferCustomersModal" style="min-width: 100px; height: 44px; border-radius: 12px; font-weight: 600;">Vazgeç</button>
+          <button type="button" class="btn-primary" id="btnConfirmTransfer" disabled style="min-width: 270px; height: 44px; padding: 0 22px; white-space: nowrap; border-radius: 12px; font-weight: 700; background: #4F46E5; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35); display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Tüm Müşterileri Aktar &amp; Onayla</span>
           </button>
         </div>
       </div>
@@ -4667,6 +4679,23 @@
 
   <!-- SheetJS for Excel (.xlsx, .xls, .csv) Import -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- Laravel Initial Database Data -->
+  <script>
+    window.__INITIAL_DATA__ = {
+      currentUser: @json($currentUser ?? null),
+      company: @json($company ?? null),
+      card: @json($card ?? null),
+      products: @json($products ?? []),
+      staffMembers: @json($staffMembers ?? []),
+      customers: @json($customers ?? []),
+      meetings: @json($meetings ?? []),
+      reminders: @json($reminders ?? []),
+      allCompanies: @json($allCompanies ?? []),
+      demoRequests: @json($demoRequests ?? []),
+      pricingTiers: @json($pricingTiers ?? [])
+    };
+  </script>
 
   <!-- JavaScript -->
   <script src="{{ asset('app.js') }}?v={{ file_exists(public_path('app.js')) ? filemtime(public_path('app.js')) : time() }}"></script>

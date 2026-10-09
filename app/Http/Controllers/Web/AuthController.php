@@ -46,13 +46,32 @@ class AuthController extends Controller
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
 
+                if ($request->expectsJson() || $request->ajax()) {
+                    return response()->json(['status' => 'error', 'message' => 'Hesabınız askıya alınmıştır.'], 403);
+                }
+
                 return back()->withErrors([
-                    'email' => 'Hesabınız veya kartvizit erişiminiz yönetici tarafından askıya alınmıştır.',
-                ])->withInput($request->only('email'));
+                    'email' => 'Hesabınız askıya alınmıştır.',
+                ]);
             }
 
-            return $this->redirectBasedOnRole($user)
+            $redirectUrl = $user->role === 'superadmin' ? '/?role=superadmin' : ($user->role === 'company_admin' ? '/?role=admin' : '/?role=staff');
+
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Giriş başarılı!',
+                    'user' => $user->load('company'),
+                    'redirect' => $redirectUrl,
+                ]);
+            }
+
+            return redirect($redirectUrl)
                 ->with('success', 'Hoş geldiniz, '.$user->name.'!');
+        }
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json(['status' => 'error', 'message' => 'Girdiğiniz e-posta veya şifre hatalı.'], 401);
         }
 
         return back()->withErrors([
@@ -180,7 +199,15 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('admin.dashboard')
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Firmanız ve yönetici hesabınız oluşturuldu!',
+                'redirect' => '/?role=admin',
+            ]);
+        }
+
+        return redirect('/?role=admin')
             ->with('success', 'Tebrikler! Firmanız ve yönetici profiliniz başarıyla oluşturuldu.');
     }
 
@@ -189,11 +216,26 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        Auth::logout();
+        if (Auth::check()) {
+            $user = Auth::user();
+            if (method_exists($user, 'tokens')) {
+                $user->tokens()->delete();
+            }
+            Auth::logout();
+        }
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('info', 'Oturum başarıyla kapatıldı.');
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Oturum başarıyla kapatıldı.',
+                'redirect' => '/login'
+            ]);
+        }
+
+        return redirect('/login')->with('info', 'Oturum başarıyla kapatıldı.');
     }
 
     /**
@@ -202,11 +244,11 @@ class AuthController extends Controller
     protected function redirectBasedOnRole($user)
     {
         if ($user->role === 'superadmin') {
-            return redirect()->route('superadmin.dashboard');
+            return redirect('/?role=superadmin');
         } elseif ($user->role === 'company_admin') {
-            return redirect()->route('admin.dashboard');
+            return redirect('/?role=admin');
         } else {
-            return redirect()->route('staff.dashboard');
+            return redirect('/?role=staff');
         }
     }
 }

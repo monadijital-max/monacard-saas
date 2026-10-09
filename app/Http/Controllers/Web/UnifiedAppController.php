@@ -22,62 +22,70 @@ class UnifiedAppController extends Controller
      */
     public function index(Request $request)
     {
+        $companyId = $request->query('company_id');
         $currentUser = Auth::user();
 
         if ($currentUser && $currentUser->company) {
             $company = $currentUser->company()->with(['products', 'users.businessCard'])->first();
-            $card = $currentUser->businessCard ?: BusinessCard::where('company_id', $company->id)->first();
+        } elseif ($companyId) {
+            $company = Company::with(['products', 'users.businessCard'])->find($companyId);
         } else {
-            // Find default company (Vedubox or first created)
+            // Ziyaretçi (Oturum kapalıyken varsayılan tanıtım kartviziti)
             $company = Company::with(['products', 'users.businessCard'])->first();
-            if (! $company) {
-                $company = Company::firstOrCreate([
-                    'name' => 'Vedubox Bilişim & Eğitim Teknolojileri',
-                    'slug' => 'vedubox',
-                ], [
-                    'sector' => 'Eğitim Teknolojileri & SaaS Yazılım',
-                    'logo_url' => 'vedubox.png',
-                    'brand_color' => '#00A86B',
-                    'theme_mode' => 'light',
-                    'website' => 'https://vedubox.com',
-                    'ceo_name' => 'Muhiddin Öktem',
-                    'ceo_title' => 'Genel Müdür / CEO',
-                    'email' => 'muhiddinoktem@vedubox.com',
-                    'phone' => '+90 536 255 64 24',
-                    'user_quota' => 10,
-                    'plan' => 'enterprise',
-                ]);
-            }
+        }
 
-            // Active Card
+        if (! $company) {
+            $company = Company::firstOrCreate([
+                'name' => 'Vedubox Bilişim & Eğitim Teknolojileri',
+                'slug' => 'vedubox',
+            ], [
+                'sector' => 'Eğitim Teknolojileri & SaaS Yazılım',
+                'logo_url' => 'vedubox.png',
+                'brand_color' => '#00A86B',
+                'theme_mode' => 'light',
+                'website' => 'https://vedubox.com',
+                'ceo_name' => 'Muhiddin Öktem',
+                'ceo_title' => 'Genel Müdür / CEO',
+                'email' => 'muhiddinoktem@vedubox.com',
+                'phone' => '+90 536 255 64 24',
+                'user_quota' => 25,
+                'plan' => 'enterprise',
+            ]);
+        }
+
+        // Active Card
+        $card = ($currentUser && $currentUser->businessCard) 
+            ?: BusinessCard::where('company_id', $company->id)->first();
+        if (! $card) {
             $card = BusinessCard::with(['user', 'company'])->first();
-            if (! $card && $company) {
-                $user = User::first();
-                if ($user) {
-                    $card = BusinessCard::create([
-                        'user_id' => $user->id,
-                        'company_id' => $company->id,
-                        'slug' => 'muhiddin-oktem',
-                        'bio' => 'Vedubox Senior Product Designer & Creative Technologist',
-                        'direct_phone' => '+90 536 255 64 24',
-                        'work_email' => 'muhiddinoktem@vedubox.com',
-                        'work_address' => 'Ayazağa Mah. Mimar Sinan Sok. Seba Office No:21 D:45 Sarıyer / İstanbul',
-                        'website' => 'https://vedubox.com',
-                        'theme_color' => '#00A86B',
-                        'is_active' => true,
-                    ]);
-                }
-            }
         }
 
         // Products
         $products = Product::where('company_id', $company->id)->orderBy('sort_order')->get();
 
-        // Staff members
-        $staffMembers = User::where('company_id', $company->id)->with('businessCard')->get();
+        // Staff members with business cards & counts
+        $staffMembers = User::where('company_id', $company->id)
+            ->with('businessCard')
+            ->withCount([
+                'customers as total_customers',
+                'customers as hot_customers' => function ($q) {
+                    $q->where('stage', 'hot');
+                },
+                'customers as warm_customers' => function ($q) {
+                    $q->where('stage', 'warm');
+                },
+                'customers as cold_customers' => function ($q) {
+                    $q->where('stage', 'cold');
+                },
+                'meetings as total_meetings',
+            ])
+            ->get();
 
-        // Customers
-        $customers = Customer::where('company_id', $company->id)->with('interactionNotes')->latest()->get();
+        // Customers with notes & staff relation
+        $customers = Customer::where('company_id', $company->id)
+            ->with(['notes', 'staff'])
+            ->latest()
+            ->get();
 
         // Meetings
         $meetings = Meeting::where('company_id', $company->id)->orderBy('start_time')->get();

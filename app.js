@@ -753,9 +753,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const btnDashAddCustomer = document.getElementById('btnDashAddCustomer');
     if (btnDashAddCustomer) {
+      const hasCustomers = (typeof customers !== 'undefined' && Array.isArray(customers) && customers.length > 0);
       const sp = btnDashAddCustomer.querySelector('span');
-      if (sp) sp.textContent = isEn ? '+ Add Client' : '+ Müşteri Ekle';
-      btnDashAddCustomer.title = isEn ? 'Add New Client' : 'Yeni Müşteri Ekle';
+      if (sp) sp.textContent = hasCustomers ? (isEn ? 'View All ›' : 'Tümünü Gör ›') : (isEn ? '+ Add Client' : '+ Müşteri Ekle');
+      btnDashAddCustomer.title = hasCustomers ? (isEn ? 'View All Clients (CRM)' : 'Tüm Müşterileri Gör (CRM)') : (isEn ? 'Add New Client' : 'Yeni Müşteri Ekle');
     }
 
     const donutLegendLabels = document.querySelectorAll('.donut-legend-col .legend-name, .donut-legend-info .donut-legend-name');
@@ -771,9 +772,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (topPerfSub) topPerfSub.textContent = isEn ? 'Top 3 team members with highest client acquisition and hot lead conversion' : 'En yüksek müşteri kazanımı ve sıcak görüşme performansına sahip ilk 3 ekip üyesi';
     const btnDashAddStaff = document.getElementById('btnDashAddStaff');
     if (btnDashAddStaff) {
+      const hasStaff = (typeof adminStaffList !== 'undefined' && Array.isArray(adminStaffList) && adminStaffList.length > 0);
       const sp = btnDashAddStaff.querySelector('span');
-      if (sp) sp.textContent = isEn ? '+ Add Staff' : '+ Personel Ekle';
-      btnDashAddStaff.title = isEn ? 'Add New Staff' : 'Yeni Personel Ekle';
+      if (sp) sp.textContent = hasStaff ? (isEn ? 'View All ›' : 'Tümünü Gör ›') : (isEn ? '+ Add Staff' : '+ Personel Ekle');
+      btnDashAddStaff.title = hasStaff ? (isEn ? 'View All Staff' : 'Tüm Personelleri Gör') : (isEn ? 'Add New Staff' : 'Yeni Personel Ekle');
     }
     const topPerfViewAll = document.querySelector('.btn-view-all-staff');
     if (topPerfViewAll) topPerfViewAll.textContent = isEn ? 'View All ›' : 'Tümünü Gör ›';
@@ -2675,24 +2677,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let adminStaffList = [];
   try {
-    const savedStaff = localStorage.getItem('monacard_admin_staff');
-    if (savedStaff) {
-      const parsed = JSON.parse(savedStaff);
-      if (Array.isArray(parsed) && parsed.length >= 20) {
-        adminStaffList = parsed
-          .filter(s => s && s.name)
-          .map((s, idx) => ({
-            ...s,
-            score: (s.score !== undefined) ? s.score : 0,
-            monthlyTarget: s.monthlyTarget || (initialAdminStaff[idx] ? initialAdminStaff[idx].monthlyTarget : 15)
-          }));
+    if (typeof window !== 'undefined' && window.__INITIAL_DATA__ && Array.isArray(window.__INITIAL_DATA__.staffMembers) && window.__INITIAL_DATA__.staffMembers.length > 0) {
+      adminStaffList = window.__INITIAL_DATA__.staffMembers.map((s, idx) => ({
+        id: 'staff-' + s.id,
+        raw_id: s.id,
+        name: s.name,
+        title: s.title || 'Müşteri Temsilcisi',
+        email: s.email,
+        phone: s.phone || '',
+        avatar: (s.business_card && s.business_card.avatar_url) ? s.business_card.avatar_url : '',
+        status: s.status || 'active',
+        isLeader: s.role === 'company_admin' || !s.leader_id,
+        leaderId: s.leader_id ? ('staff-' + s.leader_id) : '',
+        monthlyTarget: s.monthly_target || 15,
+        newLeads: s.total_customers || 0,
+        existingLeads: 0,
+        totalContacts: s.total_customers || 0,
+        hotCount: s.hot_customers || 0,
+        warmCount: s.warm_customers || 0,
+        coldCount: s.cold_customers || 0,
+        convertedCount: s.hot_customers || 0,
+        revenue: (s.hot_customers || 0) * 12500,
+        satisfactionRate: 4.8,
+        score: s.total_customers ? Math.min(100, Math.round(((s.total_customers) / (s.monthly_target || 15)) * 100)) : 80
+      }));
+    } else {
+      const savedStaff = localStorage.getItem('monacard_admin_staff');
+      if (savedStaff) {
+        const parsed = JSON.parse(savedStaff);
+        if (Array.isArray(parsed) && parsed.length >= 3) {
+          adminStaffList = parsed;
+        } else {
+          adminStaffList = [...initialAdminStaff];
+        }
       } else {
         adminStaffList = [...initialAdminStaff];
-        localStorage.setItem('monacard_admin_staff', JSON.stringify(adminStaffList));
       }
-    } else {
-      adminStaffList = [...initialAdminStaff];
-      localStorage.setItem('monacard_admin_staff', JSON.stringify(adminStaffList));
     }
   } catch (e) {
     adminStaffList = [...initialAdminStaff];
@@ -2924,39 +2944,33 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCardSocialLinks();
   }
 
-  // Logout Function: Clear authentication, reset to customer role, and open login modal
-  function logoutUser() {
+  // Logout Function: Clear authentication, destroy server session, and redirect
+  async function logoutUser() {
     try {
-      localStorage.removeItem('monacard_token');
-      localStorage.removeItem('monacard_user');
+      const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      await fetch('/logout', {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-TOKEN': csrf || '',
+          'Accept': 'application/json'
+        }
+      });
+    } catch (e) {
+      try {
+        await fetch('/logout');
+      } catch (err) {}
+    }
+
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
     } catch (e) {}
 
-    const authBtnLabel = document.getElementById('authBtnLabel');
-    if (authBtnLabel) {
-      authBtnLabel.textContent = currentLang === 'en' ? '🔑 Sign In' : '🔑 Giriş Yap';
-    }
-
-    // Switch role to customer view
-    setRole('customer', true);
-
-    // Open login modal
-    const modalAuth = document.getElementById('modalAuth');
-    if (modalAuth) {
-      modalAuth.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      const tabBtnLogin = document.getElementById('tabBtnLogin');
-      const tabBtnRegister = document.getElementById('tabBtnRegister');
-      const authPanelLogin = document.getElementById('authPanelLogin');
-      const authPanelRegister = document.getElementById('authPanelRegister');
-      if (tabBtnLogin && tabBtnRegister) {
-        tabBtnLogin.classList.add('active');
-        tabBtnRegister.classList.remove('active');
-        if (authPanelLogin) authPanelLogin.classList.remove('hidden');
-        if (authPanelRegister) authPanelRegister.classList.add('hidden');
-      }
-    }
-
-    showToast(currentLang === 'en' ? 'Logged out successfully.' : 'Başarıyla çıkış yapıldı.');
+    showToast(currentLang === 'en' ? 'Logged out successfully.' : 'Oturum kapatıldı, yönlendiriliyorsunuz...');
+    setTimeout(() => {
+      window.location.href = '/login';
+    }, 250);
   }
   window.logoutUser = logoutUser;
 
@@ -3344,18 +3358,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let customers = [];
   try {
-    const savedCust = localStorage.getItem('monacard_crm_customers');
-    if (savedCust) {
-      const parsed = JSON.parse(savedCust);
-      if (Array.isArray(parsed) && parsed.length >= 60) {
-        customers = parsed;
+    if (typeof window !== 'undefined' && window.__INITIAL_DATA__ && Array.isArray(window.__INITIAL_DATA__.customers) && window.__INITIAL_DATA__.customers.length > 0) {
+      customers = window.__INITIAL_DATA__.customers.map(c => {
+        const name = c.name || '';
+        const initials = c.initials || name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() || 'MK';
+        const notes = (c.notes || c.interaction_notes || []).map(n => ({
+          id: n.id ? ('note-' + n.id) : ('note-' + Date.now()),
+          type: n.type || 'text',
+          text: n.note || n.text || '',
+          time: n.created_at ? new Date(n.created_at).toLocaleDateString('tr-TR') : 'Bugün',
+          hubspotSynced: true
+        }));
+        return {
+          id: c.id ? ('cust-' + c.id) : ('cust-' + Date.now()),
+          raw_id: c.id,
+          name: name,
+          company: c.company_name || c.company || 'Bireysel Müşteri',
+          title: c.title || 'Yetkili',
+          phone: c.phone || '',
+          email: c.email || '',
+          stage: c.stage || 'warm',
+          assignedStaff: (c.staff && c.staff.name) ? c.staff.name : (c.assignedStaff || 'Yönetici'),
+          staff_id: c.staff_id,
+          initials: initials,
+          notes: notes
+        };
+      });
+      localStorage.setItem('monacard_crm_customers', JSON.stringify(customers));
+    } else {
+      const savedCust = localStorage.getItem('monacard_crm_customers');
+      if (savedCust) {
+        const parsed = JSON.parse(savedCust);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          customers = parsed;
+        } else {
+          customers = [...initialCustomers];
+          localStorage.setItem('monacard_crm_customers', JSON.stringify(customers));
+        }
       } else {
         customers = [...initialCustomers];
         localStorage.setItem('monacard_crm_customers', JSON.stringify(customers));
       }
-    } else {
-      customers = [...initialCustomers];
-      localStorage.setItem('monacard_crm_customers', JSON.stringify(customers));
     }
   } catch (e) {
     customers = [...initialCustomers];
@@ -3977,53 +4020,142 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================================================
-  // KATILIMCI LİSTESİ: FİRMAYA GÖRE GRUPLU VE YAN YANA SEÇİM LİSTESİ
+  // KATILIMCI LİSTESİ: ARAMA ÇUBUKLU & FİRMAYA GÖRE GRUPLU SEÇİM LİSTESİ
   // =========================================================
   function renderGroupedCustomerChecklist(dropdownEl, selectedCustomers, onToggleCallback) {
     if (!dropdownEl || !customers) return;
 
-    // Şirketlere göre grupla
-    const grouped = {};
-    customers.forEach(c => {
-      const comp = c.company || 'Diğer / Bireysel';
-      if (!grouped[comp]) grouped[comp] = [];
-      grouped[comp].push(c);
-    });
+    let searchInput = dropdownEl.querySelector('.multiselect-search-input');
+    let searchClear = dropdownEl.querySelector('.multiselect-search-clear');
+    let itemsContainer = dropdownEl.querySelector('.multiselect-items-container');
+    let currentSearchVal = searchInput ? searchInput.value : '';
 
-    let html = '';
-    for (const [company, members] of Object.entries(grouped)) {
-      html += `
-        <div class="company-group-block">
-          <div class="company-group-title">🏢 ${company}</div>
-          <div class="company-group-members">
-            ${members.map(c => {
-              const isChecked = selectedCustomers.some(sc => sc.id === c.id);
-              return `
-                <label class="grouped-participant-row">
-                  <input type="checkbox" data-id="${c.id}" ${isChecked ? 'checked' : ''}>
-                  <span class="participant-name-title">
-                    <span>${c.name}</span>
-                    <span style="font-weight: 500; color: #64748B; font-size: 11px;">(${c.company})</span>
-                  </span>
-                </label>
-              `;
-            }).join('')}
+    if (!itemsContainer) {
+      const isEn = (typeof currentLanguage !== 'undefined' && currentLanguage === 'en') || (typeof currentLang !== 'undefined' && currentLang === 'en');
+      const placeholderText = isEn ? 'Search participant or company...' : 'Katılımcı veya firma ara...';
+
+      dropdownEl.innerHTML = `
+        <div class="multiselect-search-header">
+          <div class="multiselect-search-input-wrap">
+            <svg class="multiselect-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="multiselect-search-input" placeholder="${placeholderText}" autocomplete="off">
+            <button type="button" class="multiselect-search-clear hidden" title="Temizle">&times;</button>
           </div>
         </div>
+        <div class="multiselect-items-container"></div>
       `;
+
+      searchInput = dropdownEl.querySelector('.multiselect-search-input');
+      const searchIcon = dropdownEl.querySelector('.multiselect-search-icon');
+      searchClear = dropdownEl.querySelector('.multiselect-search-clear');
+      itemsContainer = dropdownEl.querySelector('.multiselect-items-container');
+
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          e.stopPropagation();
+          const q = e.target.value;
+          if (searchClear) {
+            searchClear.classList.toggle('hidden', !q);
+          }
+          if (searchIcon) {
+            searchIcon.classList.toggle('hidden', !!q);
+          }
+          renderItems(q);
+        });
+        searchInput.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+        searchInput.addEventListener('keydown', (e) => {
+          e.stopPropagation();
+        });
+      }
+
+      if (searchClear) {
+        searchClear.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (searchInput) {
+            searchInput.value = '';
+            searchInput.focus();
+          }
+          searchClear.classList.add('hidden');
+          if (searchIcon) {
+            searchIcon.classList.remove('hidden');
+          }
+          renderItems('');
+        });
+      }
     }
 
-    dropdownEl.innerHTML = html;
-
-    dropdownEl.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-      cb.addEventListener('change', (e) => {
-        const id = e.target.getAttribute('data-id');
-        const cust = customers.find(c => c.id === id);
-        if (cust && onToggleCallback) {
-          onToggleCallback(cust, e.target.checked);
-        }
+    function renderItems(filterQuery = '') {
+      const isEn = (typeof currentLanguage !== 'undefined' && currentLanguage === 'en') || (typeof currentLang !== 'undefined' && currentLang === 'en');
+      const q = (filterQuery || '').trim().toLowerCase();
+      const filteredCustomers = customers.filter(c => {
+        if (!q) return true;
+        const name = (c.name || '').toLowerCase();
+        const comp = (c.company || '').toLowerCase();
+        const title = (c.title || '').toLowerCase();
+        const phone = (c.phone || '').toLowerCase();
+        const email = (c.email || '').toLowerCase();
+        return name.includes(q) || comp.includes(q) || title.includes(q) || phone.includes(q) || email.includes(q);
       });
-    });
+
+      if (filteredCustomers.length === 0) {
+        itemsContainer.innerHTML = `
+          <div class="multiselect-empty-message">
+            ${isEn ? 'No matching participants found.' : 'Eşleşen katılımcı veya firma bulunamadı.'}
+          </div>
+        `;
+        return;
+      }
+
+      // Şirketlere göre grupla
+      const grouped = {};
+      filteredCustomers.forEach(c => {
+        const comp = c.company || (isEn ? 'Other / Individual' : 'Diğer / Bireysel');
+        if (!grouped[comp]) grouped[comp] = [];
+        grouped[comp].push(c);
+      });
+
+      let html = '';
+      for (const [company, members] of Object.entries(grouped)) {
+        html += `
+          <div class="company-group-block">
+            <div class="company-group-title">🏢 ${company}</div>
+            <div class="company-group-members">
+              ${members.map(c => {
+                const isChecked = selectedCustomers.some(sc => sc.id === c.id);
+                return `
+                  <label class="grouped-participant-row">
+                    <input type="checkbox" data-id="${c.id}" ${isChecked ? 'checked' : ''}>
+                    <span class="participant-name-title">
+                      <span class="p-name">${c.name}</span>
+                      <span class="p-role">(${c.company || ''})</span>
+                    </span>
+                  </label>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      itemsContainer.innerHTML = html;
+
+      itemsContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', (e) => {
+          const id = e.target.getAttribute('data-id');
+          const cust = customers.find(c => c.id === id);
+          if (cust && onToggleCallback) {
+            onToggleCallback(cust, e.target.checked);
+          }
+        });
+      });
+    }
+
+    renderItems(currentSearchVal);
   }
 
   // =========================================================
@@ -4101,7 +4233,14 @@ document.addEventListener('DOMContentLoaded', () => {
     toggle.addEventListener('click', (e) => {
       e.stopPropagation();
       e.preventDefault();
+      const isOpening = dropdown.classList.contains('hidden');
       dropdown.classList.toggle('hidden');
+      if (isOpening) {
+        const input = dropdown.querySelector('.multiselect-search-input');
+        if (input) {
+          setTimeout(() => input.focus(), 50);
+        }
+      }
     });
 
     dropdown.addEventListener('click', (e) => {
@@ -4131,7 +4270,14 @@ document.addEventListener('DOMContentLoaded', () => {
     toggle.addEventListener('click', (e) => {
       e.stopPropagation();
       e.preventDefault();
+      const isOpening = dropdown.classList.contains('hidden');
       dropdown.classList.toggle('hidden');
+      if (isOpening) {
+        const input = dropdown.querySelector('.multiselect-search-input');
+        if (input) {
+          setTimeout(() => input.focus(), 50);
+        }
+      }
     });
 
     dropdown.addEventListener('click', (e) => {
@@ -5356,29 +5502,407 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Topbar Global Search
+  // =========================================================
+  // TOPBAR LIVE GLOBAL SEARCH (Spotlight & Live Dropdown)
+  // =========================================================
   const adminGlobalSearch = document.getElementById('adminGlobalSearch');
+  const adminSearchClearBtn = document.getElementById('adminSearchClearBtn');
+  const adminSearchResultsDropdown = document.getElementById('adminSearchResultsDropdown');
+
+  function highlightSearchMatch(text, query) {
+    if (!text) return '';
+    const str = String(text);
+    if (!query) return escapeSearchHtml(str);
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escaped})`, 'gi');
+    return escapeSearchHtml(str).replace(regex, '<span class="search-highlight">$1</span>');
+  }
+
+  function escapeSearchHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function renderGlobalSearchResults(query) {
+    if (!adminSearchResultsDropdown) return;
+    const q = (query || '').trim().toLowerCase();
+
+    if (!q) {
+      adminSearchResultsDropdown.innerHTML = '';
+      adminSearchResultsDropdown.classList.add('hidden');
+      if (adminSearchClearBtn) adminSearchClearBtn.classList.add('hidden');
+      return;
+    }
+
+    if (adminSearchClearBtn) adminSearchClearBtn.classList.remove('hidden');
+
+    const isEn = currentLang === 'en';
+
+    // 1. Search Customers
+    const custList = (typeof customers !== 'undefined' && Array.isArray(customers)) ? customers : [];
+    const matchedCustomers = custList.filter(c => {
+      const name = (c.name || '').toLowerCase();
+      const comp = (c.company || c.company_name || '').toLowerCase();
+      const title = (c.title || '').toLowerCase();
+      const phone = (c.phone || '').toLowerCase();
+      const email = (c.email || '').toLowerCase();
+      return name.includes(q) || comp.includes(q) || title.includes(q) || phone.includes(q) || email.includes(q);
+    }).slice(0, 6);
+
+    // 2. Search Staff
+    const staffList = (typeof adminStaffList !== 'undefined' && Array.isArray(adminStaffList)) ? adminStaffList : [];
+    const matchedStaff = staffList.filter(s => {
+      const name = (s.name || '').toLowerCase();
+      const title = (s.title || '').toLowerCase();
+      const dept = (s.department || s.team || '').toLowerCase();
+      const email = (s.email || '').toLowerCase();
+      const phone = (s.phone || '').toLowerCase();
+      return name.includes(q) || title.includes(q) || dept.includes(q) || email.includes(q) || phone.includes(q);
+    }).slice(0, 4);
+
+    // 3. Search Meetings
+    const meetingList = (typeof meetings !== 'undefined' && Array.isArray(meetings)) ? meetings : (typeof adminPersonalMeetings !== 'undefined' ? adminPersonalMeetings : []);
+    const matchedMeetings = meetingList.filter(m => {
+      const title = (m.title || '').toLowerCase();
+      const client = (m.clientName || m.client_name || '').toLowerCase();
+      return title.includes(q) || client.includes(q);
+    }).slice(0, 3);
+
+    // 4. Quick Navigations
+    const navItems = [
+      { id: 'viewAdminDashboard', title: isEn ? 'Overview Dashboard' : 'Genel Bakış Paneli', sub: isEn ? 'Executive Metrics & Live CRM' : 'Yönetici Metrikleri & Canlı CRM', icon: '📊', keywords: ['genel', 'bakis', 'dashboard', 'özet', 'rapor', 'analitik', 'overview'] },
+      { id: 'viewAdminStaff', title: isEn ? 'Staff Management' : 'Personel Yönetimi', sub: isEn ? 'Digital Cards & Performance' : 'Dijital Kartvizitler & Ekip Kadrosu', icon: '👔', keywords: ['personel', 'ekip', 'calisan', 'staff', 'kadro', 'lider'] },
+      { id: 'viewAdminCrm', title: isEn ? 'Central CRM Pool' : 'CRM Müşteri Havuzu', sub: isEn ? 'All Leads & Meeting Notes' : 'Tüm Aday Müşteriler & Görüşmeler', icon: '👥', keywords: ['crm', 'musteri', 'havuz', 'lead', 'sicak', 'ilik', 'soguk', 'customer', 'aday'] },
+      { id: 'viewAdminIntegrations', title: isEn ? 'Integrations & Webhooks' : 'Entegrasyonlar & HubSpot', sub: isEn ? 'HubSpot, Salesforce, Zoom, Meet' : 'HubSpot, Salesforce, Zoom, Meet API', icon: '⚡', keywords: ['entegrasyon', 'hubspot', 'salesforce', 'zoom', 'meet', 'teams', 'webhook', 'api'] },
+      { id: 'viewAdminProfile', title: isEn ? 'Company & Manager Profile' : 'Firma & Yönetici Profili', sub: isEn ? 'Corporate Identity & Products' : 'Kurumsal Kimlik & Ürün Vitrini', icon: '🏢', keywords: ['firma', 'sirket', 'profil', 'ayarlar', 'kurumsal', 'yonetici', 'ceo', 'company', 'settings'] }
+    ];
+    const matchedNav = navItems.filter(n => {
+      const title = n.title.toLowerCase();
+      const sub = n.sub.toLowerCase();
+      return title.includes(q) || sub.includes(q) || n.keywords.some(k => k.includes(q) || q.includes(k));
+    });
+
+    const totalResults = matchedCustomers.length + matchedStaff.length + matchedMeetings.length + matchedNav.length;
+
+    if (totalResults === 0) {
+      adminSearchResultsDropdown.innerHTML = `
+        <div class="search-empty-state">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <div>"${escapeSearchHtml(query)}" ${isEn ? 'no matching records found.' : 'ile eşleşen kayıt bulunamadı.'}</div>
+        </div>
+      `;
+      adminSearchResultsDropdown.classList.remove('hidden');
+      return;
+    }
+
+    let html = '';
+
+    // Render Customers
+    if (matchedCustomers.length > 0) {
+      html += `
+        <div class="search-category-group">
+          <div class="search-category-title">
+            <span>👥 ${isEn ? 'CRM Customers' : 'Müşteri Havuzu (CRM)'}</span>
+            <span class="search-category-count">${matchedCustomers.length}</span>
+          </div>
+          ${matchedCustomers.map((c, idx) => {
+            const stageLabel = c.stage === 'hot' ? (isEn ? '🔥 Hot' : '🔥 Sıcak') : (c.stage === 'warm' ? (isEn ? '⚡ Warm' : '⚡ Ilık') : (isEn ? '❄️ Cold' : '❄️ Soğuk'));
+            const stageClass = c.stage === 'hot' ? 'hot' : (c.stage === 'warm' ? 'warm' : 'cold');
+            const compTitle = [c.company || c.company_name, c.title].filter(Boolean).join(' • ') || (c.phone || c.email || '');
+            return `
+              <div class="search-result-item" data-action="open-customer" data-cust-id="${c.id || c.phone || c.name}">
+                <div class="search-result-icon customer">👥</div>
+                <div class="search-result-info">
+                  <div class="search-result-title">
+                    ${highlightSearchMatch(c.name, query)}
+                  </div>
+                  <div class="search-result-sub">
+                    ${highlightSearchMatch(compTitle, query)}
+                  </div>
+                </div>
+                <span class="search-stage-badge ${stageClass}">${stageLabel}</span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    // Render Staff
+    if (matchedStaff.length > 0) {
+      html += `
+        <div class="search-category-group">
+          <div class="search-category-title">
+            <span>👔 ${isEn ? 'Staff Members' : 'Personel Kadrosu'}</span>
+            <span class="search-category-count">${matchedStaff.length}</span>
+          </div>
+          ${matchedStaff.map(s => {
+            const sub = [s.title, s.department || s.team, s.email].filter(Boolean).join(' • ');
+            return `
+              <div class="search-result-item" data-action="open-staff" data-staff-id="${s.id}">
+                <div class="search-result-icon staff">👔</div>
+                <div class="search-result-info">
+                  <div class="search-result-title">
+                    ${highlightSearchMatch(s.name, query)}
+                    ${s.isLeader ? '<span style="font-size:11px;">👑</span>' : ''}
+                  </div>
+                  <div class="search-result-sub">
+                    ${highlightSearchMatch(sub, query)}
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    // Render Meetings
+    if (matchedMeetings.length > 0) {
+      html += `
+        <div class="search-category-group">
+          <div class="search-category-title">
+            <span>📅 ${isEn ? 'Meetings & Calendar' : 'Toplantılar & Görüşmeler'}</span>
+            <span class="search-category-count">${matchedMeetings.length}</span>
+          </div>
+          ${matchedMeetings.map(m => `
+            <div class="search-result-item" data-action="open-calendar">
+              <div class="search-result-icon meeting">📅</div>
+              <div class="search-result-info">
+                <div class="search-result-title">
+                  ${highlightSearchMatch(m.title || 'Müşteri Görüşmesi', query)}
+                </div>
+                <div class="search-result-sub">
+                  ${highlightSearchMatch(m.clientName || m.client_name || (isEn ? 'Client Meeting' : 'Görüşme'), query)}
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // Render Quick Navigations
+    if (matchedNav.length > 0) {
+      html += `
+        <div class="search-category-group">
+          <div class="search-category-title">
+            <span>⚡ ${isEn ? 'Quick Navigation' : 'Hızlı Menü Geçişleri'}</span>
+            <span class="search-category-count">${matchedNav.length}</span>
+          </div>
+          ${matchedNav.map(n => `
+            <div class="search-result-item" data-action="open-nav" data-view-id="${n.id}">
+              <div class="search-result-icon nav">${n.icon}</div>
+              <div class="search-result-info">
+                <div class="search-result-title">
+                  ${highlightSearchMatch(n.title, query)}
+                </div>
+                <div class="search-result-sub">
+                  ${n.sub}
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    adminSearchResultsDropdown.innerHTML = html;
+    adminSearchResultsDropdown.classList.remove('hidden');
+
+    // Attach click listeners to result items
+    adminSearchResultsDropdown.querySelectorAll('.search-result-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const action = item.getAttribute('data-action');
+        if (action === 'open-customer') {
+          const custId = item.getAttribute('data-cust-id');
+          openCustomerDetailPage(custId);
+        } else if (action === 'open-staff') {
+          const staffId = item.getAttribute('data-staff-id');
+          currentStaffDetailId = staffId;
+          navigateToAdminView('viewAdminStaffDetail');
+        } else if (action === 'open-calendar') {
+          navigateToAdminView('viewAdminCalendar');
+        } else if (action === 'open-nav') {
+          const viewId = item.getAttribute('data-view-id');
+          navigateToAdminView(viewId);
+        }
+        adminSearchResultsDropdown.classList.add('hidden');
+      });
+    });
+  }
+
   if (adminGlobalSearch) {
     adminGlobalSearch.addEventListener('input', (e) => {
-      const query = e.target.value.trim().toLowerCase();
-      if (!query) return;
+      renderGlobalSearchResults(e.target.value);
+    });
 
-      // Filter staff and CRM
-      if (adminViews.viewAdminStaff && adminViews.viewAdminStaff.classList.contains('active')) {
-        const staffSearch = document.getElementById('staffSearchInput');
-        if (staffSearch) {
-          staffSearch.value = query;
-          renderAdminStaffTable();
-        }
-      } else if (adminViews.viewAdminCrm && adminViews.viewAdminCrm.classList.contains('active')) {
-        const crmSearch = document.getElementById('adminCrmSearchInput');
-        if (crmSearch) {
-          crmSearch.value = query;
-          renderAdminCrmTable();
+    adminGlobalSearch.addEventListener('focus', (e) => {
+      if (e.target.value.trim()) {
+        renderGlobalSearchResults(e.target.value);
+      }
+    });
+
+    adminGlobalSearch.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (adminSearchResultsDropdown) adminSearchResultsDropdown.classList.add('hidden');
+        adminGlobalSearch.blur();
+      } else if (e.key === 'Enter') {
+        const firstItem = adminSearchResultsDropdown ? adminSearchResultsDropdown.querySelector('.search-result-item') : null;
+        if (firstItem) {
+          e.preventDefault();
+          firstItem.click();
         }
       }
     });
   }
+
+  if (adminSearchClearBtn) {
+    adminSearchClearBtn.addEventListener('click', () => {
+      if (adminGlobalSearch) {
+        adminGlobalSearch.value = '';
+        adminGlobalSearch.focus();
+      }
+      if (adminSearchResultsDropdown) adminSearchResultsDropdown.classList.add('hidden');
+      adminSearchClearBtn.classList.add('hidden');
+    });
+  }
+
+  // SuperAdmin Global Search
+  const superGlobalSearch = document.getElementById('superGlobalSearch');
+  const superSearchClearBtn = document.getElementById('superSearchClearBtn');
+  const superSearchResultsDropdown = document.getElementById('superSearchResultsDropdown');
+
+  function renderSuperSearchResults(query) {
+    if (!superSearchResultsDropdown) return;
+    const q = (query || '').trim().toLowerCase();
+
+    if (!q) {
+      superSearchResultsDropdown.innerHTML = '';
+      superSearchResultsDropdown.classList.add('hidden');
+      if (superSearchClearBtn) superSearchClearBtn.classList.add('hidden');
+      return;
+    }
+
+    if (superSearchClearBtn) superSearchClearBtn.classList.remove('hidden');
+
+    const isEn = currentLang === 'en';
+
+    // 1. Companies
+    const compList = (typeof superAdminCompanies !== 'undefined' && Array.isArray(superAdminCompanies)) ? superAdminCompanies : [];
+    const matchedComps = compList.filter(c => {
+      const name = (c.name || '').toLowerCase();
+      const mgr = (c.managerName || c.ceo_name || '').toLowerCase();
+      const email = (c.email || '').toLowerCase();
+      const sector = (c.sector || '').toLowerCase();
+      return name.includes(q) || mgr.includes(q) || email.includes(q) || sector.includes(q);
+    }).slice(0, 5);
+
+    // 2. Demo Requests
+    const demoList = (typeof superAdminDemoRequests !== 'undefined' && Array.isArray(superAdminDemoRequests)) ? superAdminDemoRequests : [];
+    const matchedDemos = demoList.filter(d => {
+      const name = (d.companyName || d.company_name || '').toLowerCase();
+      const contact = (d.contactName || d.name || '').toLowerCase();
+      const email = (d.email || '').toLowerCase();
+      return name.includes(q) || contact.includes(q) || email.includes(q);
+    }).slice(0, 4);
+
+    const total = matchedComps.length + matchedDemos.length;
+
+    if (total === 0) {
+      superSearchResultsDropdown.innerHTML = `
+        <div class="search-empty-state">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <div>"${escapeSearchHtml(query)}" ${isEn ? 'no SaaS records found.' : 'ile eşleşen kayıt bulunamadı.'}</div>
+        </div>
+      `;
+      superSearchResultsDropdown.classList.remove('hidden');
+      return;
+    }
+
+    let html = '';
+    if (matchedComps.length > 0) {
+      html += `
+        <div class="search-category-group">
+          <div class="search-category-title">
+            <span>🏢 ${isEn ? 'Companies' : 'Kayıtlı Firmalar'}</span>
+            <span class="search-category-count">${matchedComps.length}</span>
+          </div>
+          ${matchedComps.map(c => `
+            <div class="search-result-item" data-action="open-comp">
+              <div class="search-result-icon customer">🏢</div>
+              <div class="search-result-info">
+                <div class="search-result-title">${highlightSearchMatch(c.name, query)}</div>
+                <div class="search-result-sub">${highlightSearchMatch(c.managerName || c.email, query)} • ${c.planName || 'Pro'}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    if (matchedDemos.length > 0) {
+      html += `
+        <div class="search-category-group">
+          <div class="search-category-title">
+            <span>📩 ${isEn ? 'Demo Requests' : 'Demo Talepleri'}</span>
+            <span class="search-category-count">${matchedDemos.length}</span>
+          </div>
+          ${matchedDemos.map(d => `
+            <div class="search-result-item" data-action="open-demo">
+              <div class="search-result-icon meeting">📩</div>
+              <div class="search-result-info">
+                <div class="search-result-title">${highlightSearchMatch(d.companyName, query)}</div>
+                <div class="search-result-sub">${highlightSearchMatch(d.contactName || d.email, query)}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    superSearchResultsDropdown.innerHTML = html;
+    superSearchResultsDropdown.classList.remove('hidden');
+  }
+
+  if (superGlobalSearch) {
+    superGlobalSearch.addEventListener('input', (e) => renderSuperSearchResults(e.target.value));
+    superGlobalSearch.addEventListener('focus', (e) => {
+      if (e.target.value.trim()) renderSuperSearchResults(e.target.value);
+    });
+    superGlobalSearch.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (superSearchResultsDropdown) superSearchResultsDropdown.classList.add('hidden');
+        superGlobalSearch.blur();
+      }
+    });
+  }
+
+  if (superSearchClearBtn) {
+    superSearchClearBtn.addEventListener('click', () => {
+      if (superGlobalSearch) {
+        superGlobalSearch.value = '';
+        superGlobalSearch.focus();
+      }
+      if (superSearchResultsDropdown) superSearchResultsDropdown.classList.add('hidden');
+      superSearchClearBtn.classList.add('hidden');
+    });
+  }
+
+  // Close search dropdowns on outside click
+  document.addEventListener('click', (e) => {
+    if (adminSearchResultsDropdown && !e.target.closest('#adminSearchWrap')) {
+      adminSearchResultsDropdown.classList.add('hidden');
+    }
+    if (superSearchResultsDropdown && !e.target.closest('#superSearchWrap')) {
+      superSearchResultsDropdown.classList.add('hidden');
+    }
+  });
 
   // Topbar Date Filter
   const adminDateFilter = document.getElementById('adminDateFilter');
@@ -5389,15 +5913,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 1. DASHBOARD RENDERER
+  // 1. DASHBOARD RENDERER (Doğrudan Veritabanı CRM Müşteri Havuzundan)
   function renderAdminDashboard() {
-    const totalRev = adminStaffList.reduce((acc, s) => acc + (s.revenue || 0), 0);
-    const totalNewLeads = adminStaffList.reduce((acc, s) => acc + (s.newLeads || 0), 0);
-    const totalContacts = adminStaffList.reduce((acc, s) => acc + (s.totalContacts || 0), 0);
-    const totalHot = adminStaffList.reduce((acc, s) => acc + (s.hotCount || 0), 0);
-    const totalWarm = adminStaffList.reduce((acc, s) => acc + (s.warmCount || 0), 0);
-    const totalCold = adminStaffList.reduce((acc, s) => acc + (s.coldCount || 0), 0);
-    const monthMeetingsCount = meetings.length + adminPersonalMeetings.length;
+    const cList = (typeof customers !== 'undefined' && Array.isArray(customers)) ? customers : [];
+    const totalHot = cList.filter(c => c.stage === 'hot').length;
+    const totalWarm = cList.filter(c => c.stage === 'warm').length;
+    const totalCold = cList.filter(c => c.stage === 'cold').length;
+    const totalCount = cList.length || (totalHot + totalWarm + totalCold);
+    const totalNewLeads = totalCount;
+    const totalContacts = totalCount;
+    const totalRev = adminStaffList.reduce((acc, s) => acc + (s.revenue || 0), 0) || (totalHot * 12500);
+    const monthMeetingsCount = (typeof meetings !== 'undefined' ? meetings.length : 0) + (typeof adminPersonalMeetings !== 'undefined' ? adminPersonalMeetings.length : 0);
 
     const statHotCustomers = document.getElementById('statHotCustomers');
     const statWarmCustomers = document.getElementById('statWarmCustomers');
@@ -5438,7 +5964,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (miniSatisfaction) miniSatisfaction.textContent = totalHot + totalWarm > 0 ? "4.8 / 5" : "- / 5";
 
     // Update Donut Chart (Sıcak, Ilık, Soğuk Dağılımı %100)
-    const totalCount = totalHot + totalWarm + totalCold;
     const sumAll = totalCount || 1;
 
     const pctHot = totalCount > 0 ? Math.round((totalHot / sumAll) * 100) : 0;
@@ -5598,12 +6123,24 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Top Performers Card Header Button (Personel Ekle / Tümünü Gör)
+    // Top Performers Card Header Button (Personel Varsa -> Tümünü Gör, Yoksa -> + Personel Ekle)
     const btnDashAddStaff = document.getElementById('btnDashAddStaff');
     if (btnDashAddStaff) {
-      btnDashAddStaff.onclick = () => {
-        openStaffModalForAdd();
-      };
+      const hasStaff = Array.isArray(adminStaffList) && adminStaffList.length > 0;
+      const sp = btnDashAddStaff.querySelector('span') || btnDashAddStaff;
+      if (hasStaff) {
+        sp.textContent = isEn ? 'View All ›' : 'Tümünü Gör ›';
+        btnDashAddStaff.title = isEn ? 'View All Staff' : 'Tüm Personelleri Gör';
+        btnDashAddStaff.onclick = () => {
+          navigateToAdminView('viewAdminStaff');
+        };
+      } else {
+        sp.textContent = isEn ? '+ Add Staff' : '+ Personel Ekle';
+        btnDashAddStaff.title = isEn ? 'Add New Staff' : 'Yeni Personel Ekle';
+        btnDashAddStaff.onclick = () => {
+          openStaffModalForAdd();
+        };
+      }
     }
     const btnDashViewAllStaff = document.getElementById('btnDashViewAllStaff');
     if (btnDashViewAllStaff) {
@@ -5612,12 +6149,24 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     }
 
-    // Donut Chart Card Header Button (+ Müşteri Ekle)
+    // Donut Chart Card Header Button (Müşteri Varsa -> Tümünü Gör, Yoksa -> + Müşteri Ekle)
     const btnDashAddCustomer = document.getElementById('btnDashAddCustomer');
     if (btnDashAddCustomer) {
-      btnDashAddCustomer.onclick = () => {
-        openAddCustomerModal();
-      };
+      const hasCustomers = (typeof customers !== 'undefined' && Array.isArray(customers) && customers.length > 0) || totalCount > 0;
+      const sp = btnDashAddCustomer.querySelector('span') || btnDashAddCustomer;
+      if (hasCustomers) {
+        sp.textContent = isEn ? 'View All ›' : 'Tümünü Gör ›';
+        btnDashAddCustomer.title = isEn ? 'View All Clients (CRM)' : 'Tüm Müşterileri Gör (CRM)';
+        btnDashAddCustomer.onclick = () => {
+          navigateToAdminView('viewAdminCrm');
+        };
+      } else {
+        sp.textContent = isEn ? '+ Add Client' : '+ Müşteri Ekle';
+        btnDashAddCustomer.title = isEn ? 'Add New Client' : 'Yeni Müşteri Ekle';
+        btnDashAddCustomer.onclick = () => {
+          openAddCustomerModal();
+        };
+      }
     }
 
     // Greeting Header Integration Button (+ Entegrasyonlar -> Yapıldıktan sonra boş kalır)
@@ -6609,22 +7158,62 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (btnConfirmTransfer) {
-    btnConfirmTransfer.addEventListener('click', () => {
+    btnConfirmTransfer.addEventListener('click', async () => {
       if (!selectedTransferTargetStaffId) return;
       const sourceStaff = adminStaffList.find(s => s.id === currentStaffDetailId);
       const targetStaff = adminStaffList.find(s => s.id === selectedTransferTargetStaffId);
 
       if (!sourceStaff || !targetStaff) return;
 
-      if (confirm(`"${sourceStaff.name}" personeline ait tüm müşteriler, görüşmeler ve veriler "${targetStaff.name}" personeline aktarılacaktır.\n\nBu işlemi onaylıyor musunuz?`)) {
-        // Transfer CRM customers
-        customers.forEach(c => {
-          if (c.assignedStaff === sourceStaff.name || (!c.assignedStaff && sourceStaff.id === 'staff-1')) {
-            c.assignedStaff = targetStaff.name;
-          }
-        });
+      const isEn = (typeof currentLanguage !== 'undefined' && currentLanguage === 'en');
+      const confirmMsg = isEn
+        ? `All clients, meetings and CRM data belonging to "${sourceStaff.name}" will be transferred to "${targetStaff.name}".\n\nDo you confirm this transfer?`
+        : `"${sourceStaff.name}" personeline ait tüm müşteriler, görüşmeler ve veriler "${targetStaff.name}" personeline aktarılacaktır.\n\nBu işlemi onaylıyor musunuz?`;
 
-        // Transfer counts
+      if (confirm(confirmMsg)) {
+        btnConfirmTransfer.disabled = true;
+        const originalBtnHtml = btnConfirmTransfer.innerHTML;
+        btnConfirmTransfer.innerHTML = `<span>${isEn ? 'Transferring...' : 'Aktarılıyor...'}</span>`;
+
+        // 1. Try Backend API transfer if authenticated
+        try {
+          const fromRawId = sourceStaff.raw_id || (typeof sourceStaff.id === 'string' ? sourceStaff.id.replace('staff-', '') : sourceStaff.id);
+          const toRawId = targetStaff.raw_id || (typeof targetStaff.id === 'string' ? targetStaff.id.replace('staff-', '') : targetStaff.id);
+          const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+          if (fromRawId && toRawId && !isNaN(parseInt(fromRawId)) && !isNaN(parseInt(toRawId))) {
+            await fetch('/api/admin/staff/transfer-clients', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                ...(csrfToken ? { 'X-CSRF-TOKEN': csrfToken } : {})
+              },
+              body: JSON.stringify({
+                from_staff_id: parseInt(fromRawId),
+                to_staff_id: parseInt(toRawId)
+              })
+            }).catch(e => console.log('API transfer sync notice:', e));
+          }
+        } catch (e) {
+          console.warn('API transfer sync notice:', e);
+        }
+
+        // 2. Transfer CRM customers in client-side state
+        if (typeof customers !== 'undefined' && Array.isArray(customers)) {
+          customers.forEach(c => {
+            if (c.assignedStaff === sourceStaff.name || c.staff_id == sourceStaff.raw_id || (!c.assignedStaff && sourceStaff.id === 'staff-1')) {
+              c.assignedStaff = targetStaff.name;
+              c.staff_id = targetStaff.raw_id || targetStaff.id;
+              if (c.staff) {
+                c.staff.name = targetStaff.name;
+                c.staff.id = targetStaff.raw_id || targetStaff.id;
+              }
+            }
+          });
+        }
+
+        // 3. Transfer counts
         targetStaff.totalContacts = (targetStaff.totalContacts || 0) + (sourceStaff.totalContacts || 0);
         targetStaff.hotCount = (targetStaff.hotCount || 0) + (sourceStaff.hotCount || 0);
         targetStaff.warmCount = (targetStaff.warmCount || 0) + (sourceStaff.warmCount || 0);
@@ -6638,7 +7227,12 @@ document.addEventListener('DOMContentLoaded', () => {
         sourceStaff.newLeads = 0;
 
         saveStaffToStorage();
-        saveCustomersToStorage();
+        if (typeof saveCustomersToStorage === 'function') {
+          saveCustomersToStorage();
+        }
+
+        btnConfirmTransfer.innerHTML = originalBtnHtml;
+        btnConfirmTransfer.disabled = false;
 
         closeModal(transferCustomersModal);
         renderStaffDetailPage();
@@ -6646,7 +7240,10 @@ document.addEventListener('DOMContentLoaded', () => {
         renderAdminDashboard();
         renderAdminCrmTable();
 
-        showToast(`"${sourceStaff.name}" personeline ait tüm müşteriler ve veriler başarıyla "${targetStaff.name}" personeline aktarıldı! 🚀💼`);
+        showToast(isEn
+          ? `All clients and CRM records of "${sourceStaff.name}" have been successfully transferred to "${targetStaff.name}"! 🚀💼`
+          : `"${sourceStaff.name}" personeline ait tüm müşteriler ve veriler başarıyla "${targetStaff.name}" personeline aktarıldı! 🚀💼`
+        );
       }
     });
   }
@@ -9134,28 +9731,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Topbar Global Search for Super Admin
-  const superGlobalSearch = document.getElementById('superGlobalSearch');
-  if (superGlobalSearch) {
-    superGlobalSearch.addEventListener('input', (e) => {
-      const q = e.target.value.trim().toLowerCase();
-      if (!q) return;
-
-      if (superViews.viewSuperCompanies && superViews.viewSuperCompanies.classList.contains('active')) {
-        const cSearch = document.getElementById('superCompanySearch');
-        if (cSearch) {
-          cSearch.value = q;
-          renderSuperCompaniesTable();
-        }
-      } else if (superViews.viewSuperDemoRequests && superViews.viewSuperDemoRequests.classList.contains('active')) {
-        const dSearch = document.getElementById('superDemoSearch');
-        if (dSearch) {
-          dSearch.value = q;
-          renderSuperDemoRequestsTable();
-        }
-      }
-    });
-  }
 
   // =========================================================
   // 1. DASHBOARD RENDERER (SaaS Executive Overview)
