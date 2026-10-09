@@ -1635,15 +1635,30 @@ document.addEventListener('DOMContentLoaded', () => {
   // 0. ADMIN / COMPANY SETTINGS & DATA STRUCTURES
   // =========================================================
   let loggedInUser = null;
-  try {
-    const loggedInUserStr = localStorage.getItem('monacard_user');
-    if (loggedInUserStr) loggedInUser = JSON.parse(loggedInUserStr);
-  } catch (e) {}
+  if (typeof window !== 'undefined' && window.__INITIAL_DATA__ && window.__INITIAL_DATA__.currentUser) {
+    loggedInUser = window.__INITIAL_DATA__.currentUser;
+    try {
+      localStorage.setItem('monacard_user', JSON.stringify(loggedInUser));
+    } catch (e) {}
+  } else {
+    try {
+      const loggedInUserStr = localStorage.getItem('monacard_user');
+      if (loggedInUserStr) loggedInUser = JSON.parse(loggedInUserStr);
+    } catch (e) {}
+  }
+
+  const currentCompany = (typeof window !== 'undefined' && window.__INITIAL_DATA__ && window.__INITIAL_DATA__.company)
+    ? window.__INITIAL_DATA__.company
+    : (loggedInUser && loggedInUser.company ? loggedInUser.company : null);
+
+  const currentCard = (typeof window !== 'undefined' && window.__INITIAL_DATA__ && window.__INITIAL_DATA__.card)
+    ? window.__INITIAL_DATA__.card
+    : null;
 
   const defaultAdminSettings = {
-    brandColor: '#00A86B',
-    themeMode: 'light',
-    staffFeatures: {
+    brandColor: (currentCompany && currentCompany.brand_color) || '#00A86B',
+    themeMode: (currentCompany && currentCompany.theme_mode) || 'light',
+    staffFeatures: (currentCompany && currentCompany.staff_features) || {
       hubspot: true,
       voiceNotes: true,
       products: true,
@@ -1652,17 +1667,17 @@ document.addEventListener('DOMContentLoaded', () => {
       vcard: true
     },
     companyProfile: {
-      name: (loggedInUser && ((loggedInUser.company && loggedInUser.company.name) || loggedInUser.company_name)) || '',
-      sector: (loggedInUser && ((loggedInUser.company && loggedInUser.company.sector) || loggedInUser.sector)) || '',
-      website: (loggedInUser && ((loggedInUser.company && loggedInUser.company.website) || loggedInUser.website)) || '',
-      managerName: (loggedInUser && loggedInUser.name) || '',
-      managerTitle: (loggedInUser && (loggedInUser.title || (loggedInUser.company && loggedInUser.company.ceo_title))) || '',
-      email: (loggedInUser && loggedInUser.email) || '',
-      phone: (loggedInUser && (loggedInUser.phone || (loggedInUser.company && loggedInUser.company.phone))) || '',
-      phone2: (loggedInUser && ((loggedInUser.company && loggedInUser.company.phone2) || loggedInUser.phone2)) || '',
-      address: (loggedInUser && ((loggedInUser.company && loggedInUser.company.address) || loggedInUser.address)) || '',
-      address2: (loggedInUser && ((loggedInUser.company && loggedInUser.company.address2) || loggedInUser.address2)) || '',
-      socialLinks: {
+      name: (currentCompany && currentCompany.name) || (loggedInUser && ((loggedInUser.company && loggedInUser.company.name) || loggedInUser.company_name)) || '',
+      sector: (currentCompany && currentCompany.sector) || (loggedInUser && ((loggedInUser.company && loggedInUser.company.sector) || loggedInUser.sector)) || '',
+      website: (currentCompany && currentCompany.website) || (loggedInUser && ((loggedInUser.company && loggedInUser.company.website) || loggedInUser.website)) || '',
+      managerName: (currentCompany && currentCompany.ceo_name) || (loggedInUser && loggedInUser.name) || '',
+      managerTitle: (currentCompany && currentCompany.ceo_title) || (loggedInUser && (loggedInUser.title || (loggedInUser.company && loggedInUser.company.ceo_title))) || '',
+      email: (currentCompany && currentCompany.email) || (loggedInUser && loggedInUser.email) || '',
+      phone: (currentCompany && currentCompany.phone) || (loggedInUser && (loggedInUser.phone || (loggedInUser.company && loggedInUser.company.phone))) || '',
+      phone2: (currentCompany && currentCompany.phone2) || (loggedInUser && ((loggedInUser.company && loggedInUser.company.phone2) || loggedInUser.phone2)) || '',
+      address: (currentCompany && currentCompany.address) || (loggedInUser && ((loggedInUser.company && loggedInUser.company.address) || loggedInUser.address)) || '',
+      address2: (currentCompany && currentCompany.address2) || (loggedInUser && ((loggedInUser.company && loggedInUser.company.address2) || loggedInUser.address2)) || '',
+      socialLinks: (currentCompany && currentCompany.social_links) || {
         whatsapp: (loggedInUser && loggedInUser.company && loggedInUser.company.social_links && loggedInUser.company.social_links.whatsapp) || '',
         telegram: (loggedInUser && loggedInUser.company && loggedInUser.company.social_links && loggedInUser.company.social_links.telegram) || '',
         twitter: (loggedInUser && loggedInUser.company && loggedInUser.company.social_links && loggedInUser.company.social_links.twitter) || '',
@@ -1672,7 +1687,9 @@ document.addEventListener('DOMContentLoaded', () => {
         youtube: (loggedInUser && loggedInUser.company && loggedInUser.company.social_links && loggedInUser.company.social_links.youtube) || '',
         tiktok: (loggedInUser && loggedInUser.company && loggedInUser.company.social_links && loggedInUser.company.social_links.tiktok) || ''
       },
-      products: (loggedInUser && loggedInUser.company && Array.isArray(loggedInUser.company.products)) ? loggedInUser.company.products : []
+      products: (typeof window !== 'undefined' && window.__INITIAL_DATA__ && Array.isArray(window.__INITIAL_DATA__.products))
+        ? window.__INITIAL_DATA__.products
+        : ((loggedInUser && loggedInUser.company && Array.isArray(loggedInUser.company.products)) ? loggedInUser.company.products : [])
     },
     integrations: {
       google: {
@@ -1709,11 +1726,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let adminSettings = { ...defaultAdminSettings };
   try {
-    const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : 'default');
+    const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : (currentCompany && currentCompany.id ? currentCompany.id : 'default'));
     const storageKey = `monacard_admin_settings_${userCompId}`;
     const savedAdmin = localStorage.getItem(storageKey);
     if (savedAdmin) {
       adminSettings = { ...defaultAdminSettings, ...JSON.parse(savedAdmin) };
+    }
+    if (currentCompany) {
+      if (!adminSettings.companyProfile) adminSettings.companyProfile = { ...defaultAdminSettings.companyProfile };
+      if (currentCompany.name) adminSettings.companyProfile.name = currentCompany.name;
+      if (currentCompany.sector) adminSettings.companyProfile.sector = currentCompany.sector;
+      if (currentCompany.website) adminSettings.companyProfile.website = currentCompany.website;
+      if (currentCompany.email) adminSettings.companyProfile.email = currentCompany.email;
+      if (currentCompany.phone) adminSettings.companyProfile.phone = currentCompany.phone;
+      if (currentCompany.ceo_name) adminSettings.companyProfile.managerName = currentCompany.ceo_name;
+      if (currentCompany.ceo_title) adminSettings.companyProfile.managerTitle = currentCompany.ceo_title;
     }
     if (loggedInUser && loggedInUser.name) {
       if (!adminSettings.companyProfile) adminSettings.companyProfile = { ...defaultAdminSettings.companyProfile };
@@ -1729,7 +1756,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function saveAdminSettingsToStorage() {
     try {
-      const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : 'default');
+      const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : (currentCompany && currentCompany.id ? currentCompany.id : 'default'));
       localStorage.setItem(`monacard_admin_settings_${userCompId}`, JSON.stringify(adminSettings));
     } catch (e) {}
   }
@@ -1737,30 +1764,32 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================================================
   // 1. STAFF PROFILE DATA & LOCAL STORAGE
   // =========================================================
+  const cardUser = (currentCard && currentCard.user) || loggedInUser || {};
   const defaultProfile = {
-    fullName: (loggedInUser && loggedInUser.name) || "Muhiddin Öktem",
-    company: (loggedInUser && ((loggedInUser.company && loggedInUser.company.name) || loggedInUser.company_name)) || "Vedubox",
-    title: (loggedInUser && loggedInUser.title) || "Senior Product Designer & Creative Technologist",
-    phone: (loggedInUser && loggedInUser.phone) || "+90 536 255 64 24",
-    phoneClean: (loggedInUser && loggedInUser.phone ? loggedInUser.phone.replace(/\D/g, '') : "+905362556424"),
-    email: (loggedInUser && loggedInUser.email) || "muhiddinoktem@vedubox.com",
-    website: (loggedInUser && ((loggedInUser.company && loggedInUser.company.website) || loggedInUser.website)) || "https://vedubox.com",
-    address: "",
-    whatsapp: "",
-    telegram: "",
-    linkedin: "",
-    twitter: "",
-    facebook: "",
-    instagram: "",
-    youtube: "",
-    tiktok: "",
-    prodVeduboxUrl: "https://vedubox.com",
-    prodEtgigrupUrl: "https://etgigrup.com"
+    fullName: cardUser.name || (currentCard && currentCard.name) || (currentCompany && currentCompany.ceo_name) || "Firma Yöneticisi",
+    company: (currentCompany && currentCompany.name) || (cardUser.company && cardUser.company.name) || "Firma",
+    title: cardUser.title || (currentCard && currentCard.title) || (currentCompany && currentCompany.ceo_title) || "Yönetici",
+    phone: cardUser.phone || (currentCard && currentCard.direct_phone) || (currentCompany && currentCompany.phone) || "",
+    phoneClean: (cardUser.phone || (currentCard && currentCard.direct_phone) || (currentCompany && currentCompany.phone) || "").replace(/\D/g, ''),
+    email: cardUser.email || (currentCard && currentCard.work_email) || (currentCompany && currentCompany.email) || "",
+    website: (currentCompany && currentCompany.website) || "",
+    address: (currentCompany && currentCompany.address) || "",
+    whatsapp: (currentCard && currentCard.whatsapp) || "",
+    telegram: (currentCard && currentCard.telegram) || "",
+    linkedin: (currentCard && currentCard.linkedin) || "",
+    twitter: (currentCard && currentCard.twitter) || "",
+    facebook: (currentCard && currentCard.facebook) || "",
+    instagram: (currentCard && currentCard.instagram) || "",
+    youtube: (currentCard && currentCard.youtube) || "",
+    tiktok: (currentCard && currentCard.tiktok) || "",
+    prodVeduboxUrl: (currentCompany && currentCompany.website) || "",
+    prodEtgigrupUrl: ""
   };
 
   let staffProfile = { ...defaultProfile };
   try {
-    const saved = localStorage.getItem('monacard_staff_profile');
+    const userProfId = (loggedInUser && loggedInUser.id) ? loggedInUser.id : 'default';
+    const saved = localStorage.getItem(`monacard_staff_profile_${userProfId}`);
     if (saved) {
       staffProfile = { ...defaultProfile, ...JSON.parse(saved) };
     }
@@ -2677,50 +2706,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let adminStaffList = [];
   try {
-    if (typeof window !== 'undefined' && window.__INITIAL_DATA__ && Array.isArray(window.__INITIAL_DATA__.staffMembers) && window.__INITIAL_DATA__.staffMembers.length > 0) {
-      adminStaffList = window.__INITIAL_DATA__.staffMembers.map((s, idx) => ({
-        id: 'staff-' + s.id,
-        raw_id: s.id,
-        name: s.name,
-        title: s.title || 'Müşteri Temsilcisi',
-        email: s.email,
-        phone: s.phone || '',
-        avatar: (s.business_card && s.business_card.avatar_url) ? s.business_card.avatar_url : '',
-        status: s.status || 'active',
-        isLeader: s.role === 'company_admin' || !s.leader_id,
-        leaderId: s.leader_id ? ('staff-' + s.leader_id) : '',
-        monthlyTarget: s.monthly_target || 15,
-        newLeads: s.total_customers || 0,
-        existingLeads: 0,
-        totalContacts: s.total_customers || 0,
-        hotCount: s.hot_customers || 0,
-        warmCount: s.warm_customers || 0,
-        coldCount: s.cold_customers || 0,
-        convertedCount: s.hot_customers || 0,
-        revenue: (s.hot_customers || 0) * 12500,
-        satisfactionRate: 4.8,
-        score: s.total_customers ? Math.min(100, Math.round(((s.total_customers) / (s.monthly_target || 15)) * 100)) : 80
-      }));
-    } else {
-      const savedStaff = localStorage.getItem('monacard_admin_staff');
-      if (savedStaff) {
-        const parsed = JSON.parse(savedStaff);
-        if (Array.isArray(parsed) && parsed.length >= 3) {
-          adminStaffList = parsed;
-        } else {
-          adminStaffList = [...initialAdminStaff];
-        }
-      } else {
+    if (typeof window !== 'undefined' && window.__INITIAL_DATA__) {
+      if (Array.isArray(window.__INITIAL_DATA__.staffMembers)) {
+        adminStaffList = window.__INITIAL_DATA__.staffMembers.map((s, idx) => ({
+          id: 'staff-' + s.id,
+          raw_id: s.id,
+          name: s.name,
+          title: s.title || 'Müşteri Temsilcisi',
+          email: s.email,
+          phone: s.phone || '',
+          avatar: (s.business_card && s.business_card.avatar_url) ? s.business_card.avatar_url : '',
+          status: s.status || 'active',
+          isLeader: s.role === 'company_admin' || !s.leader_id,
+          leaderId: s.leader_id ? ('staff-' + s.leader_id) : '',
+          monthlyTarget: s.monthly_target || 15,
+          newLeads: s.total_customers || 0,
+          existingLeads: 0,
+          totalContacts: s.total_customers || 0,
+          hotCount: s.hot_customers || 0,
+          warmCount: s.warm_customers || 0,
+          coldCount: s.cold_customers || 0,
+          convertedCount: s.hot_customers || 0,
+          revenue: (s.hot_customers || 0) * 12500,
+          satisfactionRate: 4.8,
+          score: s.total_customers ? Math.min(100, Math.round(((s.total_customers) / (s.monthly_target || 15)) * 100)) : 0
+        }));
+      }
+      if (!loggedInUser && !currentCompany && adminStaffList.length === 0) {
         adminStaffList = [...initialAdminStaff];
       }
+    } else {
+      adminStaffList = [...initialAdminStaff];
     }
   } catch (e) {
-    adminStaffList = [...initialAdminStaff];
+    adminStaffList = [];
   }
 
   function saveStaffToStorage() {
     try {
-      localStorage.setItem('monacard_admin_staff', JSON.stringify(adminStaffList));
+      const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : (currentCompany && currentCompany.id ? currentCompany.id : 'default'));
+      localStorage.setItem(`monacard_admin_staff_${userCompId}`, JSON.stringify(adminStaffList));
     } catch (e) {}
   }
 
@@ -2733,12 +2758,24 @@ document.addEventListener('DOMContentLoaded', () => {
   // Manager Personal VIP Meetings
   let adminPersonalMeetings = [];
   try {
-    const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : null);
+    const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : (currentCompany && currentCompany.id ? currentCompany.id : null));
     const storageKey = userCompId ? `monacard_admin_personal_meetings_${userCompId}` : 'monacard_admin_personal_meetings';
     const savedPersonal = localStorage.getItem(storageKey);
     if (savedPersonal) {
       adminPersonalMeetings = JSON.parse(savedPersonal);
-    } else if (!loggedInUser) {
+    } else if (typeof window !== 'undefined' && window.__INITIAL_DATA__ && Array.isArray(window.__INITIAL_DATA__.meetings) && window.__INITIAL_DATA__.meetings.length > 0) {
+      adminPersonalMeetings = window.__INITIAL_DATA__.meetings.map(m => ({
+        id: 'meet-admin-' + m.id,
+        raw_id: m.id,
+        title: m.title || 'Müşteri Görüşmesi',
+        date: m.start_time ? m.start_time.split('T')[0] : (m.date || '2026-10-10'),
+        time: m.start_time ? (m.start_time.split('T')[1] || '').substring(0,5) : (m.time || '10:00'),
+        type: m.location_type || 'Google Meet',
+        participants: m.participants || '',
+        isPast: false,
+        isPersonal: true
+      }));
+    } else if (!loggedInUser && !currentCompany) {
       adminPersonalMeetings = [
         {
           id: "meet-admin-1",
@@ -2749,22 +2786,14 @@ document.addEventListener('DOMContentLoaded', () => {
           participants: "Dr. Selim Bayraktar, Ayşe Hanım",
           isPast: false,
           isPersonal: true
-        },
-        {
-          id: "meet-admin-2",
-          title: "Bölge Satış Strateji Değerlendirmesi",
-          date: "2026-09-26",
-          time: "15:00",
-          type: "Yüz Yüze",
-          participants: "Ali Rıza Çelik, Zeynep Arslan",
-          isPast: false,
-          isPersonal: true
         }
       ];
     } else {
       adminPersonalMeetings = [];
     }
-  } catch (e) {}
+  } catch (e) {
+    adminPersonalMeetings = [];
+  }
 
   function savePersonalMeetingsToStorage() {
     try {
@@ -3358,55 +3387,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let customers = [];
   try {
-    if (typeof window !== 'undefined' && window.__INITIAL_DATA__ && Array.isArray(window.__INITIAL_DATA__.customers) && window.__INITIAL_DATA__.customers.length > 0) {
-      customers = window.__INITIAL_DATA__.customers.map(c => {
-        const name = c.name || '';
-        const initials = c.initials || name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() || 'MK';
-        const notes = (c.notes || c.interaction_notes || []).map(n => ({
-          id: n.id ? ('note-' + n.id) : ('note-' + Date.now()),
-          type: n.type || 'text',
-          text: n.note || n.text || '',
-          time: n.created_at ? new Date(n.created_at).toLocaleDateString('tr-TR') : 'Bugün',
-          hubspotSynced: true
-        }));
-        return {
-          id: c.id ? ('cust-' + c.id) : ('cust-' + Date.now()),
-          raw_id: c.id,
-          name: name,
-          company: c.company_name || c.company || 'Bireysel Müşteri',
-          title: c.title || 'Yetkili',
-          phone: c.phone || '',
-          email: c.email || '',
-          stage: c.stage || 'warm',
-          assignedStaff: (c.staff && c.staff.name) ? c.staff.name : (c.assignedStaff || 'Yönetici'),
-          staff_id: c.staff_id,
-          initials: initials,
-          notes: notes
-        };
-      });
-      localStorage.setItem('monacard_crm_customers', JSON.stringify(customers));
-    } else {
-      const savedCust = localStorage.getItem('monacard_crm_customers');
-      if (savedCust) {
-        const parsed = JSON.parse(savedCust);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          customers = parsed;
-        } else {
-          customers = [...initialCustomers];
-          localStorage.setItem('monacard_crm_customers', JSON.stringify(customers));
-        }
-      } else {
-        customers = [...initialCustomers];
-        localStorage.setItem('monacard_crm_customers', JSON.stringify(customers));
+    if (typeof window !== 'undefined' && window.__INITIAL_DATA__) {
+      if (Array.isArray(window.__INITIAL_DATA__.customers)) {
+        customers = window.__INITIAL_DATA__.customers.map(c => {
+          const name = c.name || '';
+          const initials = c.initials || name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() || 'MK';
+          const notes = (c.notes || c.interaction_notes || []).map(n => ({
+            id: n.id ? ('note-' + n.id) : ('note-' + Date.now()),
+            type: n.type || 'text',
+            text: n.note || n.text || '',
+            time: n.created_at ? new Date(n.created_at).toLocaleDateString('tr-TR') : 'Bugün',
+            hubspotSynced: true
+          }));
+          return {
+            id: c.id ? ('cust-' + c.id) : ('cust-' + Date.now()),
+            raw_id: c.id,
+            name: name,
+            company: c.company_name || c.company || 'Bireysel Müşteri',
+            title: c.title || 'Yetkili',
+            phone: c.phone || '',
+            email: c.email || '',
+            stage: c.stage || 'warm',
+            assignedStaff: (c.staff && c.staff.name) ? c.staff.name : (c.assignedStaff || 'Yönetici'),
+            staff_id: c.staff_id,
+            initials: initials,
+            notes: notes
+          };
+        });
       }
+      if (!loggedInUser && !currentCompany && customers.length === 0) {
+        customers = [...initialCustomers];
+      }
+    } else {
+      customers = [...initialCustomers];
     }
   } catch (e) {
-    customers = [...initialCustomers];
+    customers = [];
   }
 
   function saveCustomersToStorage() {
     try {
-      localStorage.setItem('monacard_crm_customers', JSON.stringify(customers));
+      const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : (currentCompany && currentCompany.id ? currentCompany.id : 'default'));
+      localStorage.setItem(`monacard_crm_customers_${userCompId}`, JSON.stringify(customers));
     } catch (e) {
       console.warn(e);
     }
@@ -3867,23 +3889,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let meetings = [];
   try {
-    const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : null);
+    const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : (currentCompany && currentCompany.id ? currentCompany.id : null));
     const storageKey = userCompId ? `monacard_meetings_${userCompId}` : 'monacard_meetings';
     const savedM = localStorage.getItem(storageKey);
     if (savedM) {
       meetings = JSON.parse(savedM);
-    } else if (!loggedInUser) {
+    } else if (typeof window !== 'undefined' && window.__INITIAL_DATA__ && Array.isArray(window.__INITIAL_DATA__.meetings) && window.__INITIAL_DATA__.meetings.length > 0) {
+      meetings = window.__INITIAL_DATA__.meetings.map(m => ({
+        id: 'meet-' + m.id,
+        raw_id: m.id,
+        title: m.title || 'Müşteri Görüşmesi',
+        customer: m.participants || '',
+        date: m.start_time ? m.start_time.split('T')[0] : (m.date || '2026-10-10'),
+        time: m.start_time ? (m.start_time.split('T')[1] || '').substring(0,5) : (m.time || '10:00'),
+        type: m.location_type || 'Google Meet',
+        completed: !!m.is_completed,
+        isPast: false
+      }));
+    } else if (!loggedInUser && !currentCompany) {
       meetings = [...defaultMeetings];
     } else {
       meetings = [];
     }
   } catch (e) {
-    console.warn(e);
+    meetings = [];
   }
 
   function saveMeetingsToStorage() {
     try {
-      const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : null);
+      const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : (currentCompany && currentCompany.id ? currentCompany.id : null));
       const storageKey = userCompId ? `monacard_meetings_${userCompId}` : 'monacard_meetings';
       localStorage.setItem(storageKey, JSON.stringify(meetings));
       if (typeof savePersonalMeetingsToStorage === 'function') savePersonalMeetingsToStorage();
@@ -5085,12 +5119,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
-  let reminders = [...defaultReminders];
+  let reminders = [];
   try {
-    const savedR = localStorage.getItem('monacard_reminders');
-    if (savedR) reminders = JSON.parse(savedR);
+    const userCompId = (loggedInUser && loggedInUser.company_id) ? loggedInUser.company_id : (loggedInUser && loggedInUser.id ? loggedInUser.id : (currentCompany && currentCompany.id ? currentCompany.id : 'default'));
+    const savedR = localStorage.getItem(`monacard_reminders_${userCompId}`);
+    if (savedR) {
+      reminders = JSON.parse(savedR);
+    } else if (typeof window !== 'undefined' && window.__INITIAL_DATA__ && Array.isArray(window.__INITIAL_DATA__.reminders) && window.__INITIAL_DATA__.reminders.length > 0) {
+      reminders = window.__INITIAL_DATA__.reminders.map(r => ({
+        id: 'rem-' + r.id,
+        raw_id: r.id,
+        title: r.title,
+        date: r.due_date || 'Bugün',
+        priority: r.priority || 'medium',
+        completed: !!r.is_completed
+      }));
+    } else if (!loggedInUser && !currentCompany) {
+      reminders = [...defaultReminders];
+    } else {
+      reminders = [];
+    }
   } catch (e) {
-    console.warn(e);
+    reminders = [];
   }
 
   let activeReminderForDetail = null;

@@ -25,8 +25,8 @@ class UnifiedAppController extends Controller
         $companyId = $request->query('company_id');
         $currentUser = Auth::user();
 
-        if ($currentUser && $currentUser->company) {
-            $company = $currentUser->company()->with(['products', 'users.businessCard'])->first();
+        if ($currentUser && $currentUser->company_id) {
+            $company = Company::with(['products', 'users.businessCard'])->find($currentUser->company_id);
         } elseif ($companyId) {
             $company = Company::with(['products', 'users.businessCard'])->find($companyId);
         } else {
@@ -36,35 +36,52 @@ class UnifiedAppController extends Controller
 
         if (! $company) {
             $company = Company::firstOrCreate([
-                'name' => 'Vedubox Bilişim & Eğitim Teknolojileri',
-                'slug' => 'vedubox',
+                'name' => 'MonaCard Dijital',
+                'slug' => 'monacard',
             ], [
-                'sector' => 'Eğitim Teknolojileri & SaaS Yazılım',
-                'logo_url' => 'vedubox.png',
+                'sector' => 'Yazılım & Teknoloji',
                 'brand_color' => '#00A86B',
                 'theme_mode' => 'light',
-                'website' => 'https://vedubox.com',
-                'ceo_name' => 'Muhiddin Öktem',
-                'ceo_title' => 'Genel Müdür / CEO',
-                'email' => 'muhiddinoktem@vedubox.com',
-                'phone' => '+90 536 255 64 24',
-                'user_quota' => 25,
-                'plan' => 'enterprise',
+                'website' => 'https://monacard.com',
+                'ceo_name' => 'Firma Yöneticisi',
+                'ceo_title' => 'Yönetici',
+                'email' => 'info@monacard.com',
+                'phone' => '+90 555 000 00 00',
+                'user_quota' => 10,
+                'plan' => 'pro',
             ]);
         }
 
         // Active Card
-        $card = ($currentUser && $currentUser->businessCard) 
-            ?: BusinessCard::where('company_id', $company->id)->first();
+        $card = null;
+        if ($currentUser) {
+            $card = $currentUser->businessCard ?: BusinessCard::where('company_id', $currentUser->company_id)->first();
+            if (! $card && $company) {
+                $card = BusinessCard::create([
+                    'user_id' => $currentUser->id,
+                    'company_id' => $company->id,
+                    'slug' => \Illuminate\Support\Str::slug($currentUser->name).'-'.\Illuminate\Support\Str::random(4),
+                    'bio' => $company->name.' bünyesinde dijital kartvizit profilim.',
+                    'direct_phone' => $currentUser->phone,
+                    'work_email' => $currentUser->email,
+                    'theme_color' => $company->brand_color ?? '#00A86B',
+                    'is_active' => true,
+                ]);
+            }
+        } elseif ($company) {
+            $card = BusinessCard::where('company_id', $company->id)->first();
+        }
+
         if (! $card) {
             $card = BusinessCard::with(['user', 'company'])->first();
         }
 
         // Products
-        $products = Product::where('company_id', $company->id)->orderBy('sort_order')->get();
+        $products = $company ? Product::where('company_id', $company->id)->orderBy('sort_order')->get() : collect();
 
-        // Staff members with business cards & counts
-        $staffMembers = User::where('company_id', $company->id)
+        // Staff members with business cards & counts (Only real staff of this company)
+        $staffMembers = $company ? User::where('company_id', $company->id)
+            ->where('role', 'staff')
             ->with('businessCard')
             ->withCount([
                 'customers as total_customers',
@@ -79,7 +96,7 @@ class UnifiedAppController extends Controller
                 },
                 'meetings as total_meetings',
             ])
-            ->get();
+            ->get() : collect();
 
         // Customers with notes & staff relation
         $customers = Customer::where('company_id', $company->id)
