@@ -968,7 +968,7 @@
           </button>
           <div class="admin-search-wrap" id="adminSearchWrap">
             <svg class="admin-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" class="admin-search-input" id="adminGlobalSearch" placeholder="Personel, müşteri veya rapor ara..." autocomplete="off">
+            <input type="search" name="header_search_query_monacard" class="admin-search-input" id="adminGlobalSearch" placeholder="Personel, müşteri veya rapor ara..." autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" data-lpignore="true" data-1p-ignore="true" data-form-type="other" value="">
             <button type="button" class="admin-search-clear-btn hidden" id="adminSearchClearBtn" title="Temizle">&times;</button>
             <div class="global-search-results-dropdown hidden" id="adminSearchResultsDropdown"></div>
           </div>
@@ -4695,6 +4695,37 @@
       demoRequests: @json($demoRequests ?? []),
       pricingTiers: @json($pricingTiers ?? [])
     };
+
+    // Oturum veya Firma değiştiğinde eski şirket verisinin localStorage kalıntılarını temizle
+    (function() {
+      try {
+        const curUserId = window.__INITIAL_DATA__ && window.__INITIAL_DATA__.currentUser ? window.__INITIAL_DATA__.currentUser.id : null;
+        const curCompId = window.__INITIAL_DATA__ && window.__INITIAL_DATA__.company ? window.__INITIAL_DATA__.company.id : null;
+        const prevUserId = localStorage.getItem('monacard_last_user_id');
+        const prevCompId = localStorage.getItem('monacard_last_comp_id');
+
+        if (curUserId && (prevUserId != curUserId || prevCompId != curCompId)) {
+          const keysToClear = [
+            'monacard_crm_customers', 'monacard_admin_staff', 'monacard_reminders', 
+            'monacard_meetings', 'monacard_admin_personal_meetings', 'monacard_staff_profile',
+            'monacard_admin_settings', 'monacard_products', 'monacard_notifications'
+          ];
+          keysToClear.forEach(k => localStorage.removeItem(k));
+          localStorage.setItem('monacard_last_user_id', curUserId);
+          if (curCompId) localStorage.setItem('monacard_last_comp_id', curCompId);
+        }
+
+        // Global Arama kutusu tarayıcı şifre doldurucu tarafından doldurulursa sıfırla
+        document.addEventListener('DOMContentLoaded', function() {
+          const sInput = document.getElementById('adminGlobalSearch');
+          if (sInput) {
+            sInput.value = '';
+            setTimeout(function() { sInput.value = ''; }, 100);
+            setTimeout(function() { sInput.value = ''; }, 500);
+          }
+        });
+      } catch(e) {}
+    })();
   </script>
 
   <!-- JavaScript -->
