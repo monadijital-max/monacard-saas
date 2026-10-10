@@ -1257,7 +1257,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const btnReauth = document.getElementById('btnReconnectGoogle');
       if (stTitle) stTitle.textContent = isEn ? 'Google Workspace & Calendar Connection' : 'Google Workspace & Takvim Bağlantısı';
       if (stBadge) stBadge.innerHTML = `<span class="pulse-dot"></span>${isEn ? 'Connected' : 'Bağlandı'}`;
-      if (stMeta) stMeta.innerHTML = isEn ? 'Active Account: <strong>muhiddinoktem@vedubox.com</strong> &bull; Last Synced: 2 minutes ago' : 'Aktif Hesap: <strong>muhiddinoktem@vedubox.com</strong> &bull; Son Senkronizasyon: 2 dakika önce';
+      const activeIntegEmail = (loggedInUser && loggedInUser.email) || (compProf && compProf.email) || (staffProfile && staffProfile.email) || 'hesap@firma.com';
+      if (stMeta) stMeta.innerHTML = isEn ? `Active Account: <strong>${activeIntegEmail}</strong> &bull; Last Synced: Just now` : `Aktif Hesap: <strong>${activeIntegEmail}</strong> &bull; Son Senkronizasyon: Az önce`;
       if (btnReauth) btnReauth.textContent = isEn ? '🔄 Re-authorize' : '🔄 Yeniden Yetkilendir';
 
       const toggles = pGoogle.querySelectorAll('.settings-toggle-row');
@@ -1766,9 +1767,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================================================
   const cardUser = (currentCard && currentCard.user) || loggedInUser || {};
   const defaultProfile = {
-    fullName: cardUser.name || (currentCard && currentCard.name) || (currentCompany && currentCompany.ceo_name) || "Firma Yöneticisi",
-    company: (currentCompany && currentCompany.name) || (cardUser.company && cardUser.company.name) || "Firma",
-    title: cardUser.title || (currentCard && currentCard.title) || (currentCompany && currentCompany.ceo_title) || "Yönetici",
+    fullName: cardUser.name || (currentCard && currentCard.name) || (currentCompany && currentCompany.ceo_name) || "",
+    company: (currentCompany && currentCompany.name) || (cardUser.company && cardUser.company.name) || "",
+    title: cardUser.title || (currentCard && currentCard.title) || (currentCompany && currentCompany.ceo_title) || "",
     phone: cardUser.phone || (currentCard && currentCard.direct_phone) || (currentCompany && currentCompany.phone) || "",
     phoneClean: (cardUser.phone || (currentCard && currentCard.direct_phone) || (currentCompany && currentCompany.phone) || "").replace(/\D/g, ''),
     email: cardUser.email || (currentCard && currentCard.work_email) || (currentCompany && currentCompany.email) || "",
@@ -1819,7 +1820,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Corporate Profile inheritance
     const compProf = (typeof adminSettings !== 'undefined' && adminSettings.companyProfile) ? adminSettings.companyProfile : {};
 
-    const activeFullName = staffProfile.fullName || compProf.managerName || 'Muhiddin Öktem';
+    const activeFullName = staffProfile.fullName || compProf.managerName || '';
     const activeTitle = staffProfile.title || compProf.managerTitle || '';
     const activePhone = staffProfile.phone || compProf.phone || '';
     const activePhoneClean = (staffProfile.phoneClean || activePhone).replace(/[^\d+]/g, '');
@@ -2642,14 +2643,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function downloadFullVCard() {
     const compProf = (typeof adminSettings !== 'undefined' && adminSettings.companyProfile) ? adminSettings.companyProfile : {};
-    const activeFullName = staffProfile.fullName || compProf.managerName || 'Muhiddin Öktem';
-    const activeCompany = compProf.name || staffProfile.company || 'Vedubox';
-    const activeTitle = staffProfile.title || compProf.managerTitle || '';
-    const activePhone = staffProfile.phone || compProf.phone || '+90 536 255 64 24';
+    const activeFullName = staffProfile.fullName || compProf.managerName || (loggedInUser && loggedInUser.name) || (currentCompany && currentCompany.ceo_name) || 'Firma Yetkilisi';
+    const activeCompany = compProf.name || staffProfile.company || (currentCompany && currentCompany.name) || 'MonaCard';
+    const activeTitle = staffProfile.title || compProf.managerTitle || (loggedInUser && loggedInUser.title) || '';
+    const activePhone = staffProfile.phone || compProf.phone || (currentCompany && currentCompany.phone) || '';
     const activePhoneClean = (staffProfile.phoneClean || activePhone).replace(/[^\d+]/g, '');
-    const activeEmail = staffProfile.email || compProf.email || 'muhiddinoktem@vedubox.com';
-    const activeWebsite = compProf.website || staffProfile.website || 'https://vedubox.com';
-    const activeAddress = compProf.address || staffProfile.address || '';
+    const activeEmail = staffProfile.email || compProf.email || (currentCompany && currentCompany.email) || '';
+    const activeWebsite = compProf.website || staffProfile.website || (currentCompany && currentCompany.website) || '';
+    const activeAddress = compProf.address || staffProfile.address || (currentCompany && currentCompany.address) || '';
     const cleanAddress = activeAddress.replace(/\n/g, ', ');
 
     const vcardLines = [
@@ -5673,16 +5674,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalAddCustomer = document.getElementById('modalAddCustomer');
   const formAddCustomerModal = document.getElementById('formAddCustomerModal');
   const modalCustStaff = document.getElementById('modalCustStaff');
+  const btnCrmAddCustomer = document.getElementById('btnCrmAddCustomer');
 
   function openAddCustomerModal() {
     if (!modalAddCustomer) return;
     if (formAddCustomerModal) formAddCustomerModal.reset();
     if (modalCustStaff) {
       const mgrName = (loggedInUser && loggedInUser.name) || (adminSettings.companyProfile && adminSettings.companyProfile.managerName) || 'Yönetici';
-      modalCustStaff.innerHTML = `<option value="${mgrName}">Yönetici (${mgrName})</option>` +
-        adminStaffList.map(s => `<option value="${s.name}">${s.name} (${s.title})</option>`).join('');
+      const mgrId = loggedInUser ? loggedInUser.id : null;
+      modalCustStaff.innerHTML = `<option value="${mgrName}" data-id="${mgrId || ''}">Yönetici (${mgrName})</option>` +
+        adminStaffList.map(s => `<option value="${s.name}" data-id="${s.raw_id || s.id}">${s.name} (${s.title})</option>`).join('');
     }
     openModal(modalAddCustomer);
+  }
+  window.openAddCustomerModal = openAddCustomerModal;
+
+  if (btnCrmAddCustomer) {
+    btnCrmAddCustomer.addEventListener('click', () => {
+      openAddCustomerModal();
+    });
   }
 
   if (formAddCustomerModal) {
@@ -5695,6 +5705,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const email = document.getElementById('modalCustEmail').value.trim();
       const stage = document.getElementById('modalCustStage').value;
       const assignedStaff = modalCustStaff ? modalCustStaff.value : 'Yönetici';
+      const selectedOpt = modalCustStaff ? modalCustStaff.options[modalCustStaff.selectedIndex] : null;
+      const staff_id = selectedOpt ? selectedOpt.getAttribute('data-id') : null;
       const note = document.getElementById('modalCustNote').value.trim();
 
       const initials = name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
@@ -5708,6 +5720,7 @@ document.addEventListener('DOMContentLoaded', () => {
         email,
         stage,
         assignedStaff,
+        staff_id: staff_id || (loggedInUser ? loggedInUser.id : null),
         initials,
         notes: note ? [{
           id: "note-" + Date.now(),
@@ -5721,9 +5734,36 @@ document.addEventListener('DOMContentLoaded', () => {
       customers.unshift(newCust);
       saveCustomersToStorage();
       closeModal(modalAddCustomer);
+
+      // Backend PostgreSQL Persistence
+      fetch('/api/admin/crm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+        },
+        body: JSON.stringify({
+          name: name,
+          company: company || 'Bireysel Müşteri',
+          title: title,
+          phone: phone,
+          email: email,
+          stage: stage,
+          staff_id: staff_id || (loggedInUser ? loggedInUser.id : null),
+          note: note
+        })
+      }).then(r => r.json()).then(data => {
+        if (data && data.customer) {
+          newCust.raw_id = data.customer.id;
+          saveCustomersToStorage();
+        }
+      }).catch(err => console.warn('CRM Customer save API note:', err));
+
+      syncStaffCountsWithCustomers();
       renderAdminDashboard();
       if (typeof renderCrmList === 'function') renderCrmList();
       if (typeof renderAdminCrmTable === 'function') renderAdminCrmTable();
+      if (typeof renderAdminStaffTable === 'function') renderAdminStaffTable();
       showToast(`${name} başarıyla müşteri havuzuna eklendi! 🎯🔥`);
     });
   }
@@ -6210,26 +6250,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function syncStaffCountsWithCustomers() {
+    if (!Array.isArray(adminStaffList) || !Array.isArray(customers)) return;
+    adminStaffList.forEach(s => {
+      const sCusts = customers.filter(c => (s.raw_id && c.staff_id == s.raw_id) || (c.assignedStaff && c.assignedStaff === s.name));
+      s.totalContacts = sCusts.length;
+      s.newLeads = sCusts.length;
+      s.hotCount = sCusts.filter(c => c.stage === 'hot' || c.stage === 'kazanildi').length;
+      s.warmCount = sCusts.filter(c => c.stage === 'warm' || c.stage === 'gorusuldu').length;
+      s.coldCount = sCusts.filter(c => c.stage === 'cold' || c.stage === 'yeni' || !c.stage).length;
+      s.convertedCount = s.hotCount;
+      s.revenue = s.hotCount * 12500;
+      s.score = s.monthlyTarget ? Math.min(100, Math.round((s.totalContacts / s.monthlyTarget) * 100)) : 0;
+    });
+  }
+
   function renderStaffDetailPage() {
+    syncStaffCountsWithCustomers();
     const staff = adminStaffList.find(s => s.id === currentStaffDetailId) || adminStaffList[0];
     if (!staff) return;
 
     const isEn = currentLang === 'en';
 
-    // Period multiplier for realistic dynamic numbers
-    let mult = 1.0;
-    if (currentStaffDetailPeriod === 'week') mult = 0.35;
-    else if (currentStaffDetailPeriod === 'month') mult = 1.0;
-    else if (currentStaffDetailPeriod === '30days') mult = 1.05;
-    else if (currentStaffDetailPeriod === '3months') mult = 2.8;
-    else if (currentStaffDetailPeriod === 'all') mult = 4.2;
-
-    const totalConvs = Math.max(1, Math.round((staff.totalContacts || 20) * mult));
-    const hotCount = Math.max(0, Math.round((staff.hotCount || 8) * mult));
-    const warmCount = Math.max(0, Math.round((staff.warmCount || 6) * mult));
-    const coldCount = Math.max(0, Math.round((staff.coldCount || 4) * mult));
+    // Gerçek dinamik veriler: Personele atanmış müşteriler
+    const staffCustomers = (customers || []).filter(c => (staff.raw_id && c.staff_id == staff.raw_id) || (c.assignedStaff && c.assignedStaff === staff.name));
+    const hotCount = staffCustomers.filter(c => c.stage === 'hot' || c.stage === 'kazanildi').length;
+    const warmCount = staffCustomers.filter(c => c.stage === 'warm' || c.stage === 'gorusuldu').length;
+    const coldCount = staffCustomers.filter(c => c.stage === 'cold' || c.stage === 'yeni' || !c.stage).length;
+    const totalConvs = staffCustomers.length;
     const targetGoal = staff.monthlyTarget || 15;
-    const targetPct = Math.min(100, Math.round((totalConvs / targetGoal) * 100));
+    const targetPct = targetGoal > 0 ? Math.min(100, Math.round((totalConvs / targetGoal) * 100)) : 0;
 
     // 1. Header Information
     const detHeaderName = document.getElementById('staffDetHeaderName');
@@ -6237,7 +6287,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const detHeaderTitle = document.getElementById('staffDetHeaderTitle');
 
     if (detHeaderName) detHeaderName.textContent = staff.name;
-    if (detHeaderTitle) detHeaderTitle.textContent = `${staff.title} | ${staff.team || (isEn ? 'B2B Solutions' : 'B2B Çözümler')}`;
+    if (detHeaderTitle) detHeaderTitle.textContent = `${staff.title || 'Personel'} | ${staff.team || (currentCompany ? currentCompany.name : (isEn ? 'B2B Solutions' : 'Kurumsal'))}`;
     if (detHeaderBadge) {
       if (staff.isLeader) {
         detHeaderBadge.style.display = 'inline-flex';
@@ -6268,7 +6318,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (staff.avatar) {
         detAvatar.innerHTML = `<img src="${staff.avatar}" alt="${staff.name}">`;
       } else {
-        const initials = staff.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        const initials = staff.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'AK';
         detAvatar.textContent = initials;
       }
     }
@@ -6294,10 +6344,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const teamText = document.getElementById('staffDetTeamText');
     const subCountBadge = document.getElementById('staffDetSubCountBadge');
 
-    if (phoneText) phoneText.textContent = staff.phone || '+90 532 987 65 43';
-    if (phoneLink) phoneLink.href = `tel:${(staff.phone || '+905329876543').replace(/\s+/g, '')}`;
-    if (emailText) emailText.textContent = staff.email || `${staff.name.toLowerCase().replace(/\s+/g, '')}@vedubox.com`;
-    if (mailLink) mailLink.href = `mailto:${staff.email || 'info@vedubox.com'}`;
+    if (phoneText) phoneText.textContent = staff.phone || '-';
+    if (phoneLink) phoneLink.href = staff.phone ? `tel:${staff.phone.replace(/\s+/g, '')}` : '#';
+    if (emailText) emailText.textContent = staff.email || '';
+    if (mailLink) mailLink.href = staff.email ? `mailto:${staff.email}` : '#';
 
     const subStaffList = adminStaffList.filter(s => s.leaderId === staff.id);
     if (subCountBadge) subCountBadge.textContent = subStaffList.length;
@@ -6355,43 +6405,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const activityBars = document.getElementById('staffDetActivityBars');
     if (activityBars) {
-      const days = isEn ? [
-        { label: 'M', name: 'Mon', count: Math.round(totalConvs * 0.16), height: 48 },
-        { label: 'T', name: 'Tue', count: Math.round(totalConvs * 0.24), height: 75 },
-        { label: 'W', name: 'Wed', count: Math.round(totalConvs * 0.18), height: 60 },
-        { label: 'T', name: 'Thu', count: Math.round(totalConvs * 0.32), height: 95, active: true },
-        { label: 'F', name: 'Fri', count: Math.round(totalConvs * 0.22), height: 70 },
-        { label: 'S', name: 'Sat', count: Math.round(totalConvs * 0.10), height: 35 },
-        { label: 'S', name: 'Sun', count: Math.round(totalConvs * 0.05), height: 20 }
-      ] : [
-        { label: 'P', name: 'Pzt', count: Math.round(totalConvs * 0.16), height: 48 },
-        { label: 'S', name: 'Sal', count: Math.round(totalConvs * 0.24), height: 75 },
-        { label: 'Ç', name: 'Çar', count: Math.round(totalConvs * 0.18), height: 60 },
-        { label: 'P', name: 'Per', count: Math.round(totalConvs * 0.32), height: 95, active: true },
-        { label: 'C', name: 'Cum', count: Math.round(totalConvs * 0.22), height: 70 },
-        { label: 'C', name: 'Cmt', count: Math.round(totalConvs * 0.10), height: 35 },
-        { label: 'P', name: 'Paz', count: Math.round(totalConvs * 0.05), height: 20 }
-      ];
-
-      activityBars.innerHTML = days.map(d => `
-        <div class="act-bar-col">
-          <div class="act-bar-fill ${d.active ? 'active' : ''}" style="height: ${d.height}%;">
-            ${d.active ? `<div class="peoplexio-peak-pill">${totalConvs} ${isEn ? 'Meetings' : 'Görüşme'}</div>` : ''}
-            <span class="act-tooltip">${d.count} (${d.name})</span>
+      if (totalConvs === 0) {
+        const dayLabels = isEn ? ['M', 'T', 'W', 'T', 'F', 'S', 'S'] : ['P', 'S', 'Ç', 'P', 'C', 'C', 'P'];
+        activityBars.innerHTML = dayLabels.map(l => `
+          <div class="act-bar-col">
+            <div class="act-bar-fill" style="height: 6%;">
+              <span class="act-tooltip">0</span>
+            </div>
+            <span class="act-label">${l}</span>
           </div>
-          <span class="act-label">${d.label}</span>
-        </div>
-      `).join('');
+        `).join('');
+      } else {
+        const days = isEn ? [
+          { label: 'M', name: 'Mon', count: Math.round(totalConvs * 0.16), height: Math.max(10, Math.min(100, Math.round((totalConvs * 0.16 / targetGoal) * 100))) },
+          { label: 'T', name: 'Tue', count: Math.round(totalConvs * 0.24), height: Math.max(10, Math.min(100, Math.round((totalConvs * 0.24 / targetGoal) * 100))) },
+          { label: 'W', name: 'Wed', count: Math.round(totalConvs * 0.18), height: Math.max(10, Math.min(100, Math.round((totalConvs * 0.18 / targetGoal) * 100))) },
+          { label: 'T', name: 'Thu', count: Math.round(totalConvs * 0.32), height: Math.max(15, Math.min(100, Math.round((totalConvs * 0.32 / targetGoal) * 100))), active: true },
+          { label: 'F', name: 'Fri', count: Math.round(totalConvs * 0.22), height: Math.max(10, Math.min(100, Math.round((totalConvs * 0.22 / targetGoal) * 100))) },
+          { label: 'S', name: 'Sat', count: Math.round(totalConvs * 0.10), height: Math.max(10, Math.min(100, Math.round((totalConvs * 0.10 / targetGoal) * 100))) },
+          { label: 'S', name: 'Sun', count: Math.round(totalConvs * 0.05), height: Math.max(8, Math.min(100, Math.round((totalConvs * 0.05 / targetGoal) * 100))) }
+        ] : [
+          { label: 'P', name: 'Pzt', count: Math.round(totalConvs * 0.16), height: Math.max(10, Math.min(100, Math.round((totalConvs * 0.16 / targetGoal) * 100))) },
+          { label: 'S', name: 'Sal', count: Math.round(totalConvs * 0.24), height: Math.max(10, Math.min(100, Math.round((totalConvs * 0.24 / targetGoal) * 100))) },
+          { label: 'Ç', name: 'Çar', count: Math.round(totalConvs * 0.18), height: Math.max(10, Math.min(100, Math.round((totalConvs * 0.18 / targetGoal) * 100))) },
+          { label: 'P', name: 'Per', count: Math.round(totalConvs * 0.32), height: Math.max(15, Math.min(100, Math.round((totalConvs * 0.32 / targetGoal) * 100))), active: true },
+          { label: 'C', name: 'Cum', count: Math.round(totalConvs * 0.22), height: Math.max(10, Math.min(100, Math.round((totalConvs * 0.22 / targetGoal) * 100))) },
+          { label: 'C', name: 'Cmt', count: Math.round(totalConvs * 0.10), height: Math.max(10, Math.min(100, Math.round((totalConvs * 0.10 / targetGoal) * 100))) },
+          { label: 'P', name: 'Paz', count: Math.round(totalConvs * 0.05), height: Math.max(8, Math.min(100, Math.round((totalConvs * 0.05 / targetGoal) * 100))) }
+        ];
+
+        activityBars.innerHTML = days.map(d => `
+          <div class="act-bar-col">
+            <div class="act-bar-fill ${d.active ? 'active' : ''}" style="height: ${d.height}%;">
+              ${d.active ? `<div class="peoplexio-peak-pill">${totalConvs} ${isEn ? 'Meetings' : 'Görüşme'}</div>` : ''}
+              <span class="act-tooltip">${d.count} (${d.name})</span>
+            </div>
+            <span class="act-label">${d.label}</span>
+          </div>
+        `).join('');
+      }
     }
 
     // 6. Col 2: Organized Meetings List
     const meetingsListEl = document.getElementById('staffDetMeetingsList');
     const meetingBadge = document.getElementById('staffDetMeetingCountBadge');
-    const hasStaff = adminStaffList && adminStaffList.length > 0;
-    const staffMeetings = (meetings || []).filter((m, idx) => {
-      const assigned = m.assignedStaff || (hasStaff ? adminStaffList[idx % adminStaffList.length]?.name : 'Ekip');
-      return assigned === (staff ? staff.name : '') || idx % 2 === 0;
-    }).slice(0, 4);
+    const staffMeetings = (meetings || []).filter(m => (m.assignedStaff && m.assignedStaff === staff.name) || (m.staff_id && staff.raw_id && m.staff_id == staff.raw_id));
 
     if (meetingBadge) meetingBadge.textContent = `${staffMeetings.length} ${isEn ? 'Meetings' : 'Toplantı'}`;
     if (meetingsListEl) {
@@ -6426,82 +6484,58 @@ document.addEventListener('DOMContentLoaded', () => {
     // 7. Col 3: Weekly Activity Logs
     const logsListEl = document.getElementById('staffDetLogsList');
     if (logsListEl) {
-      const staffLogs = isEn ? [
-        {
-          icon: '🤝',
-          title: `Meeting Completed: ${customers[0] ? customers[0].name : 'Kemal Yılmaz'}`,
-          meta: 'Shared enterprise MonaCard presentation and pricing proposal.',
-          time: 'Today, 14:30'
-        },
-        {
-          icon: '📄',
-          title: `Proposal Sent: ${customers[1] ? customers[1].name : 'Selin Demir'}`,
-          meta: '150-User Digital Business Card annual license package.',
-          time: 'Yesterday, 11:15'
-        },
-        {
-          icon: '📅',
-          title: 'New Meeting Scheduled (Google Meet)',
-          meta: 'Digital Transformation & CRM Integration Pitch.',
-          time: '18 Sep, 16:40'
-        },
-        {
-          icon: '✅',
-          title: `Partnership Deal Approved: ${customers[2] ? customers[2].name : 'Zeynep Kaya'}`,
-          meta: 'Contract signed via e-signature and activation completed.',
-          time: '17 Sep, 15:20'
-        },
-        {
-          icon: '🎙️',
-          title: 'Voice Note Logged',
-          meta: 'Discussed budget revision with procurement director.',
-          time: '16 Sep, 10:05'
+      const realLogs = [];
+      
+      staffCustomers.forEach(c => {
+        if (Array.isArray(c.notes) && c.notes.length > 0) {
+          c.notes.forEach(n => {
+            realLogs.push({
+              icon: n.type === 'voice' ? '🎙️' : '📝',
+              title: `${c.name} - ${n.type === 'voice' ? 'Sesli Not' : 'Müşteri Notu'}`,
+              meta: n.text || 'Görüşme notu kaydedildi.',
+              time: n.time || 'Bugün'
+            });
+          });
+        } else {
+          realLogs.push({
+            icon: '👤',
+            title: `Müşteri Kaydedildi: ${c.name}`,
+            meta: `${c.company || 'Bireysel'} • ${c.phone || c.email || ''}`,
+            time: 'Son 7 gün'
+          });
         }
-      ] : [
-        {
-          icon: '🤝',
-          title: `Görüşme Tamamlandı: ${customers[0] ? customers[0].name : 'Kemal Yılmaz'}`,
-          meta: 'Kurumsal MonaCard tanıtımı ve fiyat teklifi paylaşıldı.',
-          time: 'Bugün, 14:30'
-        },
-        {
-          icon: '📄',
-          title: `Teklif Gönderildi: ${customers[1] ? customers[1].name : 'Selin Demir'}`,
-          meta: '150 Kullanıcılı Dijital Kartvizit yıllık lisans paketi.',
-          time: 'Dün, 11:15'
-        },
-        {
-          icon: '📅',
-          title: 'Yeni Toplantı Planlandı (Google Meet)',
-          meta: 'Dijital Dönüşüm & CRM Entegrasyon Sunumu.',
-          time: '18 Eylül, 16:40'
-        },
-        {
-          icon: '✅',
-          title: `İş Birliği Anlaşması Onaylandı: ${customers[2] ? customers[2].name : 'Zeynep Kaya'}`,
-          meta: 'Sözleşme e-imza ile tamamlandı ve aktivasyon yapıldı.',
-          time: '17 Eylül, 15:20'
-        },
-        {
-          icon: '🎙️',
-          title: 'Sesli Görüşme Notu Kaydedildi',
-          meta: 'Satın alma yetkilisi ile bütçe revizyonu görüşüldü.',
-          time: '16 Eylül, 10:05'
-        }
-      ];
+      });
 
-      logsListEl.innerHTML = staffLogs.map(log => `
-        <div class="dark-log-item">
-          <div class="dark-log-icon-box">${log.icon}</div>
-          <div class="dark-log-info">
-            <span class="dark-log-item-title">${log.title}</span>
-            <div class="dark-log-meta">
-              <span>${log.meta}</span>
-              <span class="dark-log-time">${log.time}</span>
+      staffMeetings.forEach(m => {
+        realLogs.push({
+          icon: '📅',
+          title: `Toplantı Planlandı: ${m.title}`,
+          meta: `${m.date} ${m.time} • ${m.type}`,
+          time: m.date || 'Bugün'
+        });
+      });
+
+      if (realLogs.length === 0) {
+        logsListEl.innerHTML = `
+          <div style="text-align:center; padding:32px 16px; color:#94A3B8;">
+            <p style="font-size:13px; font-weight:600; margin:0 0 4px 0;">${isEn ? 'No activity logs found' : 'Henüz işlem logu bulunmuyor'}</p>
+            <p style="font-size:11.5px; opacity:0.8; margin:0;">${isEn ? 'Activity logs will appear when this staff adds notes, meetings or clients.' : 'Personel müşteri, toplantı veya sesli not kaydettiğinde burada listelenecektir.'}</p>
+          </div>
+        `;
+      } else {
+        logsListEl.innerHTML = realLogs.slice(0, 10).map(log => `
+          <div class="dark-log-item">
+            <div class="dark-log-icon-box">${log.icon}</div>
+            <div class="dark-log-info">
+              <span class="dark-log-item-title">${log.title}</span>
+              <div class="dark-log-meta">
+                <span>${log.meta}</span>
+                <span class="dark-log-time">${log.time}</span>
+              </div>
             </div>
           </div>
-        </div>
-      `).join('');
+        `).join('');
+      }
     }
   }
 
@@ -8109,6 +8143,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const monthlyTarget = staffInputMonthlyTarget ? parseInt(staffInputMonthlyTarget.value, 10) || 15 : 15;
       const isLeader = staffInputIsLeader ? staffInputIsLeader.checked : false;
       const leaderId = isLeader ? "" : (staffInputLeaderId ? staffInputLeaderId.value : "");
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
       if (editId) {
         // Edit existing
@@ -8147,6 +8182,30 @@ document.addEventListener('DOMContentLoaded', () => {
           score: 0
         };
         adminStaffList.unshift(newStaff);
+
+        // Persist to backend database API
+        fetch('/api/admin/staff', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            phone,
+            title,
+            department: 'Satış & Pazarlama',
+            role: 'staff',
+            password: 'Password123!'
+          })
+        }).then(r => r.json()).then(res => {
+          if (res.data) {
+            newStaff.raw_id = res.data.id;
+          }
+        }).catch(err => console.warn('Staff API create error', err));
+
         showToast(`${name} personele eklendi! 🚀`);
       }
 
@@ -8279,6 +8338,22 @@ document.addEventListener('DOMContentLoaded', () => {
         reviews: settingStaffReviews ? settingStaffReviews.checked : true,
         vcard: settingStaffVCard ? settingStaffVCard.checked : true
       };
+
+      // Persist Settings to REST API
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+      fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify({
+          brand_color: adminSettings.brandColor,
+          theme_mode: adminSettings.themeMode,
+          staff_features: adminSettings.staffFeatures
+        })
+      }).catch(e => console.warn('Settings API update error', e));
 
       // Save integrations
       adminSettings.integrations = {
@@ -8516,6 +8591,30 @@ document.addEventListener('DOMContentLoaded', () => {
       console.warn(e);
     }
 
+    // Persist Company Profile to REST API
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    fetch('/api/admin/profile', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-CSRF-TOKEN': csrfToken
+      },
+      body: JSON.stringify({
+        name: compName,
+        sector: compSector,
+        website: compWebsite,
+        ceo_name: managerName,
+        ceo_title: managerTitle,
+        email: compEmail,
+        phone: compPhone,
+        phone2: compPhone2,
+        address: compAddress,
+        address2: compAddress2,
+        social_links: socialLinks
+      })
+    }).catch(e => console.warn('Company profile API update error', e));
+
     saveAdminSettingsToStorage();
     applyProfileToUI();
     renderCardProducts();
@@ -8750,6 +8849,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (confirm(`"${prodName}" ürününü şirket vitrininden silmek istediğinize emin misiniz?`)) {
       adminSettings.companyProfile.products = products.filter(p => p.id !== productId);
+      if (prod && prod.raw_id) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+        fetch(`/api/admin/products/${prod.raw_id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+          }
+        }).catch(e => console.warn('Product delete API error', e));
+      }
       saveAdminSettingsToStorage();
       renderAdminProductsList();
       renderCardProducts();
@@ -8765,13 +8875,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const name = document.getElementById('prodInputName').value.trim();
       const subtitle = document.getElementById('prodInputSubtitle').value.trim();
       const url = document.getElementById('prodInputUrl').value.trim();
-      const logo = document.getElementById('prodInputLogo').value.trim() || 'vedubox.png';
+      const logo = document.getElementById('prodInputLogo').value.trim() || 'MonaCard.png';
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
       if (!adminSettings.companyProfile) {
         adminSettings.companyProfile = { ...defaultAdminSettings.companyProfile };
       }
       if (!adminSettings.companyProfile.products) {
-        adminSettings.companyProfile.products = [...defaultAdminSettings.companyProfile.products];
+        adminSettings.companyProfile.products = [];
       }
 
       if (editId) {
@@ -8780,8 +8891,25 @@ document.addEventListener('DOMContentLoaded', () => {
           adminSettings.companyProfile.products[idx] = { id: editId, name, subtitle, url, logo };
         }
       } else {
-        const newId = 'prod-' + Date.now();
-        adminSettings.companyProfile.products.push({ id: newId, name, subtitle, url, logo });
+        const newProd = { id: 'prod-' + Date.now(), name, subtitle, url, logo };
+        adminSettings.companyProfile.products.push(newProd);
+
+        fetch('/api/admin/products', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+          },
+          body: JSON.stringify({
+            name,
+            description: subtitle,
+            link: url,
+            image_url: logo
+          })
+        }).then(r => r.json()).then(res => {
+          if (res.data) newProd.raw_id = res.data.id;
+        }).catch(e => console.warn('Product create API error', e));
       }
 
       saveAdminSettingsToStorage();
@@ -10291,22 +10419,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = redirectUrl;
         return;
       } else {
-        // Fallback for offline demo credentials matching
-        if (email === 'superadmin@monacard.com') {
-          setRole('superadmin');
-          if (modalAuth) modalAuth.classList.remove('active');
-          showToast('👑 Süper Admin (SaaS Sahibi) olarak giriş yapıldı!');
-        } else if (email === 'muhiddinoktem@vedubox.com') {
-          setRole('admin');
-          if (modalAuth) modalAuth.classList.remove('active');
-          showToast('🏢 Muhiddin Öktem (Firma Yöneticisi) olarak giriş yapıldı!');
-        } else if (email.includes('ali') || email.includes('zeynep')) {
-          setRole('staff');
-          if (modalAuth) modalAuth.classList.remove('active');
-          showToast('💼 Personel portalı olarak giriş yapıldı!');
-        } else {
-          showToast(res?.message || 'Geçersiz e-posta veya şifre.');
-        }
+        showToast(res?.message || 'Geçersiz e-posta veya şifre.');
       }
     });
   }

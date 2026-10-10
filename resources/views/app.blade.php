@@ -3,17 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Muhiddin Öktem | MonaCard Dijital Kartvizit</title>
-  <meta name="description" content="Muhiddin Öktem - Senior Product Designer & Creative Technologist. MonaCard Akıllı Dijital Kartvizit Profili.">
-  <meta name="theme-color" content="#00A86B">
+  @php
+    $displayName = ($card && $card->user ? $card->user->name : ($currentUser ? $currentUser->name : ($company ? ($company->ceo_name ?: $company->name) : 'MonaCard Dijital')));
+    $displayTitle = ($card && $card->title ? $card->title : ($card && $card->user && $card->user->title ? $card->user->title : ($currentUser && $currentUser->title ? $currentUser->title : ($company->ceo_title ?? 'Yönetici'))));
+    $displayCompanyName = $company ? $company->name : 'MonaCard Dijital';
+    $brandColor = $company->brand_color ?? '#00A86B';
+    $companyLogo = ($company && $company->logo_url) ? asset($company->logo_url) : asset('MonaCard.png');
+    $cardAvatar = ($card && $card->avatar_url && !str_contains($card->avatar_url, 'avatar_clean') && !str_contains($card->avatar_url, 'avatar.png')) 
+      ? asset($card->avatar_url) 
+      : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Ccircle cx='64' cy='64' r='64' fill='%23E2E8F0'/%3E%3Cpath d='M64 68c13.25 0 24-10.75 24-24S77.25 20 64 20 40 30.75 40 44s10.75 24 24 24zm0 12c-17.33 0-52 8.7-52 26v8h104v-8c0-17.3-34.67-26-52-26z' fill='%2394A3B8'/%3E%3C/svg%3E";
+    $cardPhone = $card ? ($card->direct_phone ?: ($company->phone ?? '')) : ($company->phone ?? '');
+    $cardPhoneClean = preg_replace('/[^\d+]/', '', $cardPhone);
+    $cardEmail = $card ? ($card->work_email ?: ($company->email ?? '')) : ($company->email ?? '');
+    $cardWebsite = $company->website ?? '';
+    $cardWebsiteClean = preg_replace('/^https?:\/\//', '', $cardWebsite);
+    $cardAddress = $company->address ?? '';
+  @endphp
+  <title>{{ $displayName }} | {{ $displayCompanyName }} Akıllı Kartvizit</title>
+  <meta name="description" content="{{ $displayName }} - {{ $displayTitle }}. {{ $displayCompanyName }} Akıllı Dijital Kartvizit Profili.">
+  <meta name="theme-color" content="{{ $brandColor }}">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   
   <!-- OpenGraph / Social Meta Tags -->
-  <meta property="og:title" content="Muhiddin Öktem | MonaCard Dijital Kartvizit">
-  <meta property="og:description" content="Senior Product Designer & Creative Technologist | Vedubox">
-  <meta property="og:image" content="avatar_clean.png">
+  <meta property="og:title" content="{{ $displayName }} | {{ $displayCompanyName }} Dijital Kartvizit">
+  <meta property="og:description" content="{{ $displayTitle }} | {{ $displayCompanyName }}">
+  <meta property="og:image" content="{{ $cardAvatar }}">
   <meta property="og:type" content="profile">
   
   <!-- Google Fonts: Space Grotesk -->
@@ -86,35 +102,21 @@
             <polyline points="12 19 5 12 12 5"></polyline>
           </svg>
         </button>
-        <!-- Logo (Vedubox Firma Logosu) -->
-        <div class="brand-logo" id="brandLogoWrap" title="Vedubox">
-          <img src="vedubox.png" alt="Vedubox Logo" class="logo-img" id="brandLogo">
+        <!-- Logo -->
+        <div class="brand-logo" id="brandLogoWrap" title="{{ $displayCompanyName }}">
+          <img src="{{ $companyLogo }}" alt="{{ $displayCompanyName }} Logo" class="logo-img" id="brandLogo">
         </div>
         <span class="header-subpage-title hidden" id="headerSubpageTitle"></span>
       </div>
       
-      <!-- Top Profile & Language Actions -->
+      <!-- Top Profile & Actions -->
       <div class="header-actions">
-        <!-- Language Switcher (TR / ENG) (Sadece Personel / Yönetici görür, Müşteri ekranında dil seçeneği olmaz) -->
-        <div class="lang-switcher-pill mini staff-only" id="mobileLangSwitcher">
-          <button type="button" class="lang-btn active" data-lang="tr" title="Türkçe">TR</button>
-          <button type="button" class="lang-btn" data-lang="en" title="English">ENG</button>
-        </div>
-
         <button class="profile-icon-btn staff-only" id="headerProfileBtn" aria-label="Profil Bilgilerini Düzenle" title="Profil Bilgilerini Düzenle">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00A86B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{ $brandColor }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
           <span class="edit-badge-dot" title="Düzenleme Aktif"></span>
-        </button>
-
-        <button class="profile-icon-btn staff-only admin-logout-btn" id="headerLogoutBtn" aria-label="Çıkış Yap" title="Çıkış Yap" style="margin-left: 2px;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-            <polyline points="16 17 21 12 16 7"></polyline>
-            <line x1="21" y1="12" x2="9" y2="12"></line>
-          </svg>
         </button>
       </div>
     </header>
@@ -147,12 +149,12 @@
           <div class="hero-bg-gradient"></div>
           <div class="avatar-wrapper">
             <div class="avatar-ring">
-              <img src="avatar_clean.png" alt="Muhiddin Öktem" class="avatar-img" id="userAvatar">
+              <img src="{{ $cardAvatar }}" alt="{{ $displayName }}" class="avatar-img" id="userAvatar">
             </div>
           </div>
 
-          <h1 class="user-name" id="displayFullName">Muhiddin Öktem</h1>
-          <p class="user-title" id="displayTitle">Senior Product Designer &amp; Creative Technologist</p>
+          <h1 class="user-name" id="displayFullName">{{ $displayName }}</h1>
+          <p class="user-title" id="displayTitle">{{ $displayTitle }}</p>
 
           <!-- Main Action Buttons -->
           <div class="action-buttons-group">
@@ -207,15 +209,15 @@
 
           <div class="review-info">
             <div class="rating-row">
-              <span class="rating-score">4.9</span>
-              <div class="stars-group" aria-label="5 üzerinden 4.9 puan">
+              <span class="rating-score">5.0</span>
+              <div class="stars-group" aria-label="5 üzerinden 5 puan">
                 <span class="star">★</span>
                 <span class="star">★</span>
                 <span class="star">★</span>
                 <span class="star">★</span>
                 <span class="star">★</span>
               </div>
-              <span class="review-count">(48 Yorum)</span>
+              <span class="review-count">(Doğrulanmış Profil)</span>
             </div>
             <p class="review-platform">Google Değerlendirmeleri</p>
           </div>
@@ -234,23 +236,23 @@
 
           <div class="contact-list">
             <!-- Telefon -->
-            <div class="contact-item">
+            <div class="contact-item" style="{{ empty($cardPhone) ? 'display:none;' : '' }}">
               <div class="contact-icon-circle">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00A86B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{ $brandColor }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                 </svg>
               </div>
               <div class="contact-details">
                 <span class="contact-label">Telefon</span>
-                <a href="tel:+905362556424" class="contact-value font-mono" id="displayPhone">+90 536 255 64 24</a>
+                <a href="tel:{{ $cardPhoneClean }}" class="contact-value font-mono" id="displayPhone">{{ $cardPhone }}</a>
               </div>
               <div class="contact-actions">
-                <a href="tel:+905362556424" class="contact-action-btn" id="linkCallAction" title="Hemen Ara">
+                <a href="tel:{{ $cardPhoneClean }}" class="contact-action-btn" id="linkCallAction" title="Hemen Ara">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                   </svg>
                 </a>
-                <a href="sms:+905362556424" class="contact-action-btn" id="linkSmsAction" title="SMS Gönder">
+                <a href="sms:{{ $cardPhoneClean }}" class="contact-action-btn" id="linkSmsAction" title="SMS Gönder">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                   </svg>
@@ -259,19 +261,19 @@
             </div>
 
             <!-- E-Posta -->
-            <div class="contact-item">
+            <div class="contact-item" style="{{ empty($cardEmail) ? 'display:none;' : '' }}">
               <div class="contact-icon-circle">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00A86B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{ $brandColor }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="4"></circle>
                   <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"></path>
                 </svg>
               </div>
               <div class="contact-details">
                 <span class="contact-label">E-Posta</span>
-                <a href="mailto:muhiddinoktem@vedubox.com" class="contact-value" id="displayEmail">muhiddinoktem@vedubox.com</a>
+                <a href="mailto:{{ $cardEmail }}" class="contact-value" id="displayEmail">{{ $cardEmail }}</a>
               </div>
               <div class="contact-actions">
-                <a href="mailto:muhiddinoktem@vedubox.com" class="contact-action-btn" id="linkEmailAction" title="E-Posta Gönder">
+                <a href="mailto:{{ $cardEmail }}" class="contact-action-btn" id="linkEmailAction" title="E-Posta Gönder">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="7" y1="17" x2="17" y2="7"></line>
                     <polyline points="7 7 17 7 17 17"></polyline>
@@ -281,9 +283,9 @@
             </div>
 
             <!-- Web Sitesi -->
-            <div class="contact-item">
+            <div class="contact-item" style="{{ empty($cardWebsite) ? 'display:none;' : '' }}">
               <div class="contact-icon-circle">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00A86B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{ $brandColor }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="10"></circle>
                   <line x1="2" y1="12" x2="22" y2="12"></line>
                   <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
@@ -291,10 +293,10 @@
               </div>
               <div class="contact-details">
                 <span class="contact-label">Web Sitesi</span>
-                <a href="https://vedubox.com" target="_blank" rel="noopener noreferrer" class="contact-value" id="displayWebsite">vedubox.com</a>
+                <a href="{{ str_starts_with($cardWebsite, 'http') ? $cardWebsite : 'https://' . $cardWebsite }}" target="_blank" rel="noopener noreferrer" class="contact-value" id="displayWebsite">{{ $cardWebsiteClean }}</a>
               </div>
               <div class="contact-actions">
-                <a href="https://vedubox.com" target="_blank" rel="noopener noreferrer" class="contact-action-btn" id="linkWebsiteAction" title="Web Sitesini Ziyaret Et">
+                <a href="{{ str_starts_with($cardWebsite, 'http') ? $cardWebsite : 'https://' . $cardWebsite }}" target="_blank" rel="noopener noreferrer" class="contact-action-btn" id="linkWebsiteAction" title="Web Sitesini Ziyaret Et">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="7" y1="17" x2="17" y2="7"></line>
                     <polyline points="7 7 17 7 17 17"></polyline>
@@ -304,16 +306,16 @@
             </div>
 
             <!-- Ofis & Lokasyon -->
-            <div class="contact-item" id="contactItemAddress">
+            <div class="contact-item" id="contactItemAddress" style="{{ empty($cardAddress) ? 'display:none;' : '' }}">
               <div class="contact-icon-circle">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00A86B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{ $brandColor }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                   <circle cx="12" cy="10" r="3"></circle>
                 </svg>
               </div>
               <div class="contact-details">
                 <span class="contact-label">Ofis &amp; Lokasyon</span>
-                <span class="contact-value" id="displayAddress"></span>
+                <span class="contact-value" id="displayAddress">{{ $cardAddress }}</span>
               </div>
               <div class="contact-actions">
                 <button class="btn-review" id="btnLocationNav" title="Haritada Aç ve Paylaş" style="background:#fff;">
@@ -370,6 +372,14 @@
         </div>
 
         <form id="profileEditForm" class="styled-form">
+          <div class="form-group mb-3">
+            <label style="display:block; font-size:12px; font-weight:700; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">Arayüz Dili / Interface Language</label>
+            <div class="lang-switcher-pill" id="profileLangSwitcher" style="display: inline-flex; gap: 6px; background: #F1F5F9; padding: 4px; border-radius: 12px; border: 1px solid #E2E8F0;">
+              <button type="button" class="lang-btn active" data-lang="tr" title="Türkçe" style="padding: 6px 16px; font-weight: 700; font-size: 13px; border-radius: 9px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">🇹🇷 Türkçe</button>
+              <button type="button" class="lang-btn" data-lang="en" title="English" style="padding: 6px 16px; font-weight: 700; font-size: 13px; border-radius: 9px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">🇬🇧 English</button>
+            </div>
+          </div>
+
           <div class="form-row">
             <div class="form-group">
               <label for="editFullName">Adınız Soyadınız *</label>
@@ -414,48 +424,48 @@
           <div class="form-row">
             <div class="form-group">
               <label for="editWhatsapp">WhatsApp Numarası</label>
-              <input type="text" id="editWhatsapp" placeholder="905362556424">
+              <input type="text" id="editWhatsapp" placeholder="905xxxxxxxxx">
             </div>
             <div class="form-group">
               <label for="editTelegram">Telegram Kullanıcı Adı</label>
-              <input type="text" id="editTelegram" placeholder="muhiddinoktem">
+              <input type="text" id="editTelegram" placeholder="kullaniciadi">
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="editLinkedin">LinkedIn Kullanıcı Adı</label>
-              <input type="text" id="editLinkedin" placeholder="muhiddinoktem">
+              <input type="text" id="editLinkedin" placeholder="kullaniciadi">
             </div>
             <div class="form-group">
               <label for="editTwitter">X (Twitter) Kullanıcı Adı</label>
-              <input type="text" id="editTwitter" placeholder="muhiddinoktem">
+              <input type="text" id="editTwitter" placeholder="kullaniciadi">
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="editFacebook">Facebook Kullanıcı Adı</label>
-              <input type="text" id="editFacebook" placeholder="muhiddinoktem">
+              <input type="text" id="editFacebook" placeholder="kullaniciadi">
             </div>
             <div class="form-group">
               <label for="editInstagram">Instagram Kullanıcı Adı</label>
-              <input type="text" id="editInstagram" placeholder="muhiddinoktem">
+              <input type="text" id="editInstagram" placeholder="kullaniciadi">
             </div>
           </div>
 
           <div class="form-divider">
-            <span>Markalarımız Bağlantıları</span>
+            <span>Web & Katalog Bağlantıları</span>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="editProdVedubox">Vedubox Web Bağlantısı</label>
-              <input type="url" id="editProdVedubox" placeholder="https://vedubox.com">
+              <label for="editProdVedubox">Web Sitesi</label>
+              <input type="url" id="editProdVedubox" placeholder="https://sirketiniz.com">
             </div>
             <div class="form-group">
-              <label for="editProdEtgigrup">Etgigrup Web Bağlantısı</label>
-              <input type="url" id="editProdEtgigrup" placeholder="https://etgigrup.com">
+              <label for="editProdEtgigrup">Katalog / Ek Bağlantı</label>
+              <input type="url" id="editProdEtgigrup" placeholder="https://sirketiniz.com/katalog">
             </div>
           </div>
 
@@ -486,7 +496,7 @@
           <form id="newMeetingForm" class="styled-form">
             <div class="form-group">
               <label for="meetTitle">Toplantı Konusu *</label>
-              <input type="text" id="meetTitle" placeholder="Örn: Vedubox Dijital Dönüşüm Sunumu" required>
+              <input type="text" id="meetTitle" placeholder="Örn: Tanıtım ve İş Birliği Sunumu" required>
             </div>
             <!-- Katılımcı / Müşteri (Çoklu Seçim) -->
             <div class="form-group">
@@ -1435,32 +1445,32 @@
           <div class="peoplexio-stat-chips-row">
             <div class="peoplexio-metric-chip">
               <span class="metric-chip-label">🗣️ Toplam Görüşme</span>
-              <div class="metric-chip-val" id="detMetricMeetings">24 Görüşme</div>
-              <span class="metric-chip-sub text-emerald-600">%100 Tamamlandı</span>
+              <div class="metric-chip-val" id="detMetricMeetings">0 Görüşme</div>
+              <span class="metric-chip-sub text-emerald-600">%0 Tamamlandı</span>
             </div>
 
             <div class="peoplexio-metric-chip">
               <span class="metric-chip-label">🔥 Sıcak Müşteri</span>
-              <div class="metric-chip-val text-rose-600" id="detMetricHot">14 Müşteri</div>
+              <div class="metric-chip-val text-rose-600" id="detMetricHot">0 Müşteri</div>
               <span class="metric-chip-sub">Yüksek Anlaşma İhtimali</span>
             </div>
 
             <div class="peoplexio-metric-chip">
               <span class="metric-chip-label">⚡ Ilık Müşteri</span>
-              <div class="metric-chip-val text-amber-600" id="detMetricWarm">8 Müşteri</div>
+              <div class="metric-chip-val text-amber-600" id="detMetricWarm">0 Müşteri</div>
               <span class="metric-chip-sub">Teklif Aşamasında</span>
             </div>
 
             <div class="peoplexio-metric-chip">
               <span class="metric-chip-label">❄️ Soğuk Müşteri</span>
-              <div class="metric-chip-val text-blue-600" id="detMetricCold">6 Müşteri</div>
+              <div class="metric-chip-val text-blue-600" id="detMetricCold">0 Müşteri</div>
               <span class="metric-chip-sub">Takip Bekleyen</span>
             </div>
 
             <div class="peoplexio-metric-chip highlight-card">
               <span class="metric-chip-label">🎯 Hedef Tamamlama</span>
-              <div class="metric-chip-val" id="detMetricTargetPct">%60</div>
-              <span class="metric-chip-sub" id="detMetricTargetSub">18 / 15 Görüşme Hedefi</span>
+              <div class="metric-chip-val" id="detMetricTargetPct">%0</div>
+              <span class="metric-chip-sub" id="detMetricTargetSub">0 / 15 Görüşme Hedefi</span>
             </div>
           </div>
 
@@ -1473,15 +1483,15 @@
               <!-- Purple Hero Card -->
               <div class="peoplexio-hero-card">
                 <div class="peoplexio-hero-top">
-                  <div class="peoplexio-hero-avatar" id="staffDetAvatar">AR</div>
+                  <div class="peoplexio-hero-avatar" id="staffDetAvatar">MC</div>
                   <div class="peoplexio-hero-badge" id="staffDetHeroSalaryBadge">
                     <span class="text-xs opacity-80">Toplam Görüşme</span>
-                    <strong>24 Görüşme</strong>
+                    <strong>0 Görüşme</strong>
                   </div>
                 </div>
                 <div class="peoplexio-hero-info">
-                  <h3 class="peoplexio-hero-name" id="staffDetCardName">Ali Rıza Çelik</h3>
-                  <p class="peoplexio-hero-role" id="staffDetCardRole">Kurumsal Müşteri Direktörü</p>
+                  <h3 class="peoplexio-hero-name" id="staffDetCardName">Personel</h3>
+                  <p class="peoplexio-hero-role" id="staffDetCardRole">Müşteri Temsilcisi</p>
                 </div>
               </div>
 
@@ -1489,7 +1499,7 @@
               <div class="peoplexio-single-details-card">
                 <div class="single-detail-row">
                   <span class="single-detail-label">📞 İletişim &amp; Telefon</span>
-                  <a href="#" id="staffDetPhoneLink" class="single-detail-value font-mono font-bold text-primary" style="text-decoration: none;"><span id="staffDetPhoneText">+90 532 987 65 43</span></a>
+                  <a href="#" id="staffDetPhoneLink" class="single-detail-value font-mono font-bold text-primary" style="text-decoration: none;"><span id="staffDetPhoneText">-</span></a>
                   <button type="button" class="btn-subordinates" id="btnOpenSubordinatesModal">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                     <span>Bağlı Personeller (<span id="staffDetSubCountBadge">0</span>)</span>
@@ -1498,12 +1508,12 @@
                 <div class="single-detail-divider"></div>
                 <div class="single-detail-row">
                   <span class="single-detail-label">✉️ Kurumsal E-Posta</span>
-                  <a href="#" id="staffDetMailLink" class="single-detail-value font-bold text-slate-700"><span id="staffDetEmailText">aliriza@vedubox.com</span></a>
+                  <a href="#" id="staffDetMailLink" class="single-detail-value font-bold text-slate-700"><span id="staffDetEmailText"></span></a>
                 </div>
                 <div class="single-detail-divider"></div>
                 <div class="single-detail-row">
                   <span class="single-detail-label">👑 Liderlik &amp; Ekip</span>
-                  <span class="single-detail-value font-bold text-slate-800" id="staffDetTeamText">Takım Lideri (3 Personel Bağlı)</span>
+                  <span class="single-detail-value font-bold text-slate-800" id="staffDetTeamText">Personel</span>
                 </div>
 
                 <!-- Status notice if card is cancelled -->
@@ -1541,42 +1551,39 @@
                   <div>
                     <h4 class="chart-title">Görüşme &amp; Aktivite İlerlemesi</h4>
                     <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 4px;">
-                      <span class="text-2xl font-black text-slate-900" id="staffDetBigCount" style="font-size: 24px; font-weight: 800; color: #0F172A;">24</span>
-                      <span class="text-xs font-bold text-emerald-600" style="font-size: 12px; font-weight: 700; color: #10B981;">↑ %20 geçen aya göre</span>
+                      <span class="text-2xl font-black text-slate-900" id="staffDetBigCount" style="font-size: 24px; font-weight: 800; color: #0F172A;">0</span>
+                      <span class="text-xs font-bold text-emerald-600" style="font-size: 12px; font-weight: 700; color: #10B981;">Gerçekleşen</span>
                     </div>
                   </div>
                   <span class="text-xs font-bold text-muted">↗</span>
                 </div>
                 <div class="peoplexio-activity-bars" id="staffDetActivityBars">
                   <div class="act-bar-col">
-                    <div class="act-bar-fill" style="height: 55%;"><span class="act-tooltip">5</span></div>
+                    <div class="act-bar-fill" style="height: 6%;"><span class="act-tooltip">0</span></div>
                     <span class="act-label">P</span>
                   </div>
                   <div class="act-bar-col">
-                    <div class="act-bar-fill" style="height: 80%;"><span class="act-tooltip">8</span></div>
+                    <div class="act-bar-fill" style="height: 6%;"><span class="act-tooltip">0</span></div>
                     <span class="act-label">S</span>
                   </div>
                   <div class="act-bar-col">
-                    <div class="act-bar-fill" style="height: 65%;"><span class="act-tooltip">6</span></div>
+                    <div class="act-bar-fill" style="height: 6%;"><span class="act-tooltip">0</span></div>
                     <span class="act-label">Ç</span>
                   </div>
                   <div class="act-bar-col">
-                    <div class="act-bar-fill active" style="height: 100%;">
-                      <div class="peoplexio-peak-pill">24 Görüşme</div>
-                      <span class="act-tooltip">11</span>
-                    </div>
+                    <div class="act-bar-fill" style="height: 6%;"><span class="act-tooltip">0</span></div>
                     <span class="act-label">P</span>
                   </div>
                   <div class="act-bar-col">
-                    <div class="act-bar-fill" style="height: 75%;"><span class="act-tooltip">7</span></div>
+                    <div class="act-bar-fill" style="height: 6%;"><span class="act-tooltip">0</span></div>
                     <span class="act-label">C</span>
                   </div>
                   <div class="act-bar-col">
-                    <div class="act-bar-fill" style="height: 40%;"><span class="act-tooltip">4</span></div>
+                    <div class="act-bar-fill" style="height: 6%;"><span class="act-tooltip">0</span></div>
                     <span class="act-label">C</span>
                   </div>
                   <div class="act-bar-col">
-                    <div class="act-bar-fill" style="height: 30%;"><span class="act-tooltip">2</span></div>
+                    <div class="act-bar-fill" style="height: 6%;"><span class="act-tooltip">0</span></div>
                     <span class="act-label">P</span>
                   </div>
                 </div>
@@ -1586,7 +1593,7 @@
               <div class="admin-table-card">
                 <div class="chart-card-header" style="padding: 18px 20px 0 20px; margin-bottom: 12px;">
                   <h4 class="chart-title">📅 Ayarladığı Toplantılar &amp; Randevular</h4>
-                  <span class="badge-count" id="staffDetMeetingCountBadge">3 Toplantı</span>
+                  <span class="badge-count" id="staffDetMeetingCountBadge">0 Toplantı</span>
                 </div>
                 <div class="staff-meetings-list" id="staffDetMeetingsList" style="padding: 0 16px 16px 16px; display:flex; flex-direction:column; gap:10px;">
                   <!-- Dinamik Toplantılar -->
@@ -1627,6 +1634,10 @@
               <span class="hubspot-sync-badge">
                 <span class="hubspot-dot"></span> HubSpot Kurumsal Senkron
               </span>
+              <button type="button" class="admin-btn-primary" id="btnCrmAddCustomer" title="Yeni Müşteri Ekle" style="background: #00A86B !important; color: #FFFFFF !important; font-weight: 700 !important; font-size: 13px !important; padding: 8px 16px !important; border-radius: 12px !important; border: none !important; cursor: pointer !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 6px !important; box-shadow: 0 4px 14px rgba(0, 168, 107, 0.3) !important; transition: all 0.2s ease;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>+ Yeni Müşteri Ekle</span>
+              </button>
             </div>
           </div>
 
@@ -1744,7 +1755,7 @@
                 <div class="cust-field-item">
                   <span class="cust-field-label">İlgilenen Personel:</span>
                   <div class="cust-field-value flex items-center gap-2" id="crmDetAssignedStaffVal">
-                    <span class="font-bold text-slate-800">Muhiddin Öktem</span>
+                    <span class="font-bold text-slate-800" id="crmDetAssignedStaffText">{{ $displayName }}</span>
                   </div>
                 </div>
                 <div class="cust-field-item">
@@ -1933,7 +1944,7 @@
 
                   <!-- Preset Luxury Themes -->
                   <div class="preset-colors-group">
-                    <button type="button" class="preset-color-dot active" data-color="#00A86B" style="background:#00A86B;" title="Zümrüt Yeşili (Vedubox Emerald)"></button>
+                    <button type="button" class="preset-color-dot active" data-color="#00A86B" style="background:#00A86B;" title="Zümrüt Yeşili"></button>
                     <button type="button" class="preset-color-dot" data-color="#2563EB" style="background:#2563EB;" title="Safir Mavisi (Corporate Blue)"></button>
                     <button type="button" class="preset-color-dot" data-color="#6366F1" style="background:#6366F1;" title="İndigo Moru"></button>
                     <button type="button" class="preset-color-dot" data-color="#7C3AED" style="background:#7C3AED;" title="Kraliyet Moru"></button>
@@ -2193,7 +2204,7 @@
                           <strong>Google Workspace &amp; Takvim Bağlantısı</strong>
                           <span class="status-badge active"><span class="pulse-dot"></span>Bağlandı</span>
                         </div>
-                        <p class="integ-status-meta">Aktif Hesap: <strong>muhiddinoktem@vedubox.com</strong> &bull; Son Senkronizasyon: 2 dakika önce</p>
+                        <p class="integ-status-meta">Aktif Hesap: <strong id="integGoogleActiveEmail">{{ $cardEmail ?: ('admin@' . ($company->slug ?? 'firma') . '.com') }}</strong> &bull; Son Senkronizasyon: 2 dakika önce</p>
                       </div>
                     </div>
                     <button type="button" class="integ-card-action-btn" id="btnReconnectGoogle" onclick="window.testIntegration('google')">🔄 Yeniden Yetkilendir</button>
@@ -2225,12 +2236,12 @@
                     <div class="form-row">
                       <div class="form-group">
                         <label for="integGoogleReviewUrl">Google İşletme / Değerlendirme URL'si</label>
-                        <input type="url" id="integGoogleReviewUrl" value="https://g.page/r/vedubox/review" placeholder="https://g.page/r/.../review">
+                        <input type="url" id="integGoogleReviewUrl" value="" placeholder="https://g.page/r/.../review">
                         <small class="form-help-text">Dijital kartvizitteki "Yorum Bırak" butonunun yönleneceği Google Harita / Yorum linki.</small>
                       </div>
                       <div class="form-group">
                         <label for="integGoogleClientId">Google OAuth Client ID</label>
-                        <input type="text" id="integGoogleClientId" value="782910482910-vedubox.apps.googleusercontent.com" placeholder="xxxxx.apps.googleusercontent.com">
+                        <input type="text" id="integGoogleClientId" value="" placeholder="xxxxx.apps.googleusercontent.com">
                         <small class="form-help-text">Google Cloud Console kurumsal API yetkilendirme anahtarı.</small>
                       </div>
                     </div>
@@ -2316,7 +2327,7 @@
                           <strong>Microsoft 365 &amp; Teams Video Konferans API</strong>
                           <span class="status-badge active"><span class="pulse-dot"></span>Aktif</span>
                         </div>
-                        <p class="integ-status-meta">Bağlı Organizasyon: <strong>vedubox.onmicrosoft.com</strong> &bull; Graph API Durumu: 200 OK</p>
+                        <p class="integ-status-meta">Microsoft 365 &amp; Graph API Entegrasyonu</p>
                       </div>
                     </div>
                     <button type="button" class="integ-card-action-btn" id="btnTestTeams" onclick="window.testIntegration('teams')">🔄 Bağlantıyı Test Et</button>
@@ -2376,7 +2387,7 @@
                       </div>
                       <div class="form-group">
                         <label for="integTeamsWebhookUrl">Teams Kanalı Incoming Webhook URL</label>
-                        <input type="url" id="integTeamsWebhookUrl" value="https://vedubox.webhook.office.com/webhookb2/teams-meeting-leads" placeholder="https://outlook.office.com/webhook/...">
+                        <input type="url" id="integTeamsWebhookUrl" value="" placeholder="https://outlook.office.com/webhook/...">
                       </div>
                     </div>
 
@@ -2510,7 +2521,7 @@
                     <div class="form-row">
                       <div class="form-group">
                         <label for="integSalesforceInstanceUrl">Salesforce Instance / Domain URL</label>
-                        <input type="url" id="integSalesforceInstanceUrl" value="https://vedubox.my.salesforce.com" placeholder="https://yourcompany.my.salesforce.com">
+                        <input type="url" id="integSalesforceInstanceUrl" value="" placeholder="https://yourcompany.my.salesforce.com">
                         <small class="form-help-text">Kurumsal Salesforce MyDomain giriş adresi.</small>
                       </div>
                       <div class="form-group">
@@ -2857,7 +2868,7 @@
               <span class="super-crown-icon" title="SaaS Sahibi">👑</span>
             </div>
             <div class="super-user-info">
-              <span class="super-user-name" id="superHeaderName">Muhiddin Öktem</span>
+              <span class="super-user-name" id="superHeaderName">{{ Auth::user() && Auth::user()->role === 'superadmin' ? Auth::user()->name : 'SaaS Yöneticisi' }}</span>
               <span class="super-user-role">Süper Admin</span>
             </div>
           </div>
@@ -3297,7 +3308,7 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label>SaaS Sahibi / Yönetici</label>
-                    <input type="text" id="settingOwnerName" value="Muhiddin Öktem">
+                    <input type="text" id="settingOwnerName" value="{{ Auth::user() && Auth::user()->role === 'superadmin' ? Auth::user()->name : 'SaaS Yöneticisi' }}">
                   </div>
                   <div class="form-group">
                     <label>Varsayılan Para Birimi</label>
@@ -3779,7 +3790,7 @@
         <div class="form-group mt-4">
           <label class="invite-label">Şirket Özel Katılım Bağlantısı</label>
           <div class="invite-input-copy-group">
-            <input type="text" id="staffInviteLinkInput" readonly value="http://monacard2.test/join/vedubox?token=vdx-78492" class="invite-link-field">
+            <input type="text" id="staffInviteLinkInput" readonly value="{{ url('/register?ref=' . ($company->slug ?? 'monacard')) }}" class="invite-link-field">
             <button type="button" class="btn-copy-link" id="btnCopyStaffInviteLink">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
               <span id="copyLinkBtnText">Kopyala</span>
@@ -3938,7 +3949,7 @@
           <div class="form-row">
             <div class="form-group">
               <label for="staffInputEmail">E-Posta *</label>
-              <input type="email" id="staffInputEmail" required placeholder="ayse@vedubox.com">
+              <input type="email" id="staffInputEmail" required placeholder="personel@sirketiniz.com">
             </div>
             <div class="form-group">
               <label for="staffInputPhone">Telefon *</label>
@@ -4103,17 +4114,17 @@
           
           <div class="form-group">
             <label for="prodInputName">Marka / Ürün Adı *</label>
-            <input type="text" id="prodInputName" required placeholder="Örn: Vedubox">
+            <input type="text" id="prodInputName" required placeholder="Örn: MonaCard">
           </div>
 
           <div class="form-group">
             <label for="prodInputSubtitle">Kısa Açıklama / Slogan *</label>
-            <input type="text" id="prodInputSubtitle" required placeholder="Örn: Online Eğitim & Akademi Platformu">
+            <input type="text" id="prodInputSubtitle" required placeholder="Örn: Yeni Nesil Dijital Kartvizit Platformu">
           </div>
 
           <div class="form-group">
             <label for="prodInputUrl">Web Sitesi / Yönlendirme Bağlantısı (URL) *</label>
-            <input type="url" id="prodInputUrl" required placeholder="https://vedubox.com">
+            <input type="url" id="prodInputUrl" required placeholder="https://sirketiniz.com/urun">
           </div>
 
           <div class="form-group">
@@ -4302,7 +4313,7 @@
           </button>
         </div>
         <div class="copy-link-input-group">
-          <input type="text" readonly id="profileLinkInput" value="https://monacard.com/muhiddinoktem" class="link-input">
+          <input type="text" readonly id="profileLinkInput" value="{{ url('/' . ($card ? $card->slug : '')) }}" class="link-input">
           <button class="btn-copy" id="btnCopyInline">Kopyala</button>
         </div>
       </div>
@@ -4317,7 +4328,7 @@
         <button class="modal-close-btn" data-close="reviewModal">&times;</button>
       </div>
       <div class="modal-body text-center">
-        <p class="modal-desc">Muhiddin Öktem ve Vedubox ile olan deneyiminizi değerlendirin.</p>
+        <p class="modal-desc" id="reviewModalDesc">{{ $displayName }} ve {{ $displayCompanyName }} ile olan deneyiminizi değerlendirin.</p>
         <div class="interactive-stars" id="starRatingSelector">
           <button type="button" class="star-rating-btn active" data-score="1" aria-label="1 Yıldız">
             <svg class="star-svg" width="36" height="36" viewBox="0 0 24 24">

@@ -18,20 +18,39 @@ use Illuminate\Support\Facades\Auth;
 class UnifiedAppController extends Controller
 {
     /**
-     * Show Unified Interactive Application View (with role switching & live demo data)
+     * Show Unified Interactive Application View (with multi-tenant role switching & live dynamic database data)
      */
     public function index(Request $request)
     {
         $companyId = $request->query('company_id');
+        $slug = $request->route('any') ?: $request->query('slug');
         $currentUser = Auth::user();
+        $card = null;
+        $company = null;
 
-        if ($currentUser && $currentUser->company_id) {
-            $company = Company::with(['products', 'users.businessCard'])->find($currentUser->company_id);
-        } elseif ($companyId) {
-            $company = Company::with(['products', 'users.businessCard'])->find($companyId);
-        } else {
-            // Ziyaretçi (Oturum kapalıyken varsayılan tanıtım kartviziti)
-            $company = Company::with(['products', 'users.businessCard'])->first();
+        // 1. Slug based resolution (e.g. /muhiddin-oktem or /monacard or /cards/slug)
+        if ($slug && !in_array($slug, ['admin', 'staff', 'super-admin', 'login', 'register'])) {
+            $card = BusinessCard::with(['user', 'company'])->where('slug', $slug)->first();
+            if ($card && $card->company) {
+                $company = $card->company;
+            } else {
+                $compBySlug = Company::with(['products', 'users.businessCard'])->where('slug', $slug)->first();
+                if ($compBySlug) {
+                    $company = $compBySlug;
+                }
+            }
+        }
+
+        // 2. User / Company ID based resolution
+        if (!$company) {
+            if ($currentUser && $currentUser->company_id) {
+                $company = Company::with(['products', 'users.businessCard'])->find($currentUser->company_id);
+            } elseif ($companyId) {
+                $company = Company::with(['products', 'users.businessCard'])->find($companyId);
+            } else {
+                // Ziyaretçi (Oturum kapalıyken varsayılan tanıtım kartviziti)
+                $company = Company::with(['products', 'users.businessCard'])->first();
+            }
         }
 
         if (! $company) {
@@ -52,37 +71,41 @@ class UnifiedAppController extends Controller
             ]);
         }
 
-        // Active Card
-        $card = null;
-        if ($currentUser) {
-            $card = $currentUser->businessCard ?: BusinessCard::where('company_id', $currentUser->company_id)->first();
-            if (! $card && $company) {
-                $card = BusinessCard::create([
-                    'user_id' => $currentUser->id,
-                    'company_id' => $company->id,
-                    'slug' => \Illuminate\Support\Str::slug($currentUser->name).'-'.\Illuminate\Support\Str::random(4),
-                    'bio' => $company->name.' bünyesinde dijital kartvizit profilim.',
-                    'direct_phone' => $currentUser->phone,
-                    'work_email' => $currentUser->email,
-                    'theme_color' => $company->brand_color ?? '#00A86B',
-                    'is_active' => true,
-                ]);
+        // 3. Active Card resolution
+        if (!$card) {
+            if ($currentUser) {
+                $card = $currentUser->businessCard ?: BusinessCard::where('user_id', $currentUser->id)->first();
+                if (! $card && $currentUser->company_id) {
+                    $card = BusinessCard::where('company_id', $currentUser->company_id)->first();
+                }
+                if (! $card && $company) {
+                    $card = BusinessCard::create([
+                        'user_id' => $currentUser->id,
+                        'company_id' => $company->id,
+                        'slug' => \Illuminate\Support\Str::slug($currentUser->name).'-'.\Illuminate\Support\Str::random(4),
+                        'bio' => $company->name.' bünyesinde dijital kartvizit profilim.',
+                        'direct_phone' => $currentUser->phone,
+                        'work_email' => $currentUser->email,
+                        'theme_color' => $company->brand_color ?? '#00A86B',
+                        'is_active' => true,
+                    ]);
+                }
+            } elseif ($company) {
+                $card = BusinessCard::where('company_id', $company->id)->first();
             }
-        } elseif ($company) {
-            $card = BusinessCard::where('company_id', $company->id)->first();
         }
 
         if (! $card) {
             $card = BusinessCard::with(['user', 'company'])->first();
         }
 
-        // Products
+        // 4. Multi-Tenant Dynamic Scoped Collections (STRICTLY FOR CURRENT COMPANY)
         $products = $company ? Product::where('company_id', $company->id)->orderBy('sort_order')->get() : collect();
 
-        // Staff members with business cards & counts (Only real staff of this company)
+        // Team members (Both staff and company admin users for this specific company)
         $staffMembers = $company ? User::where('company_id', $company->id)
-            ->where('role', 'staff')
-            ->with('businessCard')
+            ->whereIn('role', ['staff', 'company_admin'])
+            ->with(['businessCard', 'staffTargets'])
             ->withCount([
                 'customers as total_customers',
                 'customers as hot_customers' => function ($q) {
@@ -98,17 +121,17 @@ class UnifiedAppController extends Controller
             ])
             ->get() : collect();
 
-        // Customers with notes & staff relation
-        $customers = Customer::where('company_id', $company->id)
+        // Customers with notes & staff relation for current company
+        $customers = $company ? Customer::where('company_id', $company->id)
             ->with(['notes', 'staff'])
             ->latest()
-            ->get();
+            ->get() : collect();
 
-        // Meetings
-        $meetings = Meeting::where('company_id', $company->id)->orderBy('start_time')->get();
+        // Meetings for current company
+        $meetings = $company ? Meeting::where('company_id', $company->id)->orderBy('start_time')->get() : collect();
 
-        // Reminders
-        $reminders = Reminder::where('company_id', $company->id)->get();
+        // Reminders for current company
+        $reminders = $company ? Reminder::where('company_id', $company->id)->get() : collect();
 
         // SaaS SuperAdmin metrics
         $allCompanies = Company::withCount(['users', 'businessCards'])->get();

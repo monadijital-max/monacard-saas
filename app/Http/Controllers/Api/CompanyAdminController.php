@@ -271,6 +271,60 @@ class CompanyAdminController extends Controller
     }
 
     /**
+     * Add new CRM Customer directly
+     */
+    public function storeCustomer(Request $request): JsonResponse
+    {
+        $companyId = $request->user()->company_id;
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'company' => 'nullable|string|max:255',
+            'company_name' => 'nullable|string|max:255',
+            'title' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:50',
+            'email' => 'nullable|email|max:255',
+            'stage' => 'nullable|string|in:hot,warm,cold,kazanildi,kaybedildi,gorusuldu,yeni',
+            'staff_id' => 'nullable',
+            'note' => 'nullable|string',
+        ]);
+
+        $staffId = $validated['staff_id'] ?? $request->user()->id;
+        if (is_string($staffId) && str_starts_with($staffId, 'staff-')) {
+            $staffId = str_replace('staff-', '', $staffId);
+        }
+
+        $customer = Customer::create([
+            'company_id' => $companyId,
+            'staff_id' => $staffId,
+            'name' => $validated['name'],
+            'company_name' => $validated['company_name'] ?? $validated['company'] ?? 'Bireysel Müşteri',
+            'title' => $validated['title'] ?? 'Yetkili',
+            'phone' => $validated['phone'] ?? null,
+            'email' => $validated['email'] ?? null,
+            'stage' => $validated['stage'] ?? 'warm',
+            'source' => 'panel',
+            'last_contact_at' => now(),
+        ]);
+
+        if (! empty($validated['note'])) {
+            InteractionNote::create([
+                'customer_id' => $customer->id,
+                'staff_id' => $staffId,
+                'company_id' => $companyId,
+                'type' => 'text',
+                'note' => $validated['note'],
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Müşteri başarıyla CRM havuzuna eklendi.',
+            'customer' => $customer->load('notes', 'staff'),
+        ], 201);
+    }
+
+    /**
      * Update Company Settings (Brand Color, Theme Mode, Interface Language, Staff Feature Toggles)
      */
     public function updateSettings(Request $request): JsonResponse

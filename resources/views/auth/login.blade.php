@@ -464,13 +464,12 @@
             localStorage.setItem('monacard_token', token);
             localStorage.setItem('monacard_user', JSON.stringify(user));
 
-            if (user.email !== 'muhiddinoktem@vedubox.com') {
-              localStorage.removeItem('monacard_admin_staff');
-              localStorage.removeItem('monacard_admin_settings');
-              localStorage.removeItem('monacard_crm_customers');
-              localStorage.removeItem('monacard_meetings');
-              localStorage.removeItem('monacard_reminders');
-            }
+            // Clean legacy unscoped keys
+            const legacyKeys = [
+              'monacard_admin_staff', 'monacard_admin_settings', 'monacard_crm_customers',
+              'monacard_meetings', 'monacard_reminders', 'monacard_staff_profile'
+            ];
+            legacyKeys.forEach(k => localStorage.removeItem(k));
 
             let targetRole = 'staff';
             if (user.role === 'superadmin') {

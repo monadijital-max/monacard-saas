@@ -27,14 +27,14 @@ Route::middleware('throttle:60,1')->group(function () {
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-    Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum,web');
+    Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum,web');
 });
 
 // ==========================================
 // 3. STAFF PORTAL (Role: Staff & Admin)
 // ==========================================
-Route::middleware(['auth:sanctum'])->prefix('staff')->group(function () {
+Route::middleware(['auth:sanctum,web'])->prefix('staff')->group(function () {
     Route::get('/card', [StaffPortalController::class, 'getMyCard']);
     Route::put('/card', [StaffPortalController::class, 'updateMyCard']);
     
@@ -53,7 +53,7 @@ Route::middleware(['auth:sanctum'])->prefix('staff')->group(function () {
 // ==========================================
 // 4. COMPANY ADMIN (Role: Company Admin)
 // ==========================================
-Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
+Route::middleware(['auth:sanctum,web'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [CompanyAdminController::class, 'dashboard']);
     
     Route::get('/staff', [CompanyAdminController::class, 'getStaffList']);
@@ -63,6 +63,7 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     Route::post('/staff/transfer-clients', [CompanyAdminController::class, 'transferClients']);
     
     Route::get('/crm', [CompanyAdminController::class, 'getAllCrm']);
+    Route::post('/crm', [CompanyAdminController::class, 'storeCustomer']);
     Route::put('/settings', [CompanyAdminController::class, 'updateSettings']);
     Route::put('/profile', [CompanyAdminController::class, 'updateProfile']);
     
@@ -74,7 +75,7 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
 // ==========================================
 // 5. SUPER ADMIN (Role: SaaS Owner)
 // ==========================================
-Route::middleware(['auth:sanctum'])->prefix('super')->group(function () {
+Route::middleware(['auth:sanctum,web'])->prefix('super')->group(function () {
     Route::get('/dashboard', [SuperAdminController::class, 'dashboard']);
     Route::post('/companies', [SuperAdminController::class, 'storeCompany']);
     Route::put('/companies/{id}/quota', [SuperAdminController::class, 'updateCompanyQuota']);

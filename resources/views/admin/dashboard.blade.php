@@ -264,7 +264,7 @@
       </div>
       <div style="margin-bottom:12px;">
         <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:4px;">E-Posta Adresi *</label>
-        <input type="email" name="email" required style="width:100%; height:40px; border:1px solid #CBD5E1; border-radius:10px; padding:0 12px; font-size:13px; outline:none;" placeholder="ahmet@vedubox.com">
+        <input type="email" name="email" required style="width:100%; height:40px; border:1px solid #CBD5E1; border-radius:10px; padding:0 12px; font-size:13px; outline:none;" placeholder="personel@sirketiniz.com">
       </div>
       <div style="margin-bottom:12px;">
         <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:4px;">Telefon</label>
@@ -329,7 +329,7 @@
       @csrf
       <div style="margin-bottom:12px;">
         <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:4px;">Ürün / Çözüm Adı *</label>
-        <input type="text" name="name" required style="width:100%; height:40px; border:1px solid #CBD5E1; border-radius:10px; padding:0 12px; font-size:13px; outline:none;" placeholder="Örn: Vedubox Live Eğitim Platformu">
+        <input type="text" name="name" required style="width:100%; height:40px; border:1px solid #CBD5E1; border-radius:10px; padding:0 12px; font-size:13px; outline:none;" placeholder="Örn: MonaCard Dijital Çözüm Paketi">
       </div>
       <div style="margin-bottom:12px;">
         <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:4px;">Açıklama</label>
